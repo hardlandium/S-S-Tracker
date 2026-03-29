@@ -8,10 +8,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/599/599502.png">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/599/599502.png">
-    <title>S&S Tracker V117</title>
+    <title>S&S Tracker V118</title>
     
     <link rel="manifest" href='data:application/json,{"name":"S&S Tracker","short_name":"S&S","start_url":".","display":"standalone","background_color":"#000000","theme_color":"#ff3333","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/599/599502.png","sizes":"512x512","type":"image/png"}]}'>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 
@@ -144,7 +145,7 @@
 <div id="toast"></div>
 
 <script>
-    const STORAGE_KEY = 'SS_TRACKER_V117';
+    const STORAGE_KEY = 'SS_TRACKER_V118';
     let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     const months = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"];
 
@@ -191,7 +192,6 @@
             const fx = parseInt(s.qtyFix) || 0;
             const fl = parseInt(s.qtyFlex) || 0;
             const bs = parseInt(s.qtyCal) || 0;
-
             if(s.date === todayStr) { dFx+=fx; dFl+=fl; dB+=bs; }
             if(!s.isWait) { 
                 const d = new Date(s.date); 
@@ -225,19 +225,7 @@
             const sC = s.isWait ? 'status-wait' : (isDone ? 'status-done' : 'status-open');
             const sT = s.isWait ? '<span class="status-tag tag-wait">WACHT</span>' : (isDone ? '<span class="status-tag tag-done">OK</span>' : '<span class="status-tag tag-open">OPEN</span>');
             const dStr = s.isWait ? "?" : s.date.split('-').reverse().slice(0,2).join('/');
-            
-            log.innerHTML += `
-                <div class="log-item ${sC}">
-                    <div class="log-info">
-                        <div class="log-title">${dStr} - ${s.invoice} ${sT}</div>
-                        <div class="log-data">FX:${s.qtyFix} | FL:${s.qtyFlex} | BS:${s.qtyCal}</div>
-                        ${(s.notes && s.notes !== "0") ? `<div class="log-note">${s.notes}</div>` : ''}
-                    </div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        ${s.isWait ? `<span class="symbol" onclick="completeOrder('${s.invoice}')" style="color:var(--color-ok); cursor:pointer;">check_circle</span>` : ''}
-                        <span class="symbol" onclick="removeSale('${s.invoice}')" style="cursor:pointer; color:#333; font-size:18px;">delete</span>
-                    </div>
-                </div>`;
+            log.innerHTML += `<div class="log-item ${sC}"><div class="log-info"><div class="log-title">${dStr} - ${s.invoice} ${sT}</div><div class="log-data">FX:${s.qtyFix} | FL:${s.qtyFlex} | BS:${s.qtyCal}</div>${(s.notes && s.notes !== "0") ? `<div class="log-note">${s.notes}</div>` : ''}</div><div style="display:flex; align-items:center; gap:10px;">${s.isWait ? `<span class="symbol" onclick="completeOrder('${s.invoice}')" style="color:var(--color-ok); cursor:pointer;">check_circle</span>` : ''}<span class="symbol" onclick="removeSale('${s.invoice}')" style="cursor:pointer; color:#333; font-size:18px;">delete</span></div></div>`;
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
     }
@@ -245,7 +233,7 @@
     document.getElementById('saleForm').onsubmit = function(e) {
         e.preventDefault();
         const wait = document.getElementById('dateUnknown').checked;
-        const newSale = {
+        sales.push({
             invoice: document.getElementById('invoice').value,
             notes: document.getElementById('notes').value || "",
             qtyFix: parseInt(document.getElementById('qtyFix').value) || 0,
@@ -253,19 +241,14 @@
             qtyCal: parseInt(document.getElementById('qtyCal').value) || 0,
             date: wait ? "2099-12-31" : document.getElementById('dateInput').value,
             isWait: wait
-        };
-        sales.push(newSale);
+        });
         this.reset(); toggleDate(document.getElementById('dateUnknown')); render(); showToast("OK");
     };
 
     function removeSale(inv) { if(confirm('WISSEN?')) { sales = sales.filter(s => s.invoice !== inv); render(); } }
     function completeOrder(inv) { 
         const idx = sales.findIndex(s => s.invoice === inv); 
-        if(idx !== -1) { 
-            sales[idx].date = new Date().toISOString().split('T')[0]; 
-            sales[idx].isWait = false; 
-            render(); 
-        } 
+        if(idx !== -1) { sales[idx].date = new Date().toISOString().split('T')[0]; sales[idx].isWait = false; render(); } 
     }
 
     function shareData() {
@@ -282,6 +265,30 @@
     function copyToClipboard(text) {
         const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select();
         document.execCommand('copy'); document.body.removeChild(t); showToast("GEKOPIEERD");
+    }
+
+    function exportPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const selM = parseInt(document.getElementById('viewMonth').value);
+        const selY = parseInt(document.getElementById('viewYear').value);
+        
+        doc.setFontSize(18);
+        doc.text(`S&S TRACKER RAPPORT - ${months[selM].toUpperCase()} ${selY}`, 14, 20);
+        
+        const data = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY)
+            .map(s => [s.date.split('-').reverse().join('-'), s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '-']);
+        
+        doc.autoTable({
+            startY: 30,
+            head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']],
+            body: data,
+            theme: 'grid',
+            headStyles: { fillStyle: '#ff3333' }
+        });
+        
+        doc.save(`SS_Rapport_${months[selM]}_${selY}.pdf`);
+        showToast("PDF GEDOWNLOAD");
     }
 
     function manualExport() {
