@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#ff3333">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>S&S Tracker V114</title>
+    
+    <link rel="manifest" href='data:application/json,{"name":"S&S Tracker","short_name":"S&S","start_url":".","display":"standalone","background_color":"#000000","theme_color":"#ff3333","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/599/599502.png","sizes":"512x512","type":"image/png"}]}'>
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        :root {
+            --mm-red: #ff3333;
+            --mm-gradient: linear-gradient(135deg, #ff4d4d 0%, #df0000 100%);
+            --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-light: #888;
+            --input-bg: #222; --input-border: #333; --color-cal: #4db8ff;
+            --color-ok: #00ff88;
+            --mm-font: 'Arial Black', sans-serif;
+        }
+        
+        body { font-family: var(--mm-font); font-weight: 900; font-style: italic; background: var(--bg); margin: 0; padding-bottom: 20px; color: var(--text-dark); text-transform: uppercase; -webkit-tap-highlight-color: transparent; }
+        header { background: var(--mm-gradient); padding: 12px; text-align: center; border-radius: 0 0 20px 20px; }
+        header h1 { margin: 0; font-size: 1.3rem; letter-spacing: -1px; }
+        
+        .container { padding: 0 8px; max-width: 480px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-top: 10px; border: 1px solid #222; }
+        
+        .day-box { display: flex; background: #111; border-radius: 10px; padding: 8px; border: 1px solid #222; }
+        .day-stat { text-align: center; flex: 1; border-right: 1px solid #222; }
+        .day-stat:last-child { border: none; }
+        .day-stat b { display: block; font-size: 1.1rem; }
+        .day-stat span { font-size: 0.55rem; color: var(--text-light); }
+        
+        .progress-bar { width: 100%; height: 10px; background: #222; border-radius: 5px; margin-top: 4px; }
+        .fill { height: 100%; border-radius: 5px; transition: width 0.5s; }
+
+        .input-row { display: flex; gap: 6px; margin-bottom: 8px; align-items: flex-end; }
+        .input-col { flex: 1; }
+        label { font-size: 0.65rem; color: var(--text-light); display: block; margin-bottom: 3px; }
+        input, select { width: 100%; height: 38px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: #fff; font-family: var(--mm-font); font-style: italic; font-weight: 900; padding: 0 8px; box-sizing: border-box; font-size: 13px; text-transform: uppercase; }
+        input::placeholder { color: #444; }
+        
+        .qty-control { display: flex; background: #111; border-radius: 8px; border: 1px solid var(--input-border); height: 42px; overflow: hidden; }
+        .qty-btn { background: #222; border: none; color: #fff; width: 32px; font-weight: 900; font-size: 1.2rem; cursor: pointer; }
+        .qty-control input { flex: 1; border: none; background: transparent; text-align: center; padding: 0; font-size: 1.1rem; }
+
+        .save-btn { background: var(--mm-gradient); color: #fff; border: none; width: 44px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+        .date-unknown-box { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 50px; height: 38px; background: #111; border-radius: 8px; border: 1px solid var(--input-border); cursor: pointer; }
+        .date-unknown-box span { font-size: 0.45rem; color: var(--text-light); line-height: 1; margin-bottom: 2px; }
+
+        .search-container { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; }
+        .note-filter-btn { width: 32px; height: 32px; border-radius: 8px; background: #222; border: 1px solid #333; color: #555; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .note-filter-btn.active { color: var(--mm-red); border-color: var(--mm-red); }
+
+        .log-item { background: #111; border-radius: 8px; padding: 10px 12px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #333; }
+        .log-item.status-wait { border-left-color: var(--color-cal); }
+        .log-item.status-open { border-left-color: var(--color-ok); }
+        .log-item.status-done { opacity: 0.5; filter: grayscale(0.5); border-left-color: #444; }
+        
+        .log-info { flex-grow: 1; overflow: hidden; }
+        .log-title { font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
+        .log-data { font-size: 0.65rem; color: var(--text-light); margin-top: 2px; }
+        .log-note { font-size: 0.6rem; color: var(--mm-red); margin-top: 2px; text-transform: none; font-style: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .status-tag { font-size: 0.5rem; padding: 1px 5px; border-radius: 4px; vertical-align: middle; }
+        .tag-open { background: var(--color-ok); color: #000; }
+        .tag-wait { background: var(--color-cal); color: #000; }
+        .tag-done { background: #444; color: #aaa; }
+
+        .action-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 10px; }
+        .btn-action { height: 38px; border-radius: 8px; border: 1px solid #333; background: #111; color: #888; font-size: 0.45rem; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--mm-font); cursor: pointer; }
+        .symbol { font-family: 'Material Symbols Rounded' !important; font-size: 16px; margin-bottom: 2px; }
+        
+        #toast { visibility: hidden; background: #fff; color: #000; padding: 8px 16px; border-radius: 20px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; z-index: 9; }
+    </style>
+</head>
+<body>
+
+<header><h1>S&S TRACKER</h1></header>
+
+<div class="container">
+    <div class="card">
+        <div class="day-box">
+            <div class="day-stat"><b id="dVerz">0</b><span>VZK.</span></div>
+            <div class="day-stat"><b id="dFix" style="color:var(--mm-red);">0</b><span>FIX</span></div>
+            <div class="day-stat"><b id="dFlex" style="color:var(--mm-red);">0</b><span>FLX</span></div>
+            <div class="day-stat"><b id="dCal" style="color:var(--color-cal);">0</b><span>BS</span></div>
+        </div>
+        <div style="margin-top: 12px;">
+            <div style="display:flex; justify-content: space-between; align-items: center; font-size: 0.6rem; margin-bottom:2px;">
+                <span>MAAND TARGET VZK (<span id="percVerz" style="color:var(--mm-red);">0%</span>)</span>
+                <input type="number" id="targetVerz" style="width:50px; height:22px; background:#222; border:1px solid #444; color:#fff; text-align:center;" oninput="saveTargets()">
+            </div>
+            <div class="progress-bar"><div id="fillVerz" class="fill" style="background:var(--mm-red);"></div></div>
+            <div style="display:flex; justify-content: space-between; align-items: center; font-size: 0.6rem; margin-top:8px; margin-bottom:2px;">
+                <span>MAAND TARGET BS (<span id="percBranded" style="color:var(--color-cal);">0%</span>)</span>
+                <input type="number" id="targetBranded" style="width:50px; height:22px; background:#222; border:1px solid #444; color:#fff; text-align:center;" oninput="saveTargets()">
+            </div>
+            <div class="progress-bar"><div id="fillBranded" class="fill" style="background:var(--color-cal);"></div></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <form id="saleForm">
+            <div class="input-row">
+                <div class="input-col"><label>FACTUUR</label><input type="text" inputmode="numeric" id="invoice" placeholder="..." required></div>
+                <div class="input-col"><label>NOTITIE</label><input type="text" id="notes" placeholder="..."></div>
+            </div>
+            <div class="input-row">
+                <div class="input-col"><div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyFix',-1)">-</button><input type="number" id="qtyFix" placeholder="FX"><button type="button" class="qty-btn" onclick="adj('qtyFix',1)">+</button></div></div>
+                <div class="input-col"><div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyFlex',-1)">-</button><input type="number" id="qtyFlex" placeholder="FL"><button type="button" class="qty-btn" onclick="adj('qtyFlex',1)">+</button></div></div>
+                <div class="input-col"><div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyCal',-1)">-</button><input type="number" id="qtyCal" placeholder="BS"><button type="button" class="qty-btn" onclick="adj('qtyCal',1)">+</button></div></div>
+            </div>
+            <div class="input-row" style="margin-bottom:0;">
+                <div style="flex: 1;"><label>DATUM</label><input type="date" id="dateInput" required></div>
+                <div class="date-unknown-box" onclick="toggleDateViaBox()">
+                    <span>DTM ?</span>
+                    <input type="checkbox" id="dateUnknown" onclick="event.stopPropagation(); toggleDate(this)">
+                </div>
+                <button type="submit" class="save-btn"><span class="symbol">add_task</span></button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card" style="padding: 8px;">
+        <div style="display:flex; gap:4px; margin-bottom:8px;">
+            <select id="viewMonth" onchange="render()" style="height:32px; font-size:0.65rem;"></select>
+            <select id="viewYear" onchange="render()" style="height:32px; font-size:0.65rem;"></select>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchLog" placeholder="ZOEK FACTUUR..." style="height:32px; font-size:0.7rem; margin-bottom:0;" oninput="render()">
+            <div id="noteFilterBtn" class="note-filter-btn" onclick="toggleNoteFilter()">
+                <span class="symbol">sticky_note_2</span>
+            </div>
+        </div>
+        <div id="salesLog"></div>
+        <div class="action-grid">
+            <div class="btn-action" onclick="shareData()"><span class="symbol">share</span>DEEL</div>
+            <div class="btn-action" onclick="exportPDF()"><span class="symbol">picture_as_pdf</span>PDF</div>
+            <div class="btn-action" onclick="manualExport()"><span class="symbol">table_view</span>EXCEL</div>
+            <div class="btn-action" onclick="document.getElementById('importInput').click()"><span class="symbol">upload_file</span>IMP</div>
+            <div class="btn-action" onclick="if(confirm('WISSEN?')) { localStorage.clear(); location.reload(); }" style="color:#444;"><span class="symbol">delete_forever</span>CLR</div>
+        </div>
+        <input type="file" id="importInput" style="display:none" accept=".csv,text/csv,text/plain" onchange="manualImport(event)">
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    const STORAGE_KEY = 'SS_TRACKER_V114';
+    let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let noteFilterActive = false;
+    const months = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"];
+
+    // SERVICE WORKER INLINE REGISTRATION
+    if ('serviceWorker' in navigator) {
+        const swCode = `
+            self.addEventListener('install', e => e.waitUntil(caches.open('ss-v1').then(c => c.addAll(['./']))));
+            self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+        `;
+        const blob = new Blob([swCode], {type: 'text/javascript'});
+        navigator.serviceWorker.register(URL.createObjectURL(blob));
+    }
+
+    function adj(id, v) { const el = document.getElementById(id); el.value = Math.max(0, (parseInt(el.value) || 0) + v); }
+    function showToast(m) { const x = document.getElementById("toast"); x.innerText = m; x.style.visibility = "visible"; setTimeout(() => x.style.visibility = "hidden", 2000); }
+    function setToday() { document.getElementById('dateInput').valueAsDate = new Date(); }
+    
+    function toggleNoteFilter() {
+        noteFilterActive = !noteFilterActive;
+        document.getElementById('noteFilterBtn').classList.toggle('active', noteFilterActive);
+        render();
+    }
+
+    function saveTargets() { 
+        localStorage.setItem('ss_t_v', document.getElementById('targetVerz').value); 
+        localStorage.setItem('ss_t_b', document.getElementById('targetBranded').value); 
+        render(); 
+    }
+    
+    function toggleDateViaBox() { const cb = document.getElementById('dateUnknown'); cb.checked = !cb.checked; toggleDate(cb); }
+    function toggleDate(cb) {
+        const di = document.getElementById('dateInput');
+        if(cb.checked) { di.disabled = true; di.style.opacity = "0.2"; di.required = false; }
+        else { di.disabled = false; di.style.opacity = "1"; di.required = true; setToday(); }
+    }
+
+    function init() {
+        const mSel = document.getElementById('viewMonth');
+        const ySel = document.getElementById('viewYear');
+        const now = new Date();
+        months.forEach((m, i) => { mSel.innerHTML += `<option value="${i}" ${i === now.getMonth() ? 'selected' : ''}>${m.toUpperCase()}</option>`; });
+        for(let i = 0; i < 3; i++) {
+            let y = now.getFullYear() - i;
+            ySel.innerHTML += `<option value="${y}" ${i === 0 ? 'selected' : ''}>${y}</option>`;
+        }
+        document.getElementById('targetVerz').value = localStorage.getItem('ss_t_v') || 20;
+        document.getElementById('targetBranded').value = localStorage.getItem('ss_t_b') || 5;
+        setToday(); render();
+    }
+
+    function getWeekNumber(d) {
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+        return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+    }
+
+    function manualExport() {
+        const selM = parseInt(document.getElementById('viewMonth').value);
+        const selY = parseInt(document.getElementById('viewYear').value);
+        const maandNaam = months[selM].toUpperCase();
+        let csv = "\uFEFF"; 
+        csv += '"DATUM";"WEEK";"FACTUUR";"FIX";"FLEX";"BS";"NOTITIE";"STATUS"\n';
+        const exportData = [...sales].sort((a,b) => new Date(a.date) - new Date(b.date));
+        exportData.forEach(s => {
+            const status = s.isWait ? "WACHT" : "OK";
+            const week = s.isWait ? "N/A" : getWeekNumber(new Date(s.date));
+            csv += `"${s.date}";"${week}";"${s.invoice}";"${s.qtyFix}";"${s.qtyFlex}";"${s.qtyCal}";"${(s.notes||"").replace(/"/g, '""')}";"${status}"\n`;
+        });
+        const b = new Blob([csv], {type:'text/csv;charset=utf-8'}); 
+        const a = document.createElement('a'); a.href = URL.createObjectURL(b); 
+        a.download = `SS_EXPORT_${maandNaam}_${selY}.csv`; a.click();
+        showToast("EXCEL KLAAR");
+    }
+
+    function manualImport(event) {
+        const file = event.target.files[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const lines = e.target.result.replace(/\uFEFF/g, "").split('\n');
+            let importedSales = [];
+            for(let i = 1; i < lines.length; i++) {
+                const row = lines[i].trim(); if(!row) continue;
+                const cols = row.split(';').map(c => c.replace(/^"|"$/g, ''));
+                if(cols.length < 5) continue;
+                let sObj;
+                const isNewFormat = !isNaN(cols[1]) && cols[1].length < 3;
+                if(isNewFormat) {
+                    sObj = {date: cols[0], invoice: cols[2], qtyFix: cols[3], qtyFlex: cols[4], qtyCal: cols[5], notes: cols[6] || "", isWait: cols[7] === "WACHT"};
+                } else {
+                    sObj = {date: cols[0], invoice: cols[1], qtyFix: cols[2], qtyFlex: cols[3], qtyCal: cols[4], notes: cols[5] || "", isWait: cols[6] === "true" || cols[6] === "WACHT"};
+                }
+                importedSales.push(sObj);
+            }
+            if(importedSales.length > 0) {
+                if(confirm("Toevoegen aan huidige lijst?")) {
+                    const existing = sales.map(s => s.invoice.toString());
+                    sales = [...sales, ...importedSales.filter(s => !existing.includes(s.invoice.toString()))];
+                } else { sales = importedSales; }
+                render(); showToast("IMPORT OK");
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function render() {
+        const log = document.getElementById('salesLog'); log.innerHTML = '';
+        const searchVal = document.getElementById('searchLog').value.toLowerCase();
+        const selM = parseInt(document.getElementById('viewMonth').value);
+        const selY = parseInt(document.getElementById('viewYear').value);
+        const todayStr = new Date().toISOString().split('T')[0];
+        let tFx=0, tFl=0, tB=0, dFx=0, dFl=0, dB=0;
+        sales.forEach(s => {
+            if(s.date === todayStr) { dFx+=+s.qtyFix; dFl+=+s.qtyFlex; dB+=+s.qtyCal; }
+            if(!s.isWait) { const d = new Date(s.date); if(d.getMonth() === selM && d.getFullYear() === selY) { tFx+=+s.qtyFix; tFl+=+s.qtyFlex; tB+=+s.qtyCal; } }
+        });
+        document.getElementById('dVerz').innerText = (dFx+dFl);
+        document.getElementById('dFix').innerText = dFx; document.getElementById('dFlex').innerText = dFl; document.getElementById('dCal').innerText = dB;
+        const totV = tFx + tFl; const targetV = +document.getElementById('targetVerz').value || 1; const targetB = +document.getElementById('targetBranded').value || 1;
+        document.getElementById('fillVerz').style.width = Math.min((totV/targetV)*100, 100) + '%';
+        document.getElementById('percVerz').innerText = Math.round((totV/targetV)*100) + '%';
+        document.getElementById('fillBranded').style.width = Math.min((tB/targetB)*100, 100) + '%';
+        document.getElementById('percBranded').innerText = Math.round((tB/targetB)*100) + '%';
+        
+        let filtered = sales.filter(s => {
+            const matchesSearch = s.invoice.toString().includes(searchVal);
+            const matchesNote = noteFilterActive ? (s.notes && s.notes.trim() !== "") : true;
+            if(s.isWait) return matchesSearch && matchesNote;
+            const d = new Date(s.date); return matchesSearch && matchesNote && (d.getMonth() === selM && d.getFullYear() === selY);
+        });
+        
+        filtered.sort((a,b) => { if(a.isWait && !b.isWait) return -1; if(!a.isWait && b.isWait) return 1; return new Date(b.date) - new Date(a.date); });
+        filtered.forEach(s => {
+            const isDone = !s.isWait && (s.date <= todayStr);
+            const statusClass = s.isWait ? 'status-wait' : (isDone ? 'status-done' : 'status-open');
+            const statusTag = s.isWait ? '<span class="status-tag tag-wait">WACHT</span>' : (isDone ? '<span class="status-tag tag-done">OK</span>' : '<span class="status-tag tag-open">OPEN</span>');
+            const dStr = s.isWait ? "?" : s.date.split('-').reverse().slice(0,2).join('/');
+            log.innerHTML += `<div class="log-item ${statusClass}"><div class="log-info"><div class="log-title">${dStr} - ${s.invoice} ${statusTag}</div><div class="log-data">FX:${s.qtyFix} | FL:${s.qtyFlex} | BS:${s.qtyCal}</div>${s.notes ? `<div class="log-note">${s.notes}</div>` : ''}</div><div style="display:flex; align-items:center; gap:10px;">${s.isWait ? `<span class="symbol" onclick="completeOrder('${s.invoice}')" style="color:var(--color-ok); cursor:pointer;">check_circle</span>` : ''}<span class="symbol" onclick="removeSale('${s.invoice}')" style="cursor:pointer; color:#333; font-size:18px;">delete</span></div></div>`;
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
+    }
+
+    function removeSale(inv) { if(confirm('WISSEN?')) { sales = sales.filter(s => s.invoice !== inv); render(); } }
+    function completeOrder(inv) { const idx = sales.findIndex(s => s.invoice === inv); if(idx !== -1) { sales[idx].date = new Date().toISOString().split('T')[0]; sales[idx].isWait = false; render(); } }
+    
+    document.getElementById('saleForm').onsubmit = function(e) {
+        e.preventDefault(); const wait = document.getElementById('dateUnknown').checked;
+        sales.push({ invoice: document.getElementById('invoice').value, notes: document.getElementById('notes').value || "", qtyFix: document.getElementById('qtyFix').value || 0, qtyFlex: document.getElementById('qtyFlex').value || 0, qtyCal: document.getElementById('qtyCal').value || 0, date: wait ? "2099-12-31" : document.getElementById('dateInput').value, isWait: wait });
+        this.reset(); toggleDate(document.getElementById('dateUnknown')); render(); showToast("OK");
+    };
+    
+    function shareData() {
+        const selM = parseInt(document.getElementById('viewMonth').value);
+        const selY = parseInt(document.getElementById('viewYear').value);
+        let text = `S&S RAPPORT - ${months[selM]} ${selY}\n\n`;
+        sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY).forEach(s => {
+            text += `${s.date.split('-').reverse().slice(0,2).join('/')} | INV: ${s.invoice} | FX:${s.qtyFix} FL:${s.qtyFlex} BS:${s.qtyCal}${s.notes ? ' | NOT: ' + s.notes : ''}\n`;
+        });
+        if (navigator.share) { navigator.share({ title: 'S&S Report', text: text }).catch(() => {}); }
+        else { navigator.clipboard.writeText(text); showToast("GEKOPIEERD"); }
+    }
+
+    function exportPDF() {
+        const { jsPDF } = window.jspdf; const doc = new jsPDF('p', 'mm', 'a4');
+        const selM = parseInt(document.getElementById('viewMonth').value);
+        const selY = parseInt(document.getElementById('viewYear').value);
+        doc.setFillColor(255, 51, 51); doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255); doc.setFontSize(22); doc.text("S&S TRACKER RAPPORT", 15, 25);
+        doc.setFontSize(12); doc.text(`${months[selM].toUpperCase()} ${selY}`, 15, 33);
+        const data = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY)
+            .sort((a,b) => new Date(b.date) - new Date(a.date)).map(s => [s.date.split('-').reverse().join('/'), s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '-']);
+        doc.autoTable({ startY: 50, head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']], body: data, theme: 'grid', headStyles: { fillColor: [255, 51, 51] } });
+        doc.save(`SS_Report_${months[selM]}_${selY}.pdf`);
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
