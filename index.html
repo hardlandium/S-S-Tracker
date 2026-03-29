@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#ff3333">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/599/599502.png">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/599/599502.png">
-    <title>S&S Tracker V118</title>
+    <title>S&S Tracker V119</title>
     
-    <link rel="manifest" href='data:application/json,{"name":"S&S Tracker","short_name":"S&S","start_url":".","display":"standalone","background_color":"#000000","theme_color":"#ff3333","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/599/599502.png","sizes":"512x512","type":"image/png"}]}'>
+    <link rel="manifest" href='data:application/json,{"name":"S&S Tracker","short_name":"S&S","start_url":".","display":"standalone","background_color":"#000000","theme_color":"#000000","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/599/599502.png","sizes":"512x512","type":"image/png"}]}'>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -19,69 +19,86 @@
     <style>
         :root {
             --mm-red: #ff3333;
-            --mm-gradient: linear-gradient(135deg, #ff4d4d 0%, #df0000 100%);
-            --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-light: #888;
-            --input-bg: #222; --input-border: #333; --color-cal: #4db8ff;
+            --bg: #000; --card-bg: #111; --text-dark: #fff; --text-light: #666;
+            --input-bg: #1a1a1a; --input-border: #222; --color-cal: #4db8ff;
             --color-ok: #00ff88;
             --mm-font: 'Arial Black', sans-serif;
         }
         
-        body { font-family: var(--mm-font); font-weight: 900; font-style: italic; background: var(--bg); margin: 0; padding-bottom: env(safe-area-inset-bottom); color: var(--text-dark); text-transform: uppercase; -webkit-tap-highlight-color: transparent; }
-        header { background: var(--mm-gradient); padding: calc(12px + env(safe-area-inset-top)) 12px 12px 12px; text-align: center; border-radius: 0 0 20px 20px; }
-        header h1 { margin: 0; font-size: 1.3rem; letter-spacing: -1px; }
+        body { 
+            font-family: var(--mm-font); 
+            font-weight: 900; 
+            font-style: italic; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: calc(15px + env(safe-area-inset-top)) 8px env(safe-area-inset-bottom) 8px; 
+            color: var(--text-dark); 
+            text-transform: uppercase; 
+            -webkit-tap-highlight-color: transparent; 
+        }
         
-        .container { padding: 0 8px; max-width: 480px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-top: 10px; border: 1px solid #222; }
+        .app-title {
+            font-size: 0.7rem;
+            color: var(--mm-red);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .container { max-width: 480px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-bottom: 10px; border: 1px solid #222; }
         
-        .day-box { display: flex; background: #111; border-radius: 10px; padding: 8px; border: 1px solid #222; }
-        .day-stat { text-align: center; flex: 1; border-right: 1px solid #222; }
+        .day-box { display: flex; background: #080808; border-radius: 10px; padding: 8px; border: 1px solid #1a1a1a; }
+        .day-stat { text-align: center; flex: 1; border-right: 1px solid #1a1a1a; }
         .day-stat:last-child { border: none; }
         .day-stat b { display: block; font-size: 1.1rem; }
         .day-stat span { font-size: 0.55rem; color: var(--text-light); }
         
-        .progress-bar { width: 100%; height: 10px; background: #222; border-radius: 5px; margin-top: 4px; }
-        .fill { height: 100%; border-radius: 5px; transition: width 0.5s; }
+        .progress-bar { width: 100%; height: 8px; background: #1a1a1a; border-radius: 4px; margin-top: 4px; }
+        .fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
 
         .input-row { display: flex; gap: 6px; margin-bottom: 8px; align-items: flex-end; }
         .input-col { flex: 1; }
-        label { font-size: 0.65rem; color: var(--text-light); display: block; margin-bottom: 3px; }
+        label { font-size: 0.6rem; color: var(--text-light); display: block; margin-bottom: 3px; }
         input, select { width: 100%; height: 38px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: #fff; font-family: var(--mm-font); font-style: italic; font-weight: 900; padding: 0 8px; box-sizing: border-box; font-size: 13px; text-transform: uppercase; }
         
-        .qty-control { display: flex; background: #111; border-radius: 8px; border: 1px solid var(--input-border); height: 42px; overflow: hidden; }
-        .qty-btn { background: #222; border: none; color: #fff; width: 32px; font-weight: 900; font-size: 1.2rem; cursor: pointer; }
+        .qty-control { display: flex; background: #080808; border-radius: 8px; border: 1px solid var(--input-border); height: 42px; overflow: hidden; }
+        .qty-btn { background: #1a1a1a; border: none; color: #fff; width: 32px; font-weight: 900; font-size: 1.2rem; cursor: pointer; }
         .qty-control input { flex: 1; border: none; background: transparent; text-align: center; padding: 0; font-size: 1.1rem; }
 
-        .save-btn { background: var(--mm-gradient); color: #fff; border: none; width: 44px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .date-unknown-box { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 50px; height: 38px; background: #111; border-radius: 8px; border: 1px solid var(--input-border); cursor: pointer; }
-        .date-unknown-box span { font-size: 0.45rem; color: var(--text-light); line-height: 1; margin-bottom: 2px; }
+        .save-btn { background: var(--mm-red); color: #fff; border: none; width: 44px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .date-unknown-box { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 50px; height: 38px; background: #080808; border-radius: 8px; border: 1px solid var(--input-border); cursor: pointer; }
+        .date-unknown-box span { font-size: 0.45rem; color: var(--text-light); line-height: 1; }
 
-        .log-item { background: #111; border-radius: 8px; padding: 10px 12px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #333; }
+        .log-item { background: #080808; border-radius: 8px; padding: 10px 12px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #222; }
         .log-item.status-wait { border-left-color: var(--color-cal); }
         .log-item.status-open { border-left-color: var(--color-ok); }
-        .log-item.status-done { opacity: 0.5; filter: grayscale(0.5); border-left-color: #444; }
+        .log-item.status-done { opacity: 0.4; border-left-color: #333; }
         
         .log-info { flex-grow: 1; overflow: hidden; }
-        .log-title { font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
-        .log-data { font-size: 0.65rem; color: var(--text-light); margin-top: 2px; }
-        .log-note { font-size: 0.6rem; color: var(--mm-red); margin-top: 2px; text-transform: none; font-style: normal; }
+        .log-title { font-size: 0.8rem; display: flex; align-items: center; gap: 5px; }
+        .log-data { font-size: 0.6rem; color: var(--text-light); margin-top: 1px; }
+        .log-note { font-size: 0.55rem; color: var(--mm-red); margin-top: 1px; text-transform: none; font-style: normal; }
 
-        .status-tag { font-size: 0.5rem; padding: 1px 5px; border-radius: 4px; vertical-align: middle; }
+        .status-tag { font-size: 0.45rem; padding: 1px 4px; border-radius: 3px; vertical-align: middle; }
         .tag-open { background: var(--color-ok); color: #000; }
         .tag-wait { background: var(--color-cal); color: #000; }
-        .tag-done { background: #444; color: #aaa; }
+        .tag-done { background: #333; color: #888; }
 
         .action-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 10px; }
-        .btn-action { height: 38px; border-radius: 8px; border: 1px solid #333; background: #111; color: #888; font-size: 0.45rem; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--mm-font); cursor: pointer; }
-        .symbol { font-family: 'Material Symbols Rounded' !important; font-size: 16px; margin-bottom: 2px; }
+        .btn-action { height: 36px; border-radius: 8px; border: 1px solid #222; background: #080808; color: #555; font-size: 0.4rem; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--mm-font); cursor: pointer; }
+        .symbol { font-family: 'Material Symbols Rounded' !important; font-size: 14px; margin-bottom: 1px; }
         
-        #toast { visibility: hidden; background: #fff; color: #000; padding: 8px 16px; border-radius: 20px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; z-index: 999; }
+        #toast { visibility: hidden; background: #fff; color: #000; padding: 6px 12px; border-radius: 20px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; z-index: 999; }
     </style>
 </head>
 <body>
 
-<header><h1>S&S TRACKER</h1></header>
-
 <div class="container">
+    <div class="app-title"><span class="symbol">monitoring</span> S&S TRACKER</div>
+    
     <div class="card">
         <div class="day-box">
             <div class="day-stat"><b id="dVerz">0</b><span>VZK.</span></div>
@@ -89,15 +106,15 @@
             <div class="day-stat"><b id="dFlex" style="color:var(--mm-red);">0</b><span>FLX</span></div>
             <div class="day-stat"><b id="dCal" style="color:var(--color-cal);">0</b><span>BS</span></div>
         </div>
-        <div style="margin-top: 12px;">
-            <div style="display:flex; justify-content: space-between; align-items: center; font-size: 0.6rem; margin-bottom:2px;">
-                <span>MAAND TARGET VZK (<span id="percVerz" style="color:var(--mm-red);">0%</span>)</span>
-                <input type="number" id="targetVerz" style="width:50px; height:22px; background:#222; border:1px solid #444; color:#fff; text-align:center;" oninput="saveTargets()">
+        <div style="margin-top: 10px;">
+            <div style="display:flex; justify-content: space-between; align-items: center; font-size: 0.55rem; margin-bottom:2px;">
+                <span>VZK TARGET (<span id="percVerz" style="color:var(--mm-red);">0%</span>)</span>
+                <input type="number" id="targetVerz" style="width:45px; height:20px; background:#000; border:1px solid #222; color:#fff; text-align:center; font-size: 10px;" oninput="saveTargets()">
             </div>
             <div class="progress-bar"><div id="fillVerz" class="fill" style="background:var(--mm-red);"></div></div>
-            <div style="display:flex; justify-content: space-between; align-items: center; font-size: 0.6rem; margin-top:8px; margin-bottom:2px;">
-                <span>MAAND TARGET BS (<span id="percBranded" style="color:var(--color-cal);">0%</span>)</span>
-                <input type="number" id="targetBranded" style="width:50px; height:22px; background:#222; border:1px solid #444; color:#fff; text-align:center;" oninput="saveTargets()">
+            <div style="display:flex; justify-content: space-between; align-items: center; font-size: 0.55rem; margin-top:6px; margin-bottom:2px;">
+                <span>BS TARGET (<span id="percBranded" style="color:var(--color-cal);">0%</span>)</span>
+                <input type="number" id="targetBranded" style="width:45px; height:20px; background:#000; border:1px solid #222; color:#fff; text-align:center; font-size: 10px;" oninput="saveTargets()">
             </div>
             <div class="progress-bar"><div id="fillBranded" class="fill" style="background:var(--color-cal);"></div></div>
         </div>
@@ -118,7 +135,7 @@
                 <div style="flex: 1;"><label>DATUM</label><input type="date" id="dateInput" required></div>
                 <div class="date-unknown-box" onclick="toggleDateViaBox()">
                     <span>DTM ?</span>
-                    <input type="checkbox" id="dateUnknown" onclick="event.stopPropagation(); toggleDate(this)">
+                    <input type="checkbox" id="dateUnknown" style="display:none" onclick="event.stopPropagation(); toggleDate(this)">
                 </div>
                 <button type="submit" class="save-btn"><span class="symbol">add_task</span></button>
             </div>
@@ -127,8 +144,8 @@
 
     <div class="card" style="padding: 8px;">
         <div style="display:flex; gap:4px; margin-bottom:8px;">
-            <select id="viewMonth" onchange="render()" style="height:32px; font-size:0.65rem;"></select>
-            <select id="viewYear" onchange="render()" style="height:32px; font-size:0.65rem;"></select>
+            <select id="viewMonth" onchange="render()" style="height:30px; font-size:0.6rem; background: #000;"></select>
+            <select id="viewYear" onchange="render()" style="height:30px; font-size:0.6rem; background: #000;"></select>
         </div>
         <div id="salesLog"></div>
         <div class="action-grid">
@@ -136,7 +153,7 @@
             <div class="btn-action" onclick="exportPDF()"><span class="symbol">picture_as_pdf</span>PDF</div>
             <div class="btn-action" onclick="manualExport()"><span class="symbol">table_view</span>EXCEL</div>
             <div class="btn-action" onclick="document.getElementById('importInput').click()"><span class="symbol">upload_file</span>IMP</div>
-            <div class="btn-action" onclick="if(confirm('WISSEN?')) { localStorage.clear(); location.reload(); }" style="color:#444;"><span class="symbol">delete_forever</span>CLR</div>
+            <div class="btn-action" onclick="if(confirm('WISSEN?')) { localStorage.clear(); location.reload(); }" style="color:#222;"><span class="symbol">delete_forever</span>CLR</div>
         </div>
         <input type="file" id="importInput" style="display:none" accept=".csv,text/csv,text/plain" onchange="manualImport(event)">
     </div>
@@ -145,7 +162,7 @@
 <div id="toast"></div>
 
 <script>
-    const STORAGE_KEY = 'SS_TRACKER_V118';
+    const STORAGE_KEY = 'SS_TRACKER_V119';
     let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     const months = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"];
 
@@ -159,7 +176,14 @@
         render(); 
     }
     
-    function toggleDateViaBox() { const cb = document.getElementById('dateUnknown'); cb.checked = !cb.checked; toggleDate(cb); }
+    function toggleDateViaBox() { 
+        const cb = document.getElementById('dateUnknown'); 
+        cb.checked = !cb.checked; 
+        const box = document.querySelector('.date-unknown-box');
+        box.style.borderColor = cb.checked ? 'var(--color-cal)' : 'var(--input-border)';
+        toggleDate(cb); 
+    }
+
     function toggleDate(cb) {
         const di = document.getElementById('dateInput');
         if(cb.checked) { di.disabled = true; di.style.opacity = "0.2"; di.required = false; }
@@ -225,7 +249,7 @@
             const sC = s.isWait ? 'status-wait' : (isDone ? 'status-done' : 'status-open');
             const sT = s.isWait ? '<span class="status-tag tag-wait">WACHT</span>' : (isDone ? '<span class="status-tag tag-done">OK</span>' : '<span class="status-tag tag-open">OPEN</span>');
             const dStr = s.isWait ? "?" : s.date.split('-').reverse().slice(0,2).join('/');
-            log.innerHTML += `<div class="log-item ${sC}"><div class="log-info"><div class="log-title">${dStr} - ${s.invoice} ${sT}</div><div class="log-data">FX:${s.qtyFix} | FL:${s.qtyFlex} | BS:${s.qtyCal}</div>${(s.notes && s.notes !== "0") ? `<div class="log-note">${s.notes}</div>` : ''}</div><div style="display:flex; align-items:center; gap:10px;">${s.isWait ? `<span class="symbol" onclick="completeOrder('${s.invoice}')" style="color:var(--color-ok); cursor:pointer;">check_circle</span>` : ''}<span class="symbol" onclick="removeSale('${s.invoice}')" style="cursor:pointer; color:#333; font-size:18px;">delete</span></div></div>`;
+            log.innerHTML += `<div class="log-item ${sC}"><div class="log-info"><div class="log-title">${dStr} - ${s.invoice} ${sT}</div><div class="log-data">FX:${s.qtyFix} | FL:${s.qtyFlex} | BS:${s.qtyCal}</div>${(s.notes && s.notes !== "0") ? `<div class="log-note">${s.notes}</div>` : ''}</div><div style="display:flex; align-items:center; gap:10px;">${s.isWait ? `<span class="symbol" onclick="completeOrder('${s.invoice}')" style="color:var(--color-ok); cursor:pointer;">check_circle</span>` : ''}<span class="symbol" onclick="removeSale('${s.invoice}')" style="cursor:pointer; color:#222; font-size:16px;">delete</span></div></div>`;
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
     }
@@ -242,7 +266,9 @@
             date: wait ? "2099-12-31" : document.getElementById('dateInput').value,
             isWait: wait
         });
-        this.reset(); toggleDate(document.getElementById('dateUnknown')); render(); showToast("OK");
+        this.reset(); toggleDate(document.getElementById('dateUnknown')); 
+        document.querySelector('.date-unknown-box').style.borderColor = 'var(--input-border)';
+        render(); showToast("OK");
     };
 
     function removeSale(inv) { if(confirm('WISSEN?')) { sales = sales.filter(s => s.invoice !== inv); render(); } }
@@ -272,23 +298,13 @@
         const doc = new jsPDF();
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
-        
         doc.setFontSize(18);
-        doc.text(`S&S TRACKER RAPPORT - ${months[selM].toUpperCase()} ${selY}`, 14, 20);
-        
+        doc.text(`S&S TRACKER - ${months[selM].toUpperCase()} ${selY}`, 14, 20);
         const data = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY)
             .map(s => [s.date.split('-').reverse().join('-'), s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '-']);
-        
-        doc.autoTable({
-            startY: 30,
-            head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']],
-            body: data,
-            theme: 'grid',
-            headStyles: { fillStyle: '#ff3333' }
-        });
-        
-        doc.save(`SS_Rapport_${months[selM]}_${selY}.pdf`);
-        showToast("PDF GEDOWNLOAD");
+        doc.autoTable({ startY: 30, head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']], body: data, theme: 'grid', headStyles: { fillStyle: '#ff3333' } });
+        doc.save(`SS_Rapport_${months[selM]}.pdf`);
+        showToast("PDF OK");
     }
 
     function manualExport() {
