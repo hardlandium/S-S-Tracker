@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/599/599502.png">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/599/599502.png">
-    <title>S&S Tracker V126</title>
+    <title>S&S Tracker V127</title>
     
     <link rel="manifest" href='data:application/json,{"name":"Services & Solutions Tracker","short_name":"S&S","start_url":".","display":"standalone","background_color":"#000000","theme_color":"#000000","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/599/599502.png","sizes":"512x512","type":"image/png"}]}'>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -40,19 +40,18 @@
         .container { max-width: 480px; margin: 0 auto; }
         .card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-bottom: 10px; border: 1px solid #222; }
         
-        /* UPDATED BIGGER LOGO DESIGN */
         .card-logo {
             text-align: center;
             color: var(--mm-red);
-            font-size: 1.1rem; /* Iets groter */
-            line-height: 0.95; /* Strakke regelafstand */
-            margin-bottom: 12px; /* Iets meer ruimte */
-            letter-spacing: -1px; /* Strakke letterafstand voor de Black font */
+            font-size: 1.1rem;
+            line-height: 0.95;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
         }
         
         .card-logo span {
-            font-size: 0.65rem; /* Subtekst iets kleiner */
-            letter-spacing: 2px; /* Maar wel met spatiering */
+            font-size: 0.65rem;
+            letter-spacing: 2px;
             color: var(--text-light);
             display: block;
             margin-top: 1px;
@@ -204,7 +203,7 @@
 <div id="toast"></div>
 
 <script>
-    const STORAGE_KEY = 'SS_TRACKER_V126';
+    const STORAGE_KEY = 'SS_TRACKER_V127';
     let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let activeCompleteInvoice = null;
     let hideDone = localStorage.getItem('ss_hide_done') === 'true';
