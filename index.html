@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>S&S Tracker V186</title>
+    <title>S&S Tracker V188</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -88,8 +88,8 @@
     <div class="card">
         <form id="saleForm">
             <div style="display:flex; gap:6px; margin-bottom:8px;">
-                <div style="flex:1;"><label>FACTUUR</label><input type="text" id="invoice" inputmode="numeric" required></div>
-                <div style="flex:1;"><label>NOTITIE</label><input type="text" id="notes"></div>
+                <div style="flex:1;"><label>FACTUUR</label><input type="text" id="invoice" inputmode="numeric" placeholder="..." required></div>
+                <div style="flex:1;"><label>NOTITIE</label><input type="text" id="notes" placeholder="..."></div>
             </div>
             <div style="display:flex; gap:4px; margin-bottom:8px;">
                 <div style="flex:1;"><div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyFix',-1)">-</button><input type="number" id="qtyFix" placeholder="FX"><button type="button" class="qty-btn" onclick="adj('qtyFix',1)">+</button></div></div>
@@ -121,7 +121,7 @@
             <div class="btn-action" onclick="document.getElementById('importInput').click()"><span class="symbol">upload_file</span>IMP</div>
             <div class="btn-action" onclick="if(confirm('WISSEN?')){localStorage.clear();location.reload();}" style="color:#444;"><span class="symbol">delete_forever</span>CLR</div>
         </div>
-        <input type="file" id="importInput" style="display:none" accept="*" onchange="manualImport(event)">
+        <input type="file" id="importInput" style="display:none" accept=".csv, text/csv" onchange="manualImport(event)">
     </div>
 </div>
 
@@ -137,7 +137,7 @@
 </div>
 
 <script>
-    const STORAGE_KEY = 'SS_DATA_V184'; // Behoud dezelfde key voor data-behoud
+    const STORAGE_KEY = 'SS_DATA_V184';
     let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let currentlyEditingOrderId = null;
     let activeEditId = null;
@@ -229,12 +229,11 @@
             const isToday = !s.isWait && s.date === todayStr;
             const d = new Date(s.date);
             
-            // TOEKOMST EN WACHT ALTIJD TONEN LOGICA
             let show = false;
             if (s.isWait || isFuture || isToday) {
-                show = true; // Altijd tonen
+                show = true; 
             } else if (!onlyOpen && d.getMonth() === selM && d.getFullYear() === selY) {
-                show = true; // Tonen als het in de geselecteerde maand valt
+                show = true; 
             }
 
             if (show) {
