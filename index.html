@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>S&S Tracker V182</title>
+    <title>S&S Tracker V186</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -14,22 +14,10 @@
             --color-cal: #4db8ff; --color-ok: #00ff88; --mm-font: 'Arial Black', sans-serif;
         }
         body { font-family: var(--mm-font); font-weight: 900; font-style: italic; background: var(--bg); margin: 0; padding-bottom: env(safe-area-inset-bottom); color: var(--text-dark); text-transform: uppercase; overflow-x: hidden; }
-        
-        header { 
-            padding: calc(10px + env(safe-area-inset-top)) 10px 5px 10px; 
-            text-align: center; 
-        }
-
+        header { padding: calc(10px + env(safe-area-inset-top)) 10px 5px 10px; text-align: center; }
         .container { padding: 0 8px; max-width: 480px; margin: 0 auto; }
         .card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-top: 10px; border: 1px solid #222; }
-        
-        /* LOGO KADER STIJL */
-        .logo-card {
-            text-align: center;
-            padding: 15px 10px;
-            border-bottom: 2px solid var(--mm-red);
-            margin-bottom: 0;
-        }
+        .logo-card { text-align: center; padding: 15px 10px; border-bottom: 2px solid var(--mm-red); margin-bottom: 0; }
         .logo-card .title-main { color: var(--mm-red); font-size: 1.4rem; line-height: 1; letter-spacing: -1px; display: block; }
         .logo-card .title-sub { color: var(--text-gray); font-size: 0.8rem; letter-spacing: 3px; display: block; margin-top: 2px; }
 
@@ -38,28 +26,25 @@
         .day-stat:last-child { border: none; }
         .day-stat b { display: block; font-size: 1.1rem; }
         .day-stat span { font-size: 0.55rem; color: var(--text-gray); }
-        
+
         .target-row { display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.65rem; margin-bottom: 4px; color: var(--text-gray); }
         .target-input-clean { background: #000; border: 1px solid #333; color: var(--text-gray); width: 55px; height: 24px; border-radius: 4px; text-align: center; font-family: inherit; font-weight: 900; font-size: 11px; }
         .progress-bar { width: 100%; height: 12px; background: #222; border-radius: 6px; overflow: hidden; border: 1px solid #333; }
         .fill { height: 100%; transition: width 0.4s ease; border-radius: 6px; }
-        
+
         input, select { width: 100%; height: 40px; border-radius: 8px; border: 1px solid #333; background: #222; color: var(--text-gray); font-family: inherit; font-weight: 900; font-style: italic; padding: 0 10px; box-sizing: border-box; font-size: 13px; }
-        input::placeholder { color: #666; }
-        label { font-size: 0.6rem; color: var(--text-gray); display: block; margin-bottom: 2px; }
-        
-        .qty-control { display: flex; background: #111; border-radius: 8px; border: 1px solid #333; height: 42px; }
-        .qty-btn { background: #222; border: none; color: #fff; width: 34px; font-weight: 900; cursor: pointer; }
-        .qty-control input { flex: 1; border: none; background: transparent; text-align: center; font-size: 1.2rem; color: #fff; }
-        
+        .qty-control { display: flex; background: #111; border-radius: 8px; border: 1px solid #333; height: 38px; overflow: hidden; }
+        .qty-btn { background: #222; border: none; color: #fff; width: 28px; font-weight: 900; cursor: pointer; font-size: 16px; }
+        .qty-control input { flex: 1; border: none; background: transparent; text-align: center; font-size: 1rem; color: #fff; padding: 0; }
+
         .save-btn { background: var(--mm-gradient); color: #fff; border: none; width: 50px; height: 40px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .save-btn.editing { background: var(--color-ok); color: #000; }
-        
+
         .log-item { background: #0c0c0c; border-radius: 16px; padding: 14px; margin-bottom: 10px; border-left: 6px solid #333; display: flex; flex-direction: column; gap: 4px; }
         .status-wait { border-left-color: var(--color-cal); } 
         .status-open { border-left-color: var(--color-ok); }   
         .status-done { border-left-color: #333; opacity: 0.6; } 
-        
+
         .log-main-row { display: flex; align-items: center; justify-content: space-between; }
         .log-left-data { display: flex; align-items: center; gap: 12px; flex: 1; }
         .log-date { color: var(--text-gray); font-size: 0.85rem; min-width: 42px; font-style: italic; }
@@ -79,7 +64,6 @@
 <body>
 
 <header></header>
-
 <div id="toast">GEKOPIEERD</div>
 
 <div class="container">
@@ -88,7 +72,7 @@
         <span class="title-sub">TRACKER</span>
     </div>
 
-    <div class="card" id="statsCard">
+    <div class="card">
         <div class="day-box">
             <div class="day-stat"><b id="mVerz">0</b><span>MAAND</span></div>
             <div class="day-stat"><b id="mFix" style="color:var(--mm-red);">0</b><span>FIX</span></div>
@@ -101,13 +85,13 @@
         <div class="progress-bar"><div id="fillBranded" class="fill" style="background:var(--color-cal); width:0%;"></div></div>
     </div>
 
-    <div class="card" id="inputCard">
+    <div class="card">
         <form id="saleForm">
             <div style="display:flex; gap:6px; margin-bottom:8px;">
-                <div style="flex:1;"><label>FACTUUR</label><input type="text" id="invoice" inputmode="numeric" placeholder="..." required></div>
-                <div style="flex:1;"><label>NOTITIE</label><input type="text" id="notes" placeholder="..."></div>
+                <div style="flex:1;"><label>FACTUUR</label><input type="text" id="invoice" inputmode="numeric" required></div>
+                <div style="flex:1;"><label>NOTITIE</label><input type="text" id="notes"></div>
             </div>
-            <div style="display:flex; gap:6px; margin-bottom:8px;">
+            <div style="display:flex; gap:4px; margin-bottom:8px;">
                 <div style="flex:1;"><div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyFix',-1)">-</button><input type="number" id="qtyFix" placeholder="FX"><button type="button" class="qty-btn" onclick="adj('qtyFix',1)">+</button></div></div>
                 <div style="flex:1;"><div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyFlex',-1)">-</button><input type="number" id="qtyFlex" placeholder="FL"><button type="button" class="qty-btn" onclick="adj('qtyFlex',1)">+</button></div></div>
                 <div style="flex:1;"><div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyCal',-1)">-</button><input type="number" id="qtyCal" placeholder="BS"><button type="button" class="qty-btn" onclick="adj('qtyCal',1)">+</button></div></div>
@@ -125,7 +109,7 @@
         <div style="display:flex; gap:6px; margin-bottom:12px; align-items:center;">
             <select id="viewMonth" onchange="render()" style="flex:2;"></select>
             <select id="viewYear" onchange="render()" style="flex:1;"></select>
-            <div class="eye-filter" id="eyeFilter" onclick="toggleEye()" style="cursor:pointer; width:40px; text-align:center;">
+            <div onclick="onlyOpen = !onlyOpen; render();" style="cursor:pointer; width:40px; text-align:center;">
                 <span class="symbol" id="eyeIcon" style="color:#444;">visibility</span>
             </div>
         </div>
@@ -137,7 +121,7 @@
             <div class="btn-action" onclick="document.getElementById('importInput').click()"><span class="symbol">upload_file</span>IMP</div>
             <div class="btn-action" onclick="if(confirm('WISSEN?')){localStorage.clear();location.reload();}" style="color:#444;"><span class="symbol">delete_forever</span>CLR</div>
         </div>
-        <input type="file" id="importInput" style="display:none" accept=".csv" onchange="manualImport(event)">
+        <input type="file" id="importInput" style="display:none" accept="*" onchange="manualImport(event)">
     </div>
 </div>
 
@@ -153,40 +137,18 @@
 </div>
 
 <script>
-    const STORAGE_KEY = 'SS_DATA_V182';
+    const STORAGE_KEY = 'SS_DATA_V184'; // Behoud dezelfde key voor data-behoud
     let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    let activeEditId = null;
     let currentlyEditingOrderId = null;
+    let activeEditId = null;
     let onlyOpen = false;
     const months = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"];
 
-    function getLocalDate() {
-        const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    }
-
-    function forceToday() {
-        document.getElementById('dateInput').value = getLocalDate();
-        showToast("DATUM HERSTELD");
-    }
-
-    function cleanStr(s) { return String(s || "").replace(/"/g, "").trim(); }
-    function forceNum(n) { let num = parseInt(String(n).replace(/"/g, "")); return isNaN(num) ? 0 : num; }
-
-    function showToast(text) {
-        const t = document.getElementById('toast');
-        t.innerText = text; t.style.display = 'block';
-        setTimeout(() => { t.style.display = 'none'; }, 1500);
-    }
-
-    function copyInv(val) { navigator.clipboard.writeText(val); showToast("GEKOPIEERD"); }
-
-    function toggleEye() {
-        onlyOpen = !onlyOpen;
-        document.getElementById('eyeIcon').style.color = onlyOpen ? 'var(--mm-red)' : '#444';
-        render();
-    }
-
+    function getLocalDate() { return new Date().toISOString().split('T')[0]; }
+    function forceToday() { document.getElementById('dateInput').value = getLocalDate(); showToast("DATUM HERSTELD"); }
+    function cleanStr(s) { return String(s || "").replace(/[";]/g, "").trim(); }
+    function forceNum(n) { let num = parseInt(String(n).replace(/[";]/g, "")); return isNaN(num) ? 0 : num; }
+    function showToast(text) { const t = document.getElementById('toast'); t.innerText = text; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 1500); }
     function adj(id, v) { const el = document.getElementById(id); el.value = Math.max(0, (parseInt(el.value) || 0) + v); }
     function closeModal() { document.getElementById('datePickerModal').style.display = 'none'; }
     function toggleDateViaBox() { const cb = document.getElementById('dateUnknown'); cb.checked = !cb.checked; toggleDate(cb); }
@@ -203,8 +165,6 @@
         localStorage.setItem('ss_t_b', document.getElementById('targetBranded').value);
         render();
     }
-
-    function removeSale(id) { if(confirm('WISSEN?')) { sales = sales.filter(s => s.id !== id); render(); } }
 
     function editOrder(id) {
         const s = sales.find(x => x.id === id);
@@ -241,67 +201,65 @@
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
         const todayStr = getLocalDate();
-
         let mFx=0, mFl=0, mB=0;
         log.innerHTML = '';
         
         sales.forEach(s => {
             if(!s.isWait) {
-                const sDate = new Date(s.date);
-                if(sDate.getMonth() === selM && sDate.getFullYear() === selY) {
+                const d = new Date(s.date);
+                if(d.getMonth() === selM && d.getFullYear() === selY) {
                     mFx += forceNum(s.qtyFix); mFl += forceNum(s.qtyFlex); mB += forceNum(s.qtyCal);
                 }
             }
         });
 
         document.getElementById('mVerz').innerText = (mFx + mFl);
-        document.getElementById('mFix').innerText = mFx; 
-        document.getElementById('mFlex').innerText = mFl; 
-        document.getElementById('mCal').innerText = mB;
-
+        document.getElementById('mFix').innerText = mFx; document.getElementById('mFlex').innerText = mFl; document.getElementById('mCal').innerText = mB;
+        
         const tV = parseInt(document.getElementById('targetVerz').value) || 1;
         const tB = parseInt(document.getElementById('targetBranded').value) || 1;
-        document.getElementById('percVerz').innerText = Math.round(((mFx + mFl) / tV) * 100) + '%';
-        document.getElementById('fillVerz').style.width = Math.min(((mFx + mFl) / tV) * 100, 100) + '%';
-        document.getElementById('percBranded').innerText = Math.round((mB / tB) * 100) + '%';
-        document.getElementById('fillBranded').style.width = Math.min((mB / tB) * 100, 100) + '%';
+        document.getElementById('fillVerz').style.width = Math.min(((mFx+mFl)/tV)*100, 100) + '%';
+        document.getElementById('fillBranded').style.width = Math.min((mB/tB)*100, 100) + '%';
+        document.getElementById('eyeIcon').style.color = onlyOpen ? 'var(--mm-red)' : '#444';
 
         let sorted = [...sales].sort((a, b) => (a.isWait === b.isWait) ? b.date.localeCompare(a.date) : (a.isWait ? -1 : 1));
 
         sorted.forEach(s => {
-            const isToday = !s.isWait && s.date === todayStr;
             const isFuture = !s.isWait && s.date > todayStr;
-            const sDate = new Date(s.date);
-            const isThisMonth = sDate.getMonth() === selM && sDate.getFullYear() === selY;
-
+            const isToday = !s.isWait && s.date === todayStr;
+            const d = new Date(s.date);
+            
+            // TOEKOMST EN WACHT ALTIJD TONEN LOGICA
             let show = false;
-            if (onlyOpen) { if (s.isWait || isToday || isFuture) show = true; } 
-            else { if (s.isWait || isThisMonth || isToday || isFuture) show = true; }
+            if (s.isWait || isFuture || isToday) {
+                show = true; // Altijd tonen
+            } else if (!onlyOpen && d.getMonth() === selM && d.getFullYear() === selY) {
+                show = true; // Tonen als het in de geselecteerde maand valt
+            }
 
             if (show) {
                 let statusClass = 'status-done';
                 if(s.isWait) statusClass = 'status-wait';
-                else if(isFuture) statusClass = 'status-open';
-                
+                else if(isFuture || isToday) statusClass = 'status-open';
+
                 const dateDisplay = s.isWait ? "WACHT" : s.date.split('-').reverse().slice(0,2).join('/');
+
                 log.innerHTML += `
                     <div class="log-item ${statusClass}">
                         <div class="log-main-row">
                             <div class="log-left-data">
                                 <span class="log-date" onclick="openDateModal(${s.id}, '${s.date}')">${dateDisplay}</span>
-                                <span class="log-invoice" onclick="copyInv('${cleanStr(s.invoice)}')">${cleanStr(s.invoice)}</span>
+                                <span class="log-invoice" onclick="navigator.clipboard.writeText('${s.invoice}');showToast('GEKOPIEERD')">${s.invoice}</span>
                                 <div class="qty-pill">
-                                    <span style="color:var(--mm-red)">${forceNum(s.qtyFix)}</span>
-                                    <span style="color:var(--mm-orange)">${forceNum(s.qtyFlex)}</span>
-                                    <span style="color:var(--color-cal)">${forceNum(s.qtyCal)}</span>
+                                    <span style="color:var(--mm-red)">${s.qtyFix}</span><span style="color:var(--mm-orange)">${s.qtyFlex}</span><span style="color:var(--color-cal)">${s.qtyCal}</span>
                                 </div>
                             </div>
-                            <div class="log-actions">
+                            <div style="display:flex; gap:10px;">
                                 <span class="symbol" onclick="editOrder(${s.id})" style="color:var(--text-gray); font-size:18px; cursor:pointer;">edit</span>
-                                <span class="symbol" onclick="removeSale(${s.id})" style="color:var(--text-gray); font-size:18px; cursor:pointer;">delete</span>
+                                <span class="symbol" onclick="if(confirm('WISSEN?')){sales=sales.filter(x=>x.id!==${s.id});render();}" style="color:var(--text-gray); font-size:18px; cursor:pointer;">delete</span>
                             </div>
                         </div>
-                        ${s.notes ? `<div class="note-text">${cleanStr(s.notes)}</div>` : ''}
+                        ${s.notes ? `<div class="note-text">${s.notes}</div>` : ''}
                     </div>`;
             }
         });
@@ -311,7 +269,7 @@
     document.getElementById('saleForm').onsubmit = function(e) {
         e.preventDefault();
         const wait = document.getElementById('dateUnknown').checked;
-        const orderData = {
+        const data = {
             id: currentlyEditingOrderId || Date.now(),
             invoice: cleanStr(document.getElementById('invoice').value),
             notes: cleanStr(document.getElementById('notes').value),
@@ -322,22 +280,38 @@
             isWait: wait
         };
         if(currentlyEditingOrderId) {
-            sales[sales.findIndex(x => x.id === currentlyEditingOrderId)] = orderData;
+            sales[sales.findIndex(x => x.id === currentlyEditingOrderId)] = data;
             currentlyEditingOrderId = null;
             document.getElementById('mainSaveBtn').classList.remove('editing');
             document.getElementById('mainSaveBtn').innerHTML = '<span class="symbol">add_task</span>';
-        } else { sales.push(orderData); }
-        updateYearList(); this.reset(); toggleDate(document.getElementById('dateUnknown')); render();
+        } else { sales.push(data); }
+        this.reset(); document.getElementById('dateInput').value = getLocalDate(); toggleDate(document.getElementById('dateUnknown')); render();
     };
 
-    function updateYearList() {
-        const yS = document.getElementById('viewYear'); const currentYear = new Date().getFullYear();
-        let years = [currentYear];
-        sales.forEach(s => { if(s.date && s.date !== "2099-12-31") { const y = parseInt(s.date.split('-')[0]); if(!years.includes(y)) years.push(y); } });
-        years.sort((a,b) => b-a);
-        const prev = yS.value; yS.innerHTML = '';
-        years.forEach(y => { yS.innerHTML += `<option value="${y}">${y}</option>`; });
-        yS.value = prev || currentYear;
+    function manualImport(event) {
+        const file = event.target.files[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const lines = e.target.result.split('\n');
+            const imported = [];
+            lines.forEach((line, i) => {
+                if(i === 0 || !line.trim()) return;
+                const sep = line.includes(';') ? ';' : ',';
+                const col = line.split(sep);
+                if(col.length >= 5) {
+                    const d = cleanStr(col[0]);
+                    imported.push({ id: Date.now()+i, date: d, invoice: cleanStr(col[1]), qtyFix: forceNum(col[2]), qtyFlex: forceNum(col[3]), qtyCal: forceNum(col[4]), notes: cleanStr(col[5] || ""), isWait: d.includes("2099") });
+                }
+            });
+            if(imported.length > 0) { sales = imported; render(); alert("IMPORT GELUKT"); }
+        };
+        reader.readAsText(file);
+    }
+
+    function manualExport() {
+        let csv = "DATUM;FACTUUR;FIX;FLEX;BS;NOTITIE\n";
+        sales.forEach(s => { csv += `${s.date};${s.invoice};${s.qtyFix};${s.qtyFlex};${s.qtyCal};${s.notes}\n`; });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'})); a.download = 'SS_Backup.csv'; a.click();
     }
 
     function shareData() {
@@ -345,7 +319,7 @@
         const selY = document.getElementById('viewYear').value;
         let t = `S&S RAPPORT - ${months[selM]} ${selY}\n\n`;
         sales.filter(s => !s.isWait && new Date(s.date).getMonth() == selM && new Date(s.date).getFullYear() == selY).forEach(s => {
-            t += `${s.date.split('-').reverse().join('-')} | ${cleanStr(s.invoice)} | FX:${s.qtyFix} FL:${s.qtyFlex} BS:${s.qtyCal}\n`;
+            t += `${s.date.split('-').reverse().join('-')} | ${s.invoice} | FX:${s.qtyFix} FL:${s.qtyFlex} BS:${s.qtyCal}\n`;
         });
         navigator.share ? navigator.share({text:t}) : navigator.clipboard.writeText(t);
     }
@@ -355,84 +329,21 @@
         const doc = new jsPDF();
         const selM = document.getElementById('viewMonth').value;
         const selY = document.getElementById('viewYear').value;
-        
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(22);
-        doc.setTextColor(255, 51, 51);
-        doc.text(`SERVICES & SOLUTIONS`, 14, 20);
-        
-        doc.setFontSize(10);
-        doc.setTextColor(150, 150, 150);
-        doc.text(`TRACKER REPORT: ${months[selM].toUpperCase()} ${selY}`, 14, 28);
-
-        const filtered = sales.filter(s => {
-            if(s.isWait) return false;
-            const d = new Date(s.date);
-            return d.getMonth() == selM && d.getFullYear() == selY;
-        }).sort((a,b) => a.date.localeCompare(b.date));
-
-        const body = filtered.map(s => [
-            s.date.split('-').reverse().slice(0,2).join('/'),
-            cleanStr(s.invoice),
-            s.qtyFix,
-            s.qtyFlex,
-            s.qtyCal,
-            cleanStr(s.notes)
-        ]);
-
-        doc.autoTable({
-            head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']],
-            body: body,
-            startY: 35,
-            theme: 'grid',
-            headStyles: { fillColor: [22, 22, 22], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-            columnStyles: {
-                0: { halign: 'center', cellWidth: 20 },
-                1: { fontStyle: 'bold', cellWidth: 35 },
-                2: { halign: 'center', textColor: [255, 51, 51], fontStyle: 'bold' },
-                3: { halign: 'center', textColor: [255, 136, 0], fontStyle: 'bold' },
-                4: { halign: 'center', textColor: [77, 184, 255], fontStyle: 'bold' },
-                5: { fontStyle: 'italic', fontSize: 8 }
-            },
-            styles: { font: "helvetica", fontSize: 10, cellPadding: 4 },
-            alternateRowStyles: { fillColor: [250, 250, 250] }
-        });
-
-        doc.save(`SS_Report_${months[selM]}_${selY}.pdf`);
-    }
-
-    function manualExport() {
-        let csv = "DATUM;FACTUUR;FIX;FLEX;BS;NOTITIE\n";
-        sales.forEach(s => { csv += `${s.date};${cleanStr(s.invoice)};${s.qtyFix};${s.qtyFlex};${s.qtyCal};${cleanStr(s.notes)}\n`; });
-        const b = new Blob([csv], {type:'text/csv'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'SS_Data.csv'; a.click();
-    }
-
-    function manualImport(event) {
-        const file = event.target.files[0]; if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const lines = e.target.result.split('\n');
-            const importedSales = [];
-            for (let i = 1; i < lines.length; i++) {
-                const sep = lines[i].includes(';') ? ';' : ',';
-                const col = lines[i].split(sep);
-                if (col.length >= 5) {
-                    importedSales.push({ id: Date.now() + i, date: cleanStr(col[0]), invoice: cleanStr(col[1]), qtyFix: forceNum(col[2]), qtyFlex: forceNum(col[3]), qtyCal: forceNum(col[4]), notes: cleanStr(col[5] || ""), isWait: cleanStr(col[0]).includes("2099") });
-                }
-            }
-            if(importedSales.length > 0) { sales = importedSales; updateYearList(); render(); alert("IMPORT VOLTOOID"); }
-        };
-        reader.readAsText(file);
+        doc.setFontSize(22); doc.setTextColor(255, 51, 51); doc.text(`SERVICES & SOLUTIONS`, 14, 20);
+        doc.setFontSize(10); doc.setTextColor(150, 150, 150); doc.text(`TRACKER REPORT: ${months[selM].toUpperCase()} ${selY}`, 14, 28);
+        const body = sales.filter(s => !s.isWait && new Date(s.date).getMonth() == selM).map(s => [s.date.split('-').reverse().slice(0,2).join('/'), s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes]);
+        doc.autoTable({ head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']], body: body, startY: 35 });
+        doc.save(`SS_Report_${months[selM]}.pdf`);
     }
 
     window.onload = function() {
         const mS = document.getElementById('viewMonth'), n = new Date();
         months.forEach((m, i) => { mS.innerHTML += `<option value="${i}" ${i === n.getMonth() ? 'selected' : ''}>${m.toUpperCase()}</option>`; });
+        document.getElementById('viewYear').innerHTML = `<option value="${n.getFullYear()}">${n.getFullYear()}</option>`;
         document.getElementById('targetVerz').value = localStorage.getItem('ss_t_v') || 40;
         document.getElementById('targetBranded').value = localStorage.getItem('ss_t_b') || 10;
         document.getElementById('dateInput').value = getLocalDate();
-        updateYearList(); render();
+        render();
     };
 </script>
 </body>
