@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>S&S Tracker V192</title>
+    <title>S&S Tracker V193</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -27,7 +27,6 @@
         .day-stat b { display: block; font-size: 1.1rem; }
         .day-stat span { font-size: 0.55rem; color: var(--text-gray); }
 
-        /* Grotere tekst voor doelen */
         .target-row { display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.85rem; margin-bottom: 6px; color: var(--text-gray); }
         .target-input-clean { background: #000; border: 1px solid #333; color: var(--text-gray); width: 60px; height: 26px; border-radius: 4px; text-align: center; font-family: inherit; font-weight: 900; font-size: 12px; }
         
@@ -53,10 +52,21 @@
         .search-container input { padding-left: 35px; border-color: #333; color: #fff; height: 36px; font-size: 11px; }
         .search-icon { position: absolute; left: 10px; top: 9px; color: var(--text-gray); font-size: 18px; }
 
-        .log-item { background: #0c0c0c; border-radius: 16px; padding: 14px; margin-bottom: 10px; border-left: 6px solid #333; display: flex; flex-direction: column; gap: 4px; }
-        .status-wait { border-left-color: var(--color-cal); } 
-        .status-open { border-left-color: var(--color-ok); }   
-        .status-done { border-left-color: #333; opacity: 0.6; } 
+        /* Symmetrische randen links en rechts */
+        .log-item { 
+            background: #0c0c0c; 
+            border-radius: 16px; 
+            padding: 14px; 
+            margin-bottom: 10px; 
+            border-left: 6px solid #333; 
+            border-right: 6px solid #333; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+        }
+        .status-wait { border-left-color: var(--color-cal); border-right-color: var(--color-cal); } 
+        .status-open { border-left-color: var(--color-ok); border-right-color: var(--color-ok); }   
+        .status-done { border-left-color: #333; border-right-color: #333; opacity: 0.6; } 
 
         .log-main-row { display: flex; align-items: center; justify-content: space-between; }
         .log-left-data { display: flex; align-items: center; gap: 12px; flex: 1; }
@@ -250,7 +260,6 @@
         const tV = parseInt(document.getElementById('targetVerz').value) || 1;
         const tB = parseInt(document.getElementById('targetBranded').value) || 1;
 
-        // Correcte percentage berekening en update naar UI
         const pV = Math.round((totaalVzk / tV) * 100);
         const pB = Math.round((mB / tB) * 100);
         
