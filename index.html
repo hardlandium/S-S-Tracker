@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>S&S Tracker V224</title>
+    <title>S&S Tracker V226</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -73,7 +73,7 @@
 
         .log-main-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
         .log-left-data { display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden; }
-        .log-date-col { width: 42px; flex-shrink: 0; display: flex; align-items: center; }
+        .log-date-col { width: 42px; flex-shrink: 0; display: flex; align-items: center; cursor: pointer; }
         .log-date-text { color: var(--text-gray); font-size: 0.75rem; }
         .log-invoice { font-size: 0.9rem; color: #fff; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .qty-pill { background: #000; padding: 2px 6px; border-radius: 6px; border: 1px solid #1a1a1a; display: grid; grid-template-columns: repeat(3, 20px); gap: 4px; text-align: center; font-size: 0.8rem; flex-shrink: 0; }
@@ -169,7 +169,7 @@
 
 <div id="datePickerModal">
     <div style="background:#161616; padding:20px; border-radius:16px; border:1px solid #333; width:80%; max-width:300px; text-align:center;">
-        <label style="color:var(--mm-red); margin-bottom:10px; display:block;">DATUM WIJZIGEN</label>
+        <label style="color:var(--mm-red); margin-bottom:10px; display:block;">STATUS WIJZIGEN</label>
         <input type="date" id="modalDateInput" style="margin-bottom:15px;">
         <div style="display:flex; gap:10px;">
             <button onclick="document.getElementById('datePickerModal').style.display='none'" style="flex:1; background:#333; color:#fff; border:none; height:40px; border-radius:8px;">STOP</button>
@@ -206,6 +206,13 @@
         render();
     }
 
+    function openQuickDate(id) {
+        editId = id;
+        const s = sales.find(x => x.id === id);
+        document.getElementById('modalDateInput').value = s.isWait ? getLocalDate() : s.date;
+        document.getElementById('datePickerModal').style.display = 'flex';
+    }
+
     function startEdit(id) {
         const s = sales.find(x => x.id === id);
         if(!s) return;
@@ -236,67 +243,26 @@
         const selM = parseInt(document.getElementById('viewMonth').value), selY = parseInt(document.getElementById('viewYear').value);
         const tV = parseInt(document.getElementById('targetVerz').value) || 0;
         const tB = parseInt(document.getElementById('targetBranded').value) || 0;
-        
         let filtered = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
         let mFx=0, mFl=0, mB=0;
-        
         const rows = filtered.sort((a,b) => a.date.localeCompare(b.date)).map(s => {
             mFx += (parseInt(s.qtyFix)||0); mFl += (parseInt(s.qtyFlex)||0); mB += (parseInt(s.qtyCal)||0);
             return [s.date.split('-').reverse().join('/'), s.invoice, s.qtyFix||0, s.qtyFlex||0, s.qtyCal||0, s.notes||''];
         });
-
-        const pV = tV > 0 ? Math.round(((mFx + mFl) / tV) * 100) : 0;
-        const pB = tB > 0 ? Math.round((mB / tB) * 100) : 0;
-
-        // Dark Background voor PDF
-        doc.setFillColor(0, 0, 0);
-        doc.rect(0, 0, 210, 297, 'F');
-
-        doc.setFont("helvetica", "bolditalic");
-        doc.setFontSize(22);
-        doc.setTextColor(255, 51, 51); // mm-red
-        doc.text(`S&S RAPPORT`, 14, 20);
-        
-        doc.setFontSize(14);
-        doc.setTextColor(153, 153, 153); // text-gray
-        doc.text(`${months[selM].toUpperCase()} ${selY}`, 14, 28);
-        
-        // Progress Labels in App Style
-        doc.setFontSize(11);
-        doc.setTextColor(255, 51, 51); // Rood
-        doc.text(`VZK VOORTGANG: ${mFx + mFl} / ${tV} (${pV}%)`, 14, 40);
-        
-        doc.setTextColor(77, 184, 255); // Blauw
-        doc.text(`BS VOORTGANG: ${mB} / ${tB} (${pB}%)`, 14, 47);
-
+        const pV = tV > 0 ? Math.round(((mFx + mFl) / tV) * 100) : 0, pB = tB > 0 ? Math.round((mB / tB) * 100) : 0;
+        doc.setFillColor(0, 0, 0); doc.rect(0, 0, 210, 297, 'F');
+        doc.setFont("helvetica", "bolditalic"); doc.setFontSize(22); doc.setTextColor(255, 51, 51); doc.text(`S&S RAPPORT`, 14, 20);
+        doc.setFontSize(14); doc.setTextColor(153, 153, 153); doc.text(`${months[selM].toUpperCase()} ${selY}`, 14, 28);
+        doc.setFontSize(11); doc.setTextColor(255, 51, 51); doc.text(`VZK VOORTGANG: ${mFx + mFl} / ${tV} (${pV}%)`, 14, 40);
+        doc.setTextColor(77, 184, 255); doc.text(`BS VOORTGANG: ${mB} / ${tB} (${pB}%)`, 14, 47);
         doc.autoTable({ 
-            startY: 55, 
-            head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']], 
-            body: rows, 
-            foot: [['', 'TOTALEN', mFx, mFl, mB, '']], 
-            theme: 'grid', 
-            styles: {
-                fillColor: [22, 22, 22],
-                textColor: [255, 255, 255],
-                lineColor: [40, 40, 40],
-                font: 'helvetica',
-                fontStyle: 'bolditalic'
-            },
-            headStyles: {
-                fillColor: [255, 51, 51],
-                textColor: [255, 255, 255]
-            },
-            footStyles: {
-                fillColor: [0, 0, 0],
-                textColor: [255, 255, 255]
-            },
-            alternateRowStyles: {
-                fillColor: [15, 15, 15]
-            }
+            startY: 55, head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']], body: rows, foot: [['', 'TOTALEN', mFx, mFl, mB, '']], theme: 'grid', 
+            styles: { fillColor: [22, 22, 22], textColor: [255, 255, 255], lineColor: [40, 40, 40], font: 'helvetica', fontStyle: 'bolditalic' },
+            headStyles: { fillColor: [255, 51, 51], textColor: [255, 255, 255] },
+            footStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] },
+            alternateRowStyles: { fillColor: [15, 15, 15] }
         });
-
-        const fileName = `SS-Rapport-${months[selM]}-${selY}.pdf`;
-        const pdfBlob = doc.output('blob');
+        const fileName = `SS-Rapport-${months[selM]}-${selY}.pdf`, pdfBlob = doc.output('blob');
         if (navigator.canShare && navigator.canShare({ files: [new File([pdfBlob], fileName, { type: 'application/pdf' })] })) {
             try { await navigator.share({ files: [new File([pdfBlob], fileName, { type: 'application/pdf' })], title: fileName }); } catch (err) { doc.save(fileName); }
         } else { doc.save(fileName); showToast("GEDOWNLOAD"); }
@@ -309,7 +275,7 @@
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `SS_Backup_${getLocalDate()}.csv`; a.click();
     }
 
-    function manualImport(e) {
+    function manualImport(event) {
         const reader = new FileReader();
         reader.onload = function() {
             const rows = reader.result.split('\n').slice(1);
@@ -319,7 +285,7 @@
             });
             render();
         };
-        reader.readAsText(e.target.files[0]);
+        reader.readAsText(event.target.files[0]);
     }
 
     function confirmDateChange() {
@@ -338,31 +304,11 @@
         document.getElementById('percVerz').innerText = pV + '%'; document.getElementById('percBranded').innerText = pB + '%';
         document.getElementById('fillVerz').style.width = Math.min(pV, 100) + '%'; document.getElementById('fillBranded').style.width = Math.min(pB, 100) + '%';
         document.getElementById('eyeIcon').style.color = onlyOpen ? 'var(--mm-red)' : '#444';
-
         [...sales].sort((a,b) => (a.isWait === b.isWait) ? b.date.localeCompare(a.date) : (a.isWait ? -1 : 1)).forEach(s => {
             const isFuture = !s.isWait && s.date > todayStr, d = new Date(s.date), matchesSearch = s.invoice.toLowerCase().includes(search) || s.notes.toLowerCase().includes(search);
             const statusClass = s.isWait ? 'status-wait' : (isFuture ? 'status-open' : 'status-done');
-            
             if (matchesSearch && (s.isWait || isFuture || (!onlyOpen && d.getMonth() === selM && d.getFullYear() === selY))) {
-                log.innerHTML += `
-                    <div class="log-item ${statusClass}">
-                        <div class="log-main-row">
-                            <div class="log-left-data">
-                                <div class="log-date-col" onclick="editId=${s.id};document.getElementById('modalDateInput').value=(sales.find(x=>x.id===${s.id}).isWait?'':sales.find(x=>x.id===${s.id}).date);document.getElementById('datePickerModal').style.display='flex'">
-                                    ${s.isWait?'<span class="symbol" style="color:var(--color-cal);font-size:18px">calendar_today</span>':`<span class="log-date-text">${s.date.split('-').reverse().slice(0,2).join('/')}</span>`}
-                                </div>
-                                <span class="log-invoice" onclick="navigator.clipboard.writeText('${s.invoice}');showToast('GEKOPIEERD')">${s.invoice}</span>
-                                <div class="qty-pill">
-                                    <span style="color:var(--mm-red)">${s.qtyFix||0}</span><span style="color:var(--mm-orange)">${s.qtyFlex||0}</span><span style="color:var(--color-cal)">${s.qtyCal||0}</span>
-                                </div>
-                            </div>
-                            <div class="action-icons">
-                                <span class="symbol" onclick="startEdit(${s.id})">edit</span>
-                                <span class="symbol" onclick="confirmDelete(${s.id})">delete</span>
-                            </div>
-                        </div>
-                        ${s.notes ? `<div class="note-text">${s.notes}</div>` : ''}
-                    </div>`;
+                log.innerHTML += `<div class="log-item ${statusClass}"><div class="log-main-row"><div class="log-left-data"><div class="log-date-col" onclick="openQuickDate(${s.id})">${s.isWait?'<span class="symbol" style="color:var(--color-cal);font-size:18px">calendar_today</span>':`<span class="log-date-text">${s.date.split('-').reverse().slice(0,2).join('/')}</span>`}</div><span class="log-invoice" onclick="navigator.clipboard.writeText('${s.invoice}');showToast('GEKOPIEERD')">${s.invoice}</span><div class="qty-pill"><span style="color:var(--mm-red)">${s.qtyFix||0}</span><span style="color:var(--mm-orange)">${s.qtyFlex||0}</span><span style="color:var(--color-cal)">${s.qtyCal||0}</span></div></div><div class="action-icons"><span class="symbol" onclick="startEdit(${s.id})">edit</span><span class="symbol" onclick="confirmDelete(${s.id})">delete</span></div></div>${s.notes ? `<div class="note-text">${s.notes}</div>` : ''}</div>`;
             }
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
@@ -370,28 +316,30 @@
 
     document.getElementById('saleForm').onsubmit = function(e) {
         e.preventDefault();
-        const wait = document.getElementById('dateUnknown').checked;
-        const invNum = document.getElementById('invoice').value.trim();
+        const wait = document.getElementById('dateUnknown').checked, invNum = document.getElementById('invoice').value.trim();
         if(editId && !confirm(`WIJZIGINGEN OPSLAAN VOOR ORDER ${invNum}?`)) return;
-        const data = {
-            id: editId || Date.now(),
-            invoice: invNum,
-            notes: document.getElementById('notes').value.trim(),
-            qtyFix: document.getElementById('qtyFix').value,
-            qtyFlex: document.getElementById('qtyFlex').value,
-            qtyCal: document.getElementById('qtyCal').value,
-            date: wait ? "2099-12-31" : document.getElementById('dateInput').value,
-            isWait: wait
-        };
+        const data = { id: editId || Date.now(), invoice: invNum, notes: document.getElementById('notes').value.trim(), qtyFix: document.getElementById('qtyFix').value, qtyFlex: document.getElementById('qtyFlex').value, qtyCal: document.getElementById('qtyCal').value, date: wait ? "2099-12-31" : document.getElementById('dateInput').value, isWait: wait };
         if(editId) { sales = sales.map(x => x.id === editId ? data : x); editId = null; document.getElementById('mainSubmitBtn').innerHTML = `OPSLAAN <span class="symbol">send</span>`; }
         else { sales.push(data); }
         this.reset(); document.getElementById('dateInput').value = getLocalDate(); toggleDate(document.getElementById('dateUnknown')); render();
     };
 
     window.onload = function() {
-        const mS = document.getElementById('viewMonth'), n = new Date();
+        const mS = document.getElementById('viewMonth'), yS = document.getElementById('viewYear'), n = new Date();
+        const currentYear = n.getFullYear();
+        
+        // Vul maanden en selecteer huidige
         months.forEach((m, i) => { mS.innerHTML += `<option value="${i}" ${i === n.getMonth() ? 'selected' : ''}>${m.toUpperCase()}</option>`; });
-        document.getElementById('viewYear').innerHTML = `<option value="${n.getFullYear()}">${n.getFullYear()}</option>`;
+        
+        // Verzamel alle unieke jaren uit de data + huidige jaar
+        let availableYears = new Set([currentYear]);
+        sales.forEach(s => { if(!s.isWait) availableYears.add(new Date(s.date).getFullYear()); });
+        
+        // Vul jaren dropdown en selecteer huidige jaar
+        [...availableYears].sort((a,b) => b-a).forEach(y => {
+            yS.innerHTML += `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`;
+        });
+
         document.getElementById('targetVerz').value = localStorage.getItem('ss_t_v') || 40;
         document.getElementById('targetBranded').value = localStorage.getItem('ss_t_b') || 10;
         document.getElementById('dateInput').value = getLocalDate();
