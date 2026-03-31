@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>S&S Tracker V222</title>
+    <title>S&S Tracker V224</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -13,7 +13,6 @@
             --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-gray: #999;
             --color-cal: #4db8ff; --color-ok: #00ff88; --mm-font: 'Arial Black', sans-serif;
             --h-unit: 44px;
-            /* Donkere varianten voor placeholders */
             --ph-red: #661414; --ph-orange: #663a00; --ph-blue: #143a52;
         }
         
@@ -42,7 +41,6 @@
         input, select { width: 100%; height: var(--h-unit); border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; font-family: inherit; font-weight: 900; font-style: italic; padding: 0 10px; box-sizing: border-box; font-size: 12px; }
         ::placeholder { color: var(--text-gray); opacity: 1; }
 
-        /* Gekleurde placeholders */
         #qtyFix::placeholder { color: var(--ph-red); }
         #qtyFlex::placeholder { color: var(--ph-orange); }
         #qtyCal::placeholder { color: var(--ph-blue); }
@@ -52,7 +50,6 @@
         .qty-control input { flex: 1; border: none; background: transparent; text-align: center; font-size: 0.95rem; height: 100%; padding: 0; min-width: 0; }
         
         .input-sub-label { font-size: 0.5rem; color: var(--text-gray); margin-bottom: 4px; display: block; letter-spacing: 0.5px; }
-
         .input-row-bottom { display: flex; gap: 8px; align-items: flex-end; }
         .date-unknown-box { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: var(--h-unit); background: #000; border-radius: 8px; border: 2px solid #333; cursor: pointer; box-sizing: border-box; }
         .date-unknown-box span { font-size: 0.6rem; letter-spacing: 1px; color: var(--text-gray); }
@@ -237,14 +234,67 @@
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         const selM = parseInt(document.getElementById('viewMonth').value), selY = parseInt(document.getElementById('viewYear').value);
+        const tV = parseInt(document.getElementById('targetVerz').value) || 0;
+        const tB = parseInt(document.getElementById('targetBranded').value) || 0;
+        
         let filtered = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
         let mFx=0, mFl=0, mB=0;
+        
         const rows = filtered.sort((a,b) => a.date.localeCompare(b.date)).map(s => {
             mFx += (parseInt(s.qtyFix)||0); mFl += (parseInt(s.qtyFlex)||0); mB += (parseInt(s.qtyCal)||0);
             return [s.date.split('-').reverse().join('/'), s.invoice, s.qtyFix||0, s.qtyFlex||0, s.qtyCal||0, s.notes||''];
         });
-        doc.setFontSize(18); doc.text(`S&S RAPPORT - ${months[selM].toUpperCase()} ${selY}`, 14, 20);
-        doc.autoTable({ startY: 30, head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']], body: rows, foot: [['', 'TOTALEN', mFx, mFl, mB, '']], theme: 'grid', headStyles: {fillColor: [255, 51, 51]} });
+
+        const pV = tV > 0 ? Math.round(((mFx + mFl) / tV) * 100) : 0;
+        const pB = tB > 0 ? Math.round((mB / tB) * 100) : 0;
+
+        // Dark Background voor PDF
+        doc.setFillColor(0, 0, 0);
+        doc.rect(0, 0, 210, 297, 'F');
+
+        doc.setFont("helvetica", "bolditalic");
+        doc.setFontSize(22);
+        doc.setTextColor(255, 51, 51); // mm-red
+        doc.text(`S&S RAPPORT`, 14, 20);
+        
+        doc.setFontSize(14);
+        doc.setTextColor(153, 153, 153); // text-gray
+        doc.text(`${months[selM].toUpperCase()} ${selY}`, 14, 28);
+        
+        // Progress Labels in App Style
+        doc.setFontSize(11);
+        doc.setTextColor(255, 51, 51); // Rood
+        doc.text(`VZK VOORTGANG: ${mFx + mFl} / ${tV} (${pV}%)`, 14, 40);
+        
+        doc.setTextColor(77, 184, 255); // Blauw
+        doc.text(`BS VOORTGANG: ${mB} / ${tB} (${pB}%)`, 14, 47);
+
+        doc.autoTable({ 
+            startY: 55, 
+            head: [['DATUM', 'FACTUUR', 'FIX', 'FLEX', 'BS', 'NOTITIE']], 
+            body: rows, 
+            foot: [['', 'TOTALEN', mFx, mFl, mB, '']], 
+            theme: 'grid', 
+            styles: {
+                fillColor: [22, 22, 22],
+                textColor: [255, 255, 255],
+                lineColor: [40, 40, 40],
+                font: 'helvetica',
+                fontStyle: 'bolditalic'
+            },
+            headStyles: {
+                fillColor: [255, 51, 51],
+                textColor: [255, 255, 255]
+            },
+            footStyles: {
+                fillColor: [0, 0, 0],
+                textColor: [255, 255, 255]
+            },
+            alternateRowStyles: {
+                fillColor: [15, 15, 15]
+            }
+        });
+
         const fileName = `SS-Rapport-${months[selM]}-${selY}.pdf`;
         const pdfBlob = doc.output('blob');
         if (navigator.canShare && navigator.canShare({ files: [new File([pdfBlob], fileName, { type: 'application/pdf' })] })) {
