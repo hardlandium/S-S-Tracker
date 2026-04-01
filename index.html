@@ -26,11 +26,17 @@
         .logo-card { text-align: center; padding: 10px; border-bottom: 2px solid var(--mm-red); }
         .logo-card .title-main { color: var(--mm-red); font-size: 1.2rem; }
         
-        .target-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.65rem; margin-bottom: 6px; color: var(--text-gray); }
-        .target-input-clean { background: #000; border: 1px solid #333; color: var(--text-gray); width: 50px; height: 22px; border-radius: 4px; text-align: center; font-family: inherit; font-size: 11px; font-style: italic; }
-        .progress-bar { width: 100%; height: 16px; background: #222; border-radius: 4px; overflow: hidden; border: 1px solid #333; position: relative; }
-        .fill { height: 100%; transition: width 0.4s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; box-sizing: border-box; }
-        .perc-text { font-size: 0.65rem; color: #fff; text-shadow: 1px 1px 2px #000; }
+        /* DASHBOARD UITLIJNING */
+        .progress-container { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .progress-bar-wrapper { flex: 1; height: 30px; background: #111; border-radius: 6px; overflow: hidden; border: 1px solid #333; position: relative; display: flex; align-items: center; }
+        
+        .fill { height: 100%; transition: width 0.4s ease; position: absolute; left: 0; top: 0; z-index: 1; border-right: 1px solid rgba(255,255,255,0.2); }
+        
+        .bar-label-left { position: absolute; left: 10px; z-index: 2; font-size: 0.55rem; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; white-space: nowrap; }
+        .bar-label-right { position: absolute; right: 10px; z-index: 2; font-size: 0.55rem; color: #fff; text-shadow: 1px 1px 2px #000; text-align: right; pointer-events: none; }
+        
+        .target-input-clean { background: #000; border: 1px solid #444; color: var(--text-gray); width: 55px; height: 30px; border-radius: 6px; text-align: center; font-family: inherit; font-size: 11px; font-style: italic; }
+        .target-input-clean:focus { border-color: var(--mm-red); outline: none; color: #fff; }
 
         input, select { width: 100%; height: var(--h-unit); border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; padding: 0 10px; box-sizing: border-box; font-size: 12px; }
         
@@ -44,27 +50,21 @@
         .qty-btn { background: #222; border: none; color: #fff; width: 30px; cursor: pointer; font-weight: 900; }
         .qty-control input { flex: 1; border: none; background: transparent; text-align: center; padding: 0; color: #fff; }
 
-        /* OPTIMALIZATIE: OPSLAAN KNOP TEKSTGROOTTE GELIJK AAN WACHT */
+        .form-grid-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; align-items: center; }
+
         .save-btn { 
-            background: #222; 
-            color: var(--text-gray); 
-            border: 1px solid #333;
-            height: var(--h-unit); 
-            border-radius: 8px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            font-family: inherit; 
-            font-weight: 900; 
-            font-style: italic; 
-            font-size: 0.65rem; /* Gelijk aan #waitTxt */
-            gap: 6px; 
-            width: 100%; 
-            transition: all 0.2s ease;
+            background: #222; color: var(--text-gray); border: 1px solid #333; height: var(--h-unit); border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; cursor: pointer; font-family: inherit; 
+            font-weight: 900; font-style: italic; font-size: 0.65rem; gap: 6px; width: 100%; transition: all 0.2s ease; box-sizing: border-box;
         }
-        .save-btn .symbol { color: var(--mm-red); font-size: 18px; transition: transform 0.2s; }
+        .save-btn .symbol { color: var(--mm-red); font-size: 18px; }
         .save-btn:active { background: #333; transform: scale(0.98); }
+
+        #waitBtn {
+            height: var(--h-unit); border: 1px solid #333; border-radius: 8px; display: flex; 
+            align-items: center; justify-content: center; cursor: pointer; background: #222; transition: all 0.2s ease; box-sizing: border-box;
+        }
+        #waitTxt { font-size: 0.65rem; color: var(--text-gray); }
         
         .list-card { display: flex; flex-direction: column; flex: 1; max-height: 520px; margin-bottom: 15px; }
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; }
@@ -96,12 +96,6 @@
         .filter-group { display: flex; gap: 6px; flex-grow: 1; }
         .eye-toggle { cursor: pointer; transition: color 0.3s; color: var(--text-gray); padding: 4px; }
         .eye-toggle.active { color: var(--color-wait); }
-
-        #waitBtn {
-            height: var(--h-unit); border: 1px solid #333; border-radius: 8px; display: flex; 
-            align-items: center; justify-content: center; cursor: pointer; background: #222; transition: all 0.2s ease;
-        }
-        #waitTxt { font-size: 0.65rem; color: var(--text-gray); transition: color 0.2s; }
     </style>
 </head>
 <body>
@@ -112,23 +106,32 @@
     <div class="card logo-card"><span class="title-main">SERVICES & SOLUTIONS TRACKER</span></div>
 
     <div class="card">
-        <div class="target-row">
-            <div style="display:flex; gap:8px;">
-                <span>DOEL VZK</span>
-                <span style="color:var(--mm-red)">FIX:<b id="valFix">0</b></span>
-                <span style="color:var(--mm-orange)">FLX:<b id="valFlex">0</b></span>
+        <div class="progress-container">
+            <div class="progress-bar-wrapper">
+                <div class="bar-label-left">TARGET INSURANCE</div>
+                <div class="bar-label-right">
+                    <span>FIX:<b id="valFix">0</b></span> | 
+                    <span>FLX:<b id="valFlex">0</b></span> | 
+                    <span id="percVerz">0%</span>
+                </div>
+                <div id="fillVerz" class="fill" style="background:var(--mm-red); width:0%;"></div>
             </div>
-            <input type="number" id="targetVerz" class="target-input-clean" oninput="saveTargets()">
+            <input type="number" id="targetVerz" class="target-input-clean" oninput="saveTargets()" title="TARGET INSURANCE">
         </div>
-        <div class="progress-bar"><div id="fillVerz" class="fill" style="background:var(--mm-red); width:0%;"><span class="perc-text" id="percVerz">0%</span></div></div>
-        
-        <div class="target-row" style="margin-top:12px;">
-            <div>DOEL BS <span style="color:var(--color-wait)">BS:<b id="valCal">0</b></span></div>
-            <input type="number" id="targetBranded" class="target-input-clean" oninput="saveTargets()">
-        </div>
-        <div class="progress-bar"><div id="fillBranded" class="fill" style="background:var(--color-wait); width:0%;"><span class="perc-text" id="percBranded">0%</span></div></div>
 
-        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-top:12px;">
+        <div class="progress-container">
+            <div class="progress-bar-wrapper">
+                <div class="bar-label-left">TARGET CALIBRATION</div>
+                <div class="bar-label-right">
+                    <span>CAL:<b id="valCal">0</b></span> | 
+                    <span id="percBranded">0%</span>
+                </div>
+                <div id="fillBranded" class="fill" style="background:var(--color-wait); width:0%;"></div>
+            </div>
+            <input type="number" id="targetBranded" class="target-input-clean" oninput="saveTargets()" title="TARGET CALIBRATION">
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-top:8px;">
             <div class="btn-action-slim" onclick="shareAsPDF()"><span class="symbol">share</span>DEEL</div>
             <div class="btn-action-slim" onclick="manualExport()"><span class="symbol">output</span>EXP</div>
             <div class="btn-action-slim" onclick="document.getElementById('importInput').click()"><span class="symbol">input</span>IMP</div>
@@ -143,20 +146,18 @@
                 <input type="text" id="notes" placeholder="NOTITIE..." style="flex:1;">
             </div>
             
-            <div style="display:flex; gap:6px; margin-bottom:8px;">
-                <div class="qty-control" style="flex:1;"><button type="button" class="qty-btn" onclick="adj('qtyFix',-1)">-</button><input type="number" id="qtyFix" placeholder="FIX"><button type="button" class="qty-btn" onclick="adj('qtyFix',1)">+</button></div>
-                <div class="qty-control" style="flex:1;"><button type="button" class="qty-btn" onclick="adj('qtyFlex',-1)">-</button><input type="number" id="qtyFlex" placeholder="FLX"><button type="button" class="qty-btn" onclick="adj('qtyFlex',1)">+</button></div>
-                <div class="qty-control" style="flex:1;"><button type="button" class="qty-btn" onclick="adj('qtyCal',-1)">-</button><input type="number" id="qtyCal" placeholder="BS"><button type="button" class="qty-btn" onclick="adj('qtyCal',1)">+</button></div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
+                <div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyFix',-1)">-</button><input type="number" id="qtyFix" placeholder="FIX"><button type="button" class="qty-btn" onclick="adj('qtyFix',1)">+</button></div>
+                <div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyFlex',-1)">-</button><input type="number" id="qtyFlex" placeholder="FLX"><button type="button" class="qty-btn" onclick="adj('qtyFlex',1)">+</button></div>
+                <div class="qty-control"><button type="button" class="qty-btn" onclick="adj('qtyCal',-1)">-</button><input type="number" id="qtyCal" placeholder="CAL"><button type="button" class="qty-btn" onclick="adj('qtyCal',1)">+</button></div>
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 100px 100px; gap:6px; align-items:center;">
-                <input type="date" id="dateInput" style="padding:0 8px;" required>
-                
+            <div class="form-grid-row">
+                <input type="date" id="dateInput" style="padding:0 8px; font-size:11px;" required title="DATUM">
                 <div id="waitBtn" onclick="toggleDateViaBox()">
                     <span id="waitTxt">WACHT</span>
                     <input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)">
                 </div>
-
                 <button type="submit" id="mainSubmitBtn" class="save-btn">OPSLAAN <span class="symbol">save</span></button>
             </div>
         </form>
@@ -306,7 +307,7 @@
     }
 
     function manualExport() {
-        let csv = "Datum;Factuur;Fix;Flex;BS;Notitie\n";
+        let csv = "Datum;Factuur;Fix;Flex;CAL;Notitie\n";
         sales.filter(s => s.invoice).forEach(s => { csv += `${s.date};${s.invoice};${s.qtyFix||0};${s.qtyFlex||0};${s.qtyCal||0};${(s.notes||'').replace(/;/g, ',')}\n`; });
         const blob = new Blob([csv], { type: 'text/csv' });
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `SS_Backup.csv`; a.click();
@@ -361,7 +362,7 @@
         doc.setFontSize(10); doc.setTextColor(153, 153, 153); doc.text(`PERIODE: ${monthLabel} ${selY}`, 14, 28);
 
         doc.autoTable({
-            startY: 35, head: [['DATUM', 'FACTUUR', 'FIX', 'FLX', 'BS', 'NOTITIE']], body: body, theme: 'grid',
+            startY: 35, head: [['DATUM', 'FACTUUR', 'FIX', 'FLX', 'CAL', 'NOTITIE']], body: body, theme: 'grid',
             headStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255], fontStyle: 'bold', lineWidth: 0.1, lineColor: [60, 60, 60] },
             bodyStyles: { fillColor: [30, 30, 30], textColor: [200, 200, 200], fontSize: 9, lineColor: [50, 50, 50] },
             alternateRowStyles: { fillColor: [25, 25, 25] },
@@ -371,7 +372,7 @@
         const finalY = doc.lastAutoTable.finalY + 10;
         doc.autoTable({
             startY: finalY, head: [['OVERZICHT TOTALEN', 'AANTAL']],
-            body: [['TOTAAL FIX', { content: tFix, styles: { textColor: [255, 51, 51], fontStyle: 'bold' } }], ['TOTAAL FLEX', { content: tFlx, styles: { textColor: [255, 136, 0], fontStyle: 'bold' } }], ['TOTAAL BS', { content: tCal, styles: { textColor: [77, 184, 255], fontStyle: 'bold' } }], ['TOTAAL ALGEMEEN', { content: tFix + tFlx + tCal, styles: { textColor: [255, 255, 255], fontStyle: 'bold' } }]],
+            body: [['TOTAAL FIX', { content: tFix, styles: { textColor: [255, 51, 51], fontStyle: 'bold' } }], ['TOTAAL FLEX', { content: tFlx, styles: { textColor: [255, 136, 0], fontStyle: 'bold' } }], ['TOTAAL CAL', { content: tCal, styles: { textColor: [77, 184, 255], fontStyle: 'bold' } }], ['TOTAAL ALGEMEEN', { content: tFix + tFlx + tCal, styles: { textColor: [255, 255, 255], fontStyle: 'bold' } }]],
             theme: 'grid', styles: { fillColor: [35, 35, 35], textColor: [150, 150, 150], fontSize: 10, lineColor: [60, 60, 60] },
             headStyles: { fillColor: [255, 51, 51], textColor: [255, 255, 255] },
             columnStyles: { 1: { halign: 'right', cellWidth: 30 } }, margin: { left: 120 }
