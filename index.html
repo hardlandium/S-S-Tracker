@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V242</title>
+    <title>S&S Tracker V242-MOD</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -34,15 +34,16 @@
 
         input, select { width: 100%; height: var(--h-unit); border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; padding: 0 10px; box-sizing: border-box; font-size: 12px; }
         
+        #dateInput, #viewMonth, #viewYear { color: var(--text-gray); }
+        
         #qtyFix::placeholder { color: var(--mm-red); opacity: 0.8; }
         #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.8; }
         #qtyCal::placeholder { color: var(--color-wait); opacity: 0.8; }
         
         .qty-control { display: flex; background: #111; border-radius: 8px; border: 1px solid #333; height: var(--h-unit); overflow: hidden; }
         .qty-btn { background: #222; border: none; color: #fff; width: 30px; cursor: pointer; font-weight: 900; }
-        .qty-control input { flex: 1; border: none; background: transparent; text-align: center; padding: 0; }
+        .qty-control input { flex: 1; border: none; background: transparent; text-align: center; padding: 0; color: #fff; }
 
-        .date-adjust-btn { background: #222; border: 1px solid #333; color: var(--text-gray); width: 34px; height: var(--h-unit); border-radius: 8px; font-family: inherit; font-size: 10px; font-weight: 900; cursor: pointer; }
         .save-btn { background: var(--mm-red); color: #fff; border: none; height: var(--h-unit); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-family: inherit; font-weight: 900; font-style: italic; font-size: 0.8rem; gap: 6px; width: 100%; }
         
         .list-card { display: flex; flex-direction: column; flex: 1; max-height: 520px; margin-bottom: 15px; }
@@ -61,11 +62,19 @@
         
         .note-text { color: var(--mm-orange); font-size: 0.65rem; margin-top: 4px; padding-left: 53px; text-transform: uppercase; border-top: 1px solid #1a1a1a; padding-top: 4px; }
 
-        .btn-action { height: 54px; border-radius: 12px; border: 1px solid #333; background: #111; color: var(--text-dark); font-size: 0.6rem; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 4px; }
+        .btn-action-slim { 
+            height: 36px; border-radius: 8px; border: 1px solid #333; background: #111; 
+            color: var(--text-gray); font-size: 0.55rem; display: flex; align-items: center; 
+            justify-content: center; cursor: pointer; gap: 6px; 
+        }
+        .btn-action-slim .symbol { font-size: 16px; color: var(--text-gray); }
+
         #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 20px; border-radius: 25px; font-size: 0.75rem; z-index: 2000; display: none; font-weight: bold; text-align: center; }
         #datePickerModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
         
-        .eye-toggle { cursor: pointer; transition: color 0.3s; color: var(--text-gray); }
+        .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+        .filter-group { display: flex; gap: 6px; flex-grow: 1; }
+        .eye-toggle { cursor: pointer; transition: color 0.3s; color: var(--text-gray); padding: 4px; }
         .eye-toggle.active { color: var(--color-wait); }
     </style>
 </head>
@@ -86,11 +95,19 @@
             <input type="number" id="targetVerz" class="target-input-clean" oninput="saveTargets()">
         </div>
         <div class="progress-bar"><div id="fillVerz" class="fill" style="background:var(--mm-red); width:0%;"><span class="perc-text" id="percVerz">0%</span></div></div>
+        
         <div class="target-row" style="margin-top:12px;">
             <div>DOEL BS <span style="color:var(--color-wait)">BS:<b id="valCal">0</b></span></div>
             <input type="number" id="targetBranded" class="target-input-clean" oninput="saveTargets()">
         </div>
         <div class="progress-bar"><div id="fillBranded" class="fill" style="background:var(--color-wait); width:0%;"><span class="perc-text" id="percBranded">0%</span></div></div>
+
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-top:12px;">
+            <div class="btn-action-slim" onclick="shareAsPDF()"><span class="symbol">share</span>DEEL</div>
+            <div class="btn-action-slim" onclick="manualExport()"><span class="symbol">output</span>EXP</div>
+            <div class="btn-action-slim" onclick="document.getElementById('importInput').click()"><span class="symbol">input</span>IMP</div>
+            <div class="btn-action-slim" onclick="if(confirm('ALLES WISSEN?')){localStorage.clear();location.reload();}" style="color:var(--mm-red);"><span class="symbol" style="color:var(--mm-red);">delete</span>CLR</div>
+        </div>
     </div>
 
     <div class="card">
@@ -120,27 +137,20 @@
     </div>
 
     <div class="card list-card">
-        <div class="list-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <div style="display:flex; gap:6px; flex:1;">
-                <select id="viewMonth" onchange="render()" style="height:34px;"></select>
-                <select id="viewYear" onchange="render()" style="width:80px; height:34px;"></select>
+        <div class="list-header">
+            <div class="filter-group">
+                <select id="viewMonth" onchange="render()" style="height:34px; flex:2;"></select>
+                <select id="viewYear" onchange="render()" style="height:34px; flex:1;"></select>
             </div>
             <span id="eyeBtn" class="symbol eye-toggle" onclick="toggleRunningFilter()" title="LOPENDE ORDERS">visibility_off</span>
         </div>
 
-        <div id="salesLog"></div>
-        
-        <div style="position:relative;">
+        <div style="position:relative; margin-bottom:8px;">
             <span class="symbol" style="position:absolute; left:10px; top:12px; font-size:18px; color:var(--text-gray);">search</span>
-            <input type="text" id="searchInput" placeholder="ZOEK FACTUUR OF NOTITIE..." oninput="render()" style="height:44px; margin-top:8px; background:#000; border-color:#222; padding-left:35px;">
+            <input type="text" id="searchInput" placeholder="ZOEK FACTUUR OF NOTITIE..." oninput="render()" style="height:44px; background:#000; border-color:#222; padding-left:35px;">
         </div>
 
-        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-top:10px;">
-            <div class="btn-action" onclick="shareAsPDF()"><span class="symbol">share</span>DEEL</div>
-            <div class="btn-action" onclick="manualExport()"><span class="symbol">output</span>EXP</div>
-            <div class="btn-action" onclick="document.getElementById('importInput').click()"><span class="symbol">input</span>IMP</div>
-            <div class="btn-action" onclick="if(confirm('ALLES WISSEN?')){localStorage.clear();location.reload();}" style="color:var(--mm-red);"><span class="symbol">delete</span>CLR</div>
-        </div>
+        <div id="salesLog"></div>
         <input type="file" id="importInput" style="display:none" accept=".csv, text/csv, text/plain, .txt" onchange="manualImport(event)">
     </div>
 </div>
@@ -148,7 +158,7 @@
 <div id="datePickerModal">
     <div style="background:#161616; padding:20px; border-radius:16px; border:1px solid #333; width:80%; max-width:300px;">
         <label style="color:var(--mm-red); display:block; margin-bottom:10px; font-style:italic;">VOLTOOI DATUM</label>
-        <input type="date" id="modalDateInput" style="margin-bottom:15px;">
+        <input type="date" id="modalDateInput" style="margin-bottom:15px; color:var(--text-gray);">
         <div style="display:flex; gap:10px;">
             <button onclick="document.getElementById('datePickerModal').style.display='none'" style="flex:1; background:#333; color:#fff; border:none; height:40px; border-radius:8px; font-family:inherit;">STOP</button>
             <button onclick="confirmQuickDate()" style="flex:1; background:var(--color-future); color:#000; border:none; height:40px; border-radius:8px; font-family:inherit;">OK</button>
@@ -191,7 +201,6 @@
         let mFx=0, mFl=0, mB=0; log.innerHTML = '';
         const today = getLocalDate();
 
-        // 1. Stats Berekenen (Alleen voor de geselecteerde maand, negeer wacht-orders voor stats)
         sales.forEach(s => { 
             if(!s.isWait && s.date !== "2099-12-31") {
                 const d = new Date(s.date);
@@ -211,17 +220,13 @@
         document.getElementById('percVerz').innerText = Math.round(((mFx+mFl)/tV)*100) + '%';
         document.getElementById('percBranded').innerText = Math.round((mB/tB)*100) + '%';
 
-        // 2. Lijst Renderen
         sales.sort((a,b) => b.date.localeCompare(a.date)).forEach(s => {
             const isWait = s.isWait || s.date === "2099-12-31";
             const isFuture = !isWait && s.date > today;
             const d = new Date(s.date);
             
-            // Logica: Toon order als het WAITING is OF als het in de geselecteerde maand valt
             const inSelectedTime = isWait || (d.getMonth() === selM && d.getFullYear() === selY);
             if (!inSelectedTime) return;
-            
-            // Running filter: Verberg voltooide orders uit het verleden indien actief
             if (showOnlyRunning && !isWait && !isFuture) return;
             
             const matchesSearch = s.invoice.toLowerCase().includes(search) || (s.notes && s.notes.toLowerCase().includes(search));
@@ -268,16 +273,8 @@
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    function confirmDelete(id) {
-        if(confirm('ORDER VERWIJDEREN?')) { sales = sales.filter(x => x.id !== id); render(); }
-    }
-
-    function openQuickDate(id) {
-        editId = id;
-        document.getElementById('modalDateInput').value = getLocalDate();
-        document.getElementById('datePickerModal').style.display = 'flex';
-    }
-
+    function confirmDelete(id) { if(confirm('ORDER VERWIJDEREN?')) { sales = sales.filter(x => x.id !== id); render(); } }
+    function openQuickDate(id) { editId = id; document.getElementById('modalDateInput').value = getLocalDate(); document.getElementById('datePickerModal').style.display = 'flex'; }
     function confirmQuickDate() {
         const s = sales.find(x => x.id === editId);
         if(s) { s.date = document.getElementById('modalDateInput').value; s.isWait = false; }
@@ -301,45 +298,24 @@
             try {
                 const text = e.target.result;
                 const rows = text.split(/\r?\n/);
-                let added = 0;
-                let skipped = 0;
-                
+                let added = 0, skipped = 0;
                 rows.forEach((row, i) => {
                     if(i === 0 || !row.trim()) return;
                     const sep = row.includes(';') ? ';' : ',';
                     const cols = row.split(sep);
-                    
                     if(cols.length >= 4) {
                         const inv = cols[1]?.trim();
                         if(!inv) return;
-
-                        // STRENGE DUPLICATE CHECK: Bestaat dit factuurnummer al?
-                        const exists = sales.some(s => s.invoice === inv);
-                        
-                        if(!exists) {
+                        if(!sales.some(s => s.invoice === inv)) {
                             const dateVal = cols[0].trim();
-                            sales.push({
-                                id: Date.now() + Math.random(),
-                                date: dateVal,
-                                invoice: inv,
-                                qtyFix: cols[2] ? cols[2].trim() : '0',
-                                qtyFlex: cols[3] ? cols[3].trim() : '0',
-                                qtyCal: cols[4] ? cols[4].trim() : '0',
-                                notes: cols[5] ? cols[5].trim() : '',
-                                isWait: dateVal === "2099-12-31"
-                            });
+                            sales.push({ id: Date.now() + Math.random(), date: dateVal, invoice: inv, qtyFix: cols[2]?.trim()||'0', qtyFlex: cols[3]?.trim()||'0', qtyCal: cols[4]?.trim()||'0', notes: cols[5]?.trim()||'', isWait: dateVal === "2099-12-31" });
                             added++;
-                        } else {
-                            skipped++;
-                        }
+                        } else { skipped++; }
                     }
                 });
-
                 render();
                 showToast(`IMPORT KLAAR\n\nNieuw: ${added}\nDuplicaten: ${skipped}`);
-            } catch (err) {
-                showToast("FOUT: BESTAND NIET LEESBAAR");
-            }
+            } catch (err) { showToast("FOUT: BESTAND NIET LEESBAAR"); }
             event.target.value = '';
         };
         reader.readAsText(file);
@@ -348,32 +324,109 @@
     async function shareAsPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+        
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
         const monthLabel = months[selM];
         
         let filtered = sales.filter(s => !s.isWait && s.date !== "2099-12-31" && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
         filtered.sort((a,b) => a.date.localeCompare(b.date));
-        const rows = filtered.map(s => [s.date.split('-').reverse().join('-'), s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '']);
+
+        // Totalen berekenen
+        let tFix = 0, tFlx = 0, tCal = 0;
+        filtered.forEach(s => {
+            tFix += parseInt(s.qtyFix)||0;
+            tFlx += parseInt(s.qtyFlex)||0;
+            tCal += parseInt(s.qtyCal)||0;
+        });
+
+        const body = filtered.map(s => [
+            s.date.split('-').reverse().join('-'),
+            s.invoice,
+            { content: s.qtyFix, styles: { textColor: [255, 51, 51] } },
+            { content: s.qtyFlex, styles: { textColor: [255, 136, 0] } },
+            { content: s.qtyCal, styles: { textColor: [77, 184, 255] } },
+            s.notes || ''
+        ]);
+
+        // THEMA STYLING (DONKER)
+        doc.setFillColor(22, 22, 22); // --card-bg
+        doc.rect(0, 0, 210, 297, 'F');
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.setTextColor(255, 51, 51); // --mm-red
+        doc.text(`SERVICES & SOLUTIONS RAPPORT`, 14, 20);
         
-        doc.setFontSize(18);
-        doc.text(`S&S Rapportage: ${monthLabel} ${selY}`, 14, 20);
+        doc.setFontSize(10);
+        doc.setTextColor(153, 153, 153); // --text-gray
+        doc.text(`PERIODE: ${monthLabel} ${selY}`, 14, 28);
+
+        // HOOFDTABEL
         doc.autoTable({
-            startY: 30,
-            head: [['Datum', 'Factuur', 'Fix', 'Flex', 'BS', 'Notitie']],
-            body: rows,
-            headStyles: { fillColor: [255, 51, 51] },
-            theme: 'grid'
+            startY: 35,
+            head: [['DATUM', 'FACTUUR', 'FIX', 'FLX', 'BS', 'NOTITIE']],
+            body: body,
+            theme: 'grid',
+            headStyles: {
+                fillColor: [40, 40, 40],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                lineWidth: 0.1,
+                lineColor: [60, 60, 60]
+            },
+            bodyStyles: {
+                fillColor: [30, 30, 30],
+                textColor: [200, 200, 200],
+                fontSize: 9,
+                lineColor: [50, 50, 50]
+            },
+            alternateRowStyles: {
+                fillColor: [25, 25, 25]
+            },
+            columnStyles: {
+                0: { cellWidth: 25 },
+                1: { cellWidth: 40 },
+                2: { halign: 'center', cellWidth: 15 },
+                3: { halign: 'center', cellWidth: 15 },
+                4: { halign: 'center', cellWidth: 15 }
+            }
+        });
+
+        // TOTALEN TABEL
+        const finalY = doc.lastAutoTable.finalY + 10;
+        doc.autoTable({
+            startY: finalY,
+            head: [['OVERZICHT TOTALEN', 'AANTAL']],
+            body: [
+                ['TOTAAL FIX', { content: tFix, styles: { textColor: [255, 51, 51], fontStyle: 'bold' } }],
+                ['TOTAAL FLEX', { content: tFlx, styles: { textColor: [255, 136, 0], fontStyle: 'bold' } }],
+                ['TOTAAL BS', { content: tCal, styles: { textColor: [77, 184, 255], fontStyle: 'bold' } }],
+                ['TOTAAL ALGEMEEN', { content: tFix + tFlx + tCal, styles: { textColor: [255, 255, 255], fontStyle: 'bold' } }]
+            ],
+            theme: 'grid',
+            styles: {
+                fillColor: [35, 35, 35],
+                textColor: [150, 150, 150],
+                fontSize: 10,
+                lineColor: [60, 60, 60]
+            },
+            headStyles: {
+                fillColor: [255, 51, 51],
+                textColor: [255, 255, 255]
+            },
+            columnStyles: {
+                1: { halign: 'right', cellWidth: 30 }
+            },
+            margin: { left: 120 } // Rechts uitlijnen
         });
 
         const pdfBlob = doc.output('blob');
-        const fileName = `S_S_Rapport_${monthLabel}_${selY}.pdf`;
+        const fileName = `SS_Rapport_${monthLabel}_${selY}.pdf`;
         const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-                await navigator.share({ files: [file], title: `S&S Rapport ${monthLabel}` });
-            } catch (err) { doc.save(fileName); }
+            try { await navigator.share({ files: [file], title: `S&S Rapport ${monthLabel}` }); } catch (err) { doc.save(fileName); }
         } else {
             doc.save(fileName);
             showToast("PDF GEDOWNLOAD");
@@ -389,37 +442,14 @@
     document.getElementById('saleForm').onsubmit = function(e) {
         e.preventDefault();
         const inv = document.getElementById('invoice').value;
-        
-        // Dubbele check bij handmatige invoer
-        const exists = sales.some(s => s.invoice === inv && s.id !== editId);
-        if(exists) {
-            alert("DIT FACTUURNUMMER BESTAAT AL!");
-            return;
-        }
-
+        if(sales.some(s => s.invoice === inv && s.id !== editId)) { alert("DIT FACTUURNUMMER BESTAAT AL!"); return; }
         const wait = document.getElementById('dateUnknown').checked;
-        const data = { 
-            id: editId || Date.now(), 
-            invoice: inv, 
-            notes: document.getElementById('notes').value, 
-            qtyFix: document.getElementById('qtyFix').value||0, 
-            qtyFlex: document.getElementById('qtyFlex').value||0, 
-            qtyCal: document.getElementById('qtyCal').value||0, 
-            date: wait ? "2099-12-31" : document.getElementById('dateInput').value, 
-            isWait: wait 
-        };
-        
-        if(editId) { 
-            sales = sales.map(x => x.id === editId ? data : x); 
-            editId = null; 
-            document.getElementById('mainSubmitBtn').innerHTML = 'OPSLAAN <span class="symbol">send</span>'; 
-        } else { 
-            sales.push(data); 
-        }
-        
-        this.reset(); 
-        document.getElementById('dateInput').value = getLocalDate(); 
-        toggleDate(document.getElementById('dateUnknown')); 
+        const data = { id: editId || Date.now(), invoice: inv, notes: document.getElementById('notes').value, qtyFix: document.getElementById('qtyFix').value||0, qtyFlex: document.getElementById('qtyFlex').value||0, qtyCal: document.getElementById('qtyCal').value||0, date: wait ? "2099-12-31" : document.getElementById('dateInput').value, isWait: wait };
+        if(editId) { sales = sales.map(x => x.id === editId ? data : x); editId = null; document.getElementById('mainSubmitBtn').innerHTML = 'OPSLAAN <span class="symbol">send</span>'; }
+        else { sales.push(data); }
+        this.reset();
+        document.getElementById('dateInput').value = getLocalDate();
+        toggleDate(document.getElementById('dateUnknown'));
         render();
         showToast("ORDER OPGESLAGEN");
     };
@@ -428,7 +458,6 @@
         const mS = document.getElementById('viewMonth'), yS = document.getElementById('viewYear'), n = new Date();
         months.forEach((m, i) => { mS.innerHTML += `<option value="${i}" ${i === n.getMonth() ? 'selected' : ''}>${m.toUpperCase()}</option>`; });
         [n.getFullYear(), n.getFullYear()-1].forEach(y => { yS.innerHTML += `<option value="${y}" ${y === n.getFullYear() ? 'selected' : ''}>${y}</option>`; });
-        
         document.getElementById('targetVerz').value = localStorage.getItem('ss_t_v') || 40;
         document.getElementById('targetBranded').value = localStorage.getItem('ss_t_b') || 10;
         document.getElementById('dateInput').value = getLocalDate();
