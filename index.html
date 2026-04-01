@@ -44,7 +44,27 @@
         .qty-btn { background: #222; border: none; color: #fff; width: 30px; cursor: pointer; font-weight: 900; }
         .qty-control input { flex: 1; border: none; background: transparent; text-align: center; padding: 0; color: #fff; }
 
-        .save-btn { background: var(--mm-red); color: #fff; border: none; height: var(--h-unit); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-family: inherit; font-weight: 900; font-style: italic; font-size: 0.8rem; gap: 6px; width: 100%; }
+        /* OPTIMALIZATIE: OPSLAAN KNOP TEKSTGROOTTE GELIJK AAN WACHT */
+        .save-btn { 
+            background: #222; 
+            color: var(--text-gray); 
+            border: 1px solid #333;
+            height: var(--h-unit); 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            font-family: inherit; 
+            font-weight: 900; 
+            font-style: italic; 
+            font-size: 0.65rem; /* Gelijk aan #waitTxt */
+            gap: 6px; 
+            width: 100%; 
+            transition: all 0.2s ease;
+        }
+        .save-btn .symbol { color: var(--mm-red); font-size: 18px; transition: transform 0.2s; }
+        .save-btn:active { background: #333; transform: scale(0.98); }
         
         .list-card { display: flex; flex-direction: column; flex: 1; max-height: 520px; margin-bottom: 15px; }
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; }
@@ -76,6 +96,12 @@
         .filter-group { display: flex; gap: 6px; flex-grow: 1; }
         .eye-toggle { cursor: pointer; transition: color 0.3s; color: var(--text-gray); padding: 4px; }
         .eye-toggle.active { color: var(--color-wait); }
+
+        #waitBtn {
+            height: var(--h-unit); border: 1px solid #333; border-radius: 8px; display: flex; 
+            align-items: center; justify-content: center; cursor: pointer; background: #222; transition: all 0.2s ease;
+        }
+        #waitTxt { font-size: 0.65rem; color: var(--text-gray); transition: color 0.2s; }
     </style>
 </head>
 <body>
@@ -126,12 +152,12 @@
             <div style="display:grid; grid-template-columns: 1fr 100px 100px; gap:6px; align-items:center;">
                 <input type="date" id="dateInput" style="padding:0 8px;" required>
                 
-                <div id="waitBtn" style="height:var(--h-unit); border: 1px solid #333; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:#111;" onclick="toggleDateViaBox()">
-                    <span style="font-size:0.65rem; color:var(--text-gray);">WACHT</span>
+                <div id="waitBtn" onclick="toggleDateViaBox()">
+                    <span id="waitTxt">WACHT</span>
                     <input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)">
                 </div>
 
-                <button type="submit" id="mainSubmitBtn" class="save-btn">OPSLAAN <span class="symbol">send</span></button>
+                <button type="submit" id="mainSubmitBtn" class="save-btn">OPSLAAN <span class="symbol">save</span></button>
             </div>
         </form>
     </div>
@@ -179,9 +205,9 @@
 
     function toggleDateViaBox() { const cb = document.getElementById('dateUnknown'); cb.checked = !cb.checked; toggleDate(cb); }
     function toggleDate(cb) {
-        const di = document.getElementById('dateInput'), box = document.getElementById('waitBtn');
-        if(cb.checked) { box.style.borderColor = "var(--color-wait)"; di.disabled = true; di.style.opacity = "0.2"; } 
-        else { box.style.borderColor = "#333"; di.disabled = false; di.style.opacity = "1"; di.value = getLocalDate(); }
+        const di = document.getElementById('dateInput'), box = document.getElementById('waitBtn'), txt = document.getElementById('waitTxt');
+        if(cb.checked) { box.style.borderColor = "var(--color-wait)"; txt.style.color = "var(--color-wait)"; di.disabled = true; di.style.opacity = "0.2"; } 
+        else { box.style.borderColor = "#333"; txt.style.color = "var(--text-gray)"; di.disabled = false; di.style.opacity = "1"; di.value = getLocalDate(); }
     }
 
     function toggleRunningFilter() {
@@ -224,11 +250,9 @@
             const isWait = s.isWait || s.date === "2099-12-31";
             const isFuture = !isWait && s.date > today;
             const d = new Date(s.date);
-            
             const inSelectedTime = isWait || (d.getMonth() === selM && d.getFullYear() === selY);
             if (!inSelectedTime) return;
             if (showOnlyRunning && !isWait && !isFuture) return;
-            
             const matchesSearch = s.invoice.toLowerCase().includes(search) || (s.notes && s.notes.toLowerCase().includes(search));
             if (!matchesSearch) return;
 
@@ -269,7 +293,7 @@
         document.getElementById('dateUnknown').checked = isWait;
         toggleDate(document.getElementById('dateUnknown'));
         if(!isWait) document.getElementById('dateInput').value = s.date;
-        document.getElementById('mainSubmitBtn').innerHTML = 'UPDATE <span class="symbol">edit</span>';
+        document.getElementById('mainSubmitBtn').innerHTML = 'UPDATE <span class="symbol">save</span>';
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
@@ -283,9 +307,7 @@
 
     function manualExport() {
         let csv = "Datum;Factuur;Fix;Flex;BS;Notitie\n";
-        sales.filter(s => s.invoice).forEach(s => { 
-            csv += `${s.date};${s.invoice};${s.qtyFix||0};${s.qtyFlex||0};${s.qtyCal||0};${(s.notes||'').replace(/;/g, ',')}\n`; 
-        });
+        sales.filter(s => s.invoice).forEach(s => { csv += `${s.date};${s.invoice};${s.qtyFix||0};${s.qtyFlex||0};${s.qtyCal||0};${(s.notes||'').replace(/;/g, ',')}\n`; });
         const blob = new Blob([csv], { type: 'text/csv' });
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `SS_Backup.csv`; a.click();
     }
@@ -324,120 +346,42 @@
     async function shareAsPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
         const monthLabel = months[selM];
-        
         let filtered = sales.filter(s => !s.isWait && s.date !== "2099-12-31" && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
         filtered.sort((a,b) => a.date.localeCompare(b.date));
-
-        // Totalen berekenen
         let tFix = 0, tFlx = 0, tCal = 0;
-        filtered.forEach(s => {
-            tFix += parseInt(s.qtyFix)||0;
-            tFlx += parseInt(s.qtyFlex)||0;
-            tCal += parseInt(s.qtyCal)||0;
-        });
+        filtered.forEach(s => { tFix += parseInt(s.qtyFix)||0; tFlx += parseInt(s.qtyFlex)||0; tCal += parseInt(s.qtyCal)||0; });
 
-        const body = filtered.map(s => [
-            s.date.split('-').reverse().join('-'),
-            s.invoice,
-            { content: s.qtyFix, styles: { textColor: [255, 51, 51] } },
-            { content: s.qtyFlex, styles: { textColor: [255, 136, 0] } },
-            { content: s.qtyCal, styles: { textColor: [77, 184, 255] } },
-            s.notes || ''
-        ]);
+        const body = filtered.map(s => [s.date.split('-').reverse().join('-'), s.invoice, { content: s.qtyFix, styles: { textColor: [255, 51, 51] } }, { content: s.qtyFlex, styles: { textColor: [255, 136, 0] } }, { content: s.qtyCal, styles: { textColor: [77, 184, 255] } }, s.notes || '']);
 
-        // THEMA STYLING (DONKER)
-        doc.setFillColor(22, 22, 22); // --card-bg
-        doc.rect(0, 0, 210, 297, 'F');
+        doc.setFillColor(22, 22, 22); doc.rect(0, 0, 210, 297, 'F');
+        doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(255, 51, 51); doc.text(`SERVICES & SOLUTIONS RAPPORT`, 14, 20);
+        doc.setFontSize(10); doc.setTextColor(153, 153, 153); doc.text(`PERIODE: ${monthLabel} ${selY}`, 14, 28);
 
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
-        doc.setTextColor(255, 51, 51); // --mm-red
-        doc.text(`SERVICES & SOLUTIONS RAPPORT`, 14, 20);
-        
-        doc.setFontSize(10);
-        doc.setTextColor(153, 153, 153); // --text-gray
-        doc.text(`PERIODE: ${monthLabel} ${selY}`, 14, 28);
-
-        // HOOFDTABEL
         doc.autoTable({
-            startY: 35,
-            head: [['DATUM', 'FACTUUR', 'FIX', 'FLX', 'BS', 'NOTITIE']],
-            body: body,
-            theme: 'grid',
-            headStyles: {
-                fillColor: [40, 40, 40],
-                textColor: [255, 255, 255],
-                fontStyle: 'bold',
-                lineWidth: 0.1,
-                lineColor: [60, 60, 60]
-            },
-            bodyStyles: {
-                fillColor: [30, 30, 30],
-                textColor: [200, 200, 200],
-                fontSize: 9,
-                lineColor: [50, 50, 50]
-            },
-            alternateRowStyles: {
-                fillColor: [25, 25, 25]
-            },
-            columnStyles: {
-                0: { cellWidth: 25 },
-                1: { cellWidth: 40 },
-                2: { halign: 'center', cellWidth: 15 },
-                3: { halign: 'center', cellWidth: 15 },
-                4: { halign: 'center', cellWidth: 15 }
-            }
+            startY: 35, head: [['DATUM', 'FACTUUR', 'FIX', 'FLX', 'BS', 'NOTITIE']], body: body, theme: 'grid',
+            headStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255], fontStyle: 'bold', lineWidth: 0.1, lineColor: [60, 60, 60] },
+            bodyStyles: { fillColor: [30, 30, 30], textColor: [200, 200, 200], fontSize: 9, lineColor: [50, 50, 50] },
+            alternateRowStyles: { fillColor: [25, 25, 25] },
+            columnStyles: { 0: { cellWidth: 25 }, 1: { cellWidth: 40 }, 2: { halign: 'center', cellWidth: 15 }, 3: { halign: 'center', cellWidth: 15 }, 4: { halign: 'center', cellWidth: 15 } }
         });
 
-        // TOTALEN TABEL
         const finalY = doc.lastAutoTable.finalY + 10;
         doc.autoTable({
-            startY: finalY,
-            head: [['OVERZICHT TOTALEN', 'AANTAL']],
-            body: [
-                ['TOTAAL FIX', { content: tFix, styles: { textColor: [255, 51, 51], fontStyle: 'bold' } }],
-                ['TOTAAL FLEX', { content: tFlx, styles: { textColor: [255, 136, 0], fontStyle: 'bold' } }],
-                ['TOTAAL BS', { content: tCal, styles: { textColor: [77, 184, 255], fontStyle: 'bold' } }],
-                ['TOTAAL ALGEMEEN', { content: tFix + tFlx + tCal, styles: { textColor: [255, 255, 255], fontStyle: 'bold' } }]
-            ],
-            theme: 'grid',
-            styles: {
-                fillColor: [35, 35, 35],
-                textColor: [150, 150, 150],
-                fontSize: 10,
-                lineColor: [60, 60, 60]
-            },
-            headStyles: {
-                fillColor: [255, 51, 51],
-                textColor: [255, 255, 255]
-            },
-            columnStyles: {
-                1: { halign: 'right', cellWidth: 30 }
-            },
-            margin: { left: 120 } // Rechts uitlijnen
+            startY: finalY, head: [['OVERZICHT TOTALEN', 'AANTAL']],
+            body: [['TOTAAL FIX', { content: tFix, styles: { textColor: [255, 51, 51], fontStyle: 'bold' } }], ['TOTAAL FLEX', { content: tFlx, styles: { textColor: [255, 136, 0], fontStyle: 'bold' } }], ['TOTAAL BS', { content: tCal, styles: { textColor: [77, 184, 255], fontStyle: 'bold' } }], ['TOTAAL ALGEMEEN', { content: tFix + tFlx + tCal, styles: { textColor: [255, 255, 255], fontStyle: 'bold' } }]],
+            theme: 'grid', styles: { fillColor: [35, 35, 35], textColor: [150, 150, 150], fontSize: 10, lineColor: [60, 60, 60] },
+            headStyles: { fillColor: [255, 51, 51], textColor: [255, 255, 255] },
+            columnStyles: { 1: { halign: 'right', cellWidth: 30 } }, margin: { left: 120 }
         });
 
-        const pdfBlob = doc.output('blob');
-        const fileName = `SS_Rapport_${monthLabel}_${selY}.pdf`;
-        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try { await navigator.share({ files: [file], title: `S&S Rapport ${monthLabel}` }); } catch (err) { doc.save(fileName); }
-        } else {
-            doc.save(fileName);
-            showToast("PDF GEDOWNLOAD");
-        }
+        const pdfBlob = doc.output('blob'), fileName = `SS_Rapport_${monthLabel}_${selY}.pdf`, file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: `S&S Rapport ${monthLabel}` }); } catch (err) { doc.save(fileName); } } else { doc.save(fileName); showToast("PDF GEDOWNLOAD"); }
     }
 
-    function saveTargets() {
-        localStorage.setItem('ss_t_v', document.getElementById('targetVerz').value);
-        localStorage.setItem('ss_t_b', document.getElementById('targetBranded').value);
-        render();
-    }
+    function saveTargets() { localStorage.setItem('ss_t_v', document.getElementById('targetVerz').value); localStorage.setItem('ss_t_b', document.getElementById('targetBranded').value); render(); }
 
     document.getElementById('saleForm').onsubmit = function(e) {
         e.preventDefault();
@@ -445,13 +389,9 @@
         if(sales.some(s => s.invoice === inv && s.id !== editId)) { alert("DIT FACTUURNUMMER BESTAAT AL!"); return; }
         const wait = document.getElementById('dateUnknown').checked;
         const data = { id: editId || Date.now(), invoice: inv, notes: document.getElementById('notes').value, qtyFix: document.getElementById('qtyFix').value||0, qtyFlex: document.getElementById('qtyFlex').value||0, qtyCal: document.getElementById('qtyCal').value||0, date: wait ? "2099-12-31" : document.getElementById('dateInput').value, isWait: wait };
-        if(editId) { sales = sales.map(x => x.id === editId ? data : x); editId = null; document.getElementById('mainSubmitBtn').innerHTML = 'OPSLAAN <span class="symbol">send</span>'; }
+        if(editId) { sales = sales.map(x => x.id === editId ? data : x); editId = null; document.getElementById('mainSubmitBtn').innerHTML = 'OPSLAAN <span class="symbol">save</span>'; }
         else { sales.push(data); }
-        this.reset();
-        document.getElementById('dateInput').value = getLocalDate();
-        toggleDate(document.getElementById('dateUnknown'));
-        render();
-        showToast("ORDER OPGESLAGEN");
+        this.reset(); document.getElementById('dateInput').value = getLocalDate(); toggleDate(document.getElementById('dateUnknown')); render(); showToast("ORDER OPGESLAGEN");
     };
 
     window.onload = function() {
