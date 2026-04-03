@@ -42,10 +42,10 @@
         input::placeholder { color: #444; }
         input[type="date"] { color: var(--text-gray); color-scheme: dark; }
 
-        /* HERSTELDE PLACEHOLDER KLEUREN */
-        #qtyFix::placeholder { color: rgba(255, 51, 51, 0.6); }
-        #qtyFlex::placeholder { color: rgba(255, 136, 0, 0.6); }
-        #qtyCal::placeholder { color: rgba(77, 184, 255, 0.6); }
+        /* GEFORCEERDE PLACEHOLDER KLEUREN */
+        #qtyFix::placeholder { color: rgba(255, 51, 51, 0.7) !important; opacity: 1; }
+        #qtyFlex::placeholder { color: rgba(255, 136, 0, 0.7) !important; opacity: 1; }
+        #qtyCal::placeholder { color: rgba(77, 184, 255, 0.7) !important; opacity: 1; }
 
         .progress-container { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
         .progress-bar-wrapper { flex: 1; height: 32px; background: #111; border-radius: 8px; overflow: hidden; border: 1px solid #333; position: relative; display: flex; align-items: center; }
@@ -121,7 +121,7 @@
             <div class="btn-action-slim" onclick="document.getElementById('importInput').click()"><span class="symbol" style="font-size:16px;">input</span>IMP</div>
             <div class="btn-action-slim" onclick="if(confirm('WISSEN?')){localStorage.clear();location.reload();}"><span class="symbol" style="font-size:16px;">delete</span>CLR</div>
         </div>
-        <input type="file" id="importInput" style="display:none" onchange="manualImport(event)">
+        <input type="file" id="importInput" style="display:none" accept=".json" onchange="manualImport(event)">
     </div>
 
     <div class="card">
@@ -379,7 +379,6 @@
     }
 
     function confirmDelete(id) { if(confirm('WISSEN?')) { sales = sales.filter(x => x.id !== id); render(); } }
-    function adj(id, v) { const el = document.getElementById(id); el.value = Math.max(0, (parseInt(el.value) || 0) + v); }
 
     window.onload = function() {
         const mS = document.getElementById('viewMonth'), yS = document.getElementById('viewYear'), n = new Date();
