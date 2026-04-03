@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V247-COLORS-RESTORED</title>
+    <title>S&S Tracker V248-FULL-RESTORE</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -107,7 +107,7 @@
             <div class="btn-action-slim" onclick="document.getElementById('importInput').click()"><span class="symbol" style="font-size:16px;">input</span>IMP</div>
             <div class="btn-action-slim" onclick="if(confirm('WISSEN?')){localStorage.clear();location.reload();}"><span class="symbol" style="font-size:16px;">delete</span>CLR</div>
         </div>
-        <input type="file" id="importInput" style="display:none" accept=".json,.csv" onchange="manualImport(event)">
+        <input type="file" id="importInput" style="display:none" accept=".json,.csv,text/csv,application/json" onchange="manualImport(event)">
     </div>
 
     <div class="card">
@@ -176,24 +176,33 @@
             try {
                 let data = [];
                 const content = ev.target.result;
-                if (file.name.toLowerCase().endsWith('.json')) { data = JSON.parse(content); } 
-                else { data = csvToJSON(content); }
-                if (Array.isArray(data)) { sales = data; localStorage.setItem(STORAGE_KEY, JSON.stringify(sales)); render(); showToast("IMPORT OK"); }
+                if (file.name.toLowerCase().endsWith('.json') || content.trim().startsWith('[') || content.trim().startsWith('{')) { 
+                    data = JSON.parse(content); 
+                } else { 
+                    data = csvToJSON(content); 
+                }
+                if (Array.isArray(data) && data.length > 0) { 
+                    sales = data; 
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(sales)); 
+                    render(); 
+                    showToast("IMPORT GESLAAGD"); 
+                }
             } catch(x) { showToast("FOUT"); }
         };
         reader.readAsText(file);
     }
 
     function csvToJSON(csv) {
-        const lines = csv.split('\n');
+        const lines = csv.split(/\r?\n/);
         const result = [];
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim(); if (!line) continue;
             const c = line.split(',');
+            if (c.length < 6) continue;
             result.push({
-                id: parseInt(c[0]), date: c[1], invoice: c[2].replace(/"/g, ''),
+                id: parseInt(c[0]) || Date.now() + i, date: c[1], invoice: c[2].replace(/"/g, ''),
                 qtyFix: parseInt(c[3])||0, qtyFlex: parseInt(c[4])||0, qtyCal: parseInt(c[5])||0,
-                notes: c[6] ? c[6].replace(/"/g, '') : "", isWait: c[7] === "true"
+                notes: c[6] ? c[6].replace(/"/g, '') : "", isWait: c[7] === "true" || c[1] === "2099-12-31"
             });
         }
         return result;
