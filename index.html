@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V242-FIX</title>
+    <title>S&S Tracker V242-SHARE</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -16,7 +16,7 @@
         :root {
             --mm-red: #ff3333; --mm-orange: #ff8800;
             --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-gray: #999;
-            --color-wait: #4db8ff; --color-future: #00ff88; --mm-font: 'Arial Black', sans-serif;
+            --color-wait: #4db8ff; --mm-font: 'Arial Black', sans-serif;
             --h-unit: 36px;
         }
         
@@ -37,17 +37,17 @@
         input { text-align: center; }
         input[type="date"] { color: var(--text-gray); color-scheme: dark; }
 
-        /* HERSTELDE PLACEHOLDER KLEUREN */
         #qtyFix::placeholder { color: rgba(255, 51, 51, 0.7) !important; opacity: 1; }
         #qtyFlex::placeholder { color: rgba(255, 136, 0, 0.7) !important; opacity: 1; }
         #qtyCal::placeholder { color: rgba(77, 184, 255, 0.7) !important; opacity: 1; }
 
-        .progress-container { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .progress-container { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
         .progress-bar-wrapper { flex: 1; height: 32px; background: #111; border-radius: 8px; overflow: hidden; border: 1px solid #333; position: relative; display: flex; align-items: center; }
         .fill { height: 100%; transition: width 0.6s ease; position: absolute; left: 0; top: 0; z-index: 1; }
-        .bar-label-left { position: absolute; left: 10px; z-index: 2; font-size: 9px; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; }
-        .bar-label-right { position: absolute; right: 10px; z-index: 2; font-size: 9px; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; }
-        .target-input-slim { width: 60px; height: 32px; font-size: 11px; padding: 0; color: var(--text-gray); }
+        .bar-label-left { position: absolute; left: 10px; z-index: 2; font-size: 8px; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; }
+        .bar-label-right { position: absolute; right: 10px; z-index: 2; font-size: 8px; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; }
+        
+        .target-input-slim { width: calc(25% - 5px); height: 32px; font-size: 11px; padding: 0; color: var(--text-gray); flex-shrink: 0; }
 
         .qty-control { display: grid; grid-template-columns: 32px 1fr 32px; background: #111; border-radius: 8px; border: 1px solid #333; height: var(--h-unit); overflow: hidden; }
         .qty-btn { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 18px; display: flex; align-items: center; justify-content: center; font-family: inherit; }
@@ -66,7 +66,6 @@
         
         .log-item { background: #0c0c0c; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid #222; border-left: 5px solid #333; }
         .log-item.status-wait { border-left-color: var(--color-wait); } 
-        .log-item.status-future { border-left-color: var(--color-future); }
         .log-grid { display: grid; grid-template-columns: 50px 1fr 85px 50px; align-items: center; gap: 8px; }
         .qty-pill { background: #000; padding: 5px; border-radius: 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; text-align: center; font-size: 11px; }
         
@@ -80,6 +79,7 @@
 <div class="container">
     <div class="card">
         <div class="subtle-header">SERVICES & SOLUTIONS <span>TRACKER</span></div>
+        
         <div class="progress-container">
             <div class="progress-bar-wrapper">
                 <div class="bar-label-left">TARGET INSURANCE</div>
@@ -88,6 +88,7 @@
             </div>
             <input type="number" id="targetVerz" class="target-input-slim" oninput="saveTargets()">
         </div>
+        
         <div class="progress-container">
             <div class="progress-bar-wrapper">
                 <div class="bar-label-left">TARGET CALIBRATION</div>
@@ -96,6 +97,7 @@
             </div>
             <input type="number" id="targetVerzCalibration" class="target-input-slim" oninput="saveTargets()">
         </div>
+
         <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-top:10px;">
             <div class="btn-action-slim" onclick="shareAsPDF()"><span class="symbol" style="font-size:16px;">share</span>DEEL</div>
             <div class="btn-action-slim" onclick="manualExport()"><span class="symbol" style="font-size:16px;">output</span>EXP</div>
@@ -164,7 +166,6 @@
         dl.setAttribute("href", url);
         dl.setAttribute("download", `ss_backup_${getLocalDate()}.csv`);
         dl.click();
-        showToast("CSV EXPORT OK");
     }
 
     function manualImport(e) {
@@ -173,11 +174,8 @@
         reader.onload = function(ev) {
             try {
                 let data = [];
-                if (file.name.toLowerCase().endsWith('.json')) {
-                    data = JSON.parse(ev.target.result);
-                } else {
-                    data = csvToJSON(ev.target.result);
-                }
+                if (file.name.toLowerCase().endsWith('.json')) { data = JSON.parse(ev.target.result); } 
+                else { data = csvToJSON(ev.target.result); }
                 if (Array.isArray(data) && data.length > 0) {
                     sales = data;
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
@@ -197,14 +195,9 @@
             if (!line) continue;
             const c = line.split(',');
             result.push({
-                id: parseInt(c[0]) || Date.now() + i,
-                date: c[1],
-                invoice: c[2].replace(/"/g, ''),
-                qtyFix: parseInt(c[3]) || 0,
-                qtyFlex: parseInt(c[4]) || 0,
-                qtyCal: parseInt(c[5]) || 0,
-                notes: c[6] ? c[6].replace(/"/g, '') : "",
-                isWait: c[7] === "true" || c[1] === "2099-12-31"
+                id: parseInt(c[0]) || Date.now() + i, date: c[1], invoice: c[2].replace(/"/g, ''),
+                qtyFix: parseInt(c[3]) || 0, qtyFlex: parseInt(c[4]) || 0, qtyCal: parseInt(c[5]) || 0,
+                notes: c[6] ? c[6].replace(/"/g, '') : "", isWait: c[7] === "true" || c[1] === "2099-12-31"
             });
         }
         return result;
@@ -241,7 +234,7 @@
             const shortD = isWait ? '---' : `${dP[2]}\n${months[parseInt(dP[1])-1]}`;
 
             log.innerHTML += `
-            <div class="log-item ${isWait ? 'status-wait' : (s.date > today ? 'status-future' : '')}">
+            <div class="log-item ${isWait ? 'status-wait' : ''}">
                 <div class="log-grid">
                     <div style="font-size:10px; color:var(--text-gray); text-align:center;">${shortD}</div>
                     <div style="font-size:12px; font-weight:900; overflow:hidden; text-overflow:ellipsis;">${s.invoice}</div>
@@ -290,7 +283,7 @@
             editId = null;
             document.getElementById('mainSubmitBtn').innerHTML = '<span class="symbol">add_task</span>OPSLAAN';
         } else { sales.push({ id: Date.now(), ...data }); }
-        this.reset(); document.getElementById('dateInput').value = getLocalDate(); toggleDate(document.getElementById('dateUnknown')); render(); showToast("OK");
+        this.reset(); document.getElementById('dateInput').value = getLocalDate(); toggleDate(document.getElementById('dateUnknown')); render();
     };
 
     function saveTargets() {
@@ -316,11 +309,66 @@
         const doc = new jsPDF();
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
-        const filtered = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
-        if(filtered.length === 0) { showToast("GEEN DATA"); return; }
-        doc.text(`S&S Rapport: ${months[selM]} ${selY}`, 14, 20);
-        doc.autoTable({ head: [['Datum', 'Factuur', 'Fix', 'Flx', 'Cal']], body: filtered.map(s => [s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal]), startY: 30 });
-        doc.save(`Rapport_${months[selM]}.pdf`);
+        
+        const visibleData = sales.filter(s => {
+            const isWait = s.isWait || s.date === "2099-12-31";
+            const inTime = isWait || (new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
+            return inTime;
+        }).sort((a,b) => b.date.localeCompare(a.date));
+
+        if(visibleData.length === 0) { showToast("GEEN DATA"); return; }
+
+        // PDF THEMA: DARK MODE
+        doc.setFillColor(0, 0, 0); 
+        doc.rect(0, 0, 210, 297, 'F');
+        
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(255, 51, 51);
+        doc.setFontSize(22);
+        doc.text("S&S TRACKER", 14, 20);
+        
+        doc.setTextColor(153, 153, 153);
+        doc.setFontSize(10);
+        doc.text(`RAPPORT: ${months[selM]} ${selY}`, 14, 28);
+
+        let tFix = 0, tFlex = 0, tCal = 0;
+        const rows = visibleData.map(s => {
+            tFix += s.qtyFix; tFlex += s.qtyFlex; tCal += s.qtyCal;
+            return [s.date === "2099-12-31" ? "WACHT" : s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal];
+        });
+
+        doc.autoTable({
+            head: [['DATUM', 'FACTUUR', 'FIX', 'FLX', 'CAL']],
+            body: rows,
+            startY: 35,
+            theme: 'grid',
+            styles: { fillColor: [22, 22, 22], textColor: [255, 255, 255], fontStyle: 'italic', font: 'helvetica', lineColor: [44, 44, 44] },
+            headStyles: { fillColor: [255, 51, 51], textColor: [255, 255, 255], fontStyle: 'bold' },
+            columnStyles: { 2: { textColor: [255, 51, 51] }, 3: { textColor: [255, 136, 0] }, 4: { textColor: [77, 184, 255] } }
+        });
+
+        const finalY = doc.lastAutoTable.finalY + 15;
+        doc.setTextColor(255, 255, 255);
+        doc.text(`TOTALEN DEZE PERIODE:`, 14, finalY);
+        doc.setTextColor(255, 51, 51); doc.text(`FIX: ${tFix}`, 14, finalY + 8);
+        doc.setTextColor(255, 136, 0); doc.text(`FLX: ${tFlex}`, 40, finalY + 8);
+        doc.setTextColor(77, 184, 255); doc.text(`CAL: ${tCal}`, 66, finalY + 8);
+
+        const pdfOutput = doc.output('blob');
+        const file = new File([pdfOutput], `SS_Rapport_${months[selM]}.pdf`, { type: 'application/pdf' });
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: 'S&S Rapport',
+                    text: `Hier is het S&S overzicht voor ${months[selM]} ${selY}`
+                });
+            } catch (err) { showToast("DELEN MISLUKT"); }
+        } else {
+            doc.save(`SS_Rapport_${months[selM]}.pdf`);
+            showToast("DELEN NIET ONDERSTEUND - GEDOWNLOAD");
+        }
     }
 </script>
 </body>
