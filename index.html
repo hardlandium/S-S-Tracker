@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V243-DOUBLE-BORDER</title>
+    <title>S&S Tracker V244-ALIGN-FIX</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -37,9 +37,9 @@
         input { text-align: center; }
         input[type="date"] { color: var(--text-gray); color-scheme: dark; }
 
-        #qtyFix::placeholder { color: rgba(255, 51, 51, 0.6) !important; opacity: 1; }
-        #qtyFlex::placeholder { color: rgba(255, 136, 0, 0.6) !important; opacity: 1; }
-        #qtyCal::placeholder { color: rgba(77, 184, 255, 0.6) !important; opacity: 1; }
+        #qtyFix::placeholder { color: rgba(255, 51, 51, 0.6) !important; }
+        #qtyFlex::placeholder { color: rgba(255, 136, 0, 0.6) !important; }
+        #qtyCal::placeholder { color: rgba(77, 184, 255, 0.6) !important; }
 
         .progress-container { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
         .progress-bar-wrapper { flex: 1; height: 32px; background: #111; border-radius: 8px; overflow: hidden; border: 1px solid #333; position: relative; display: flex; align-items: center; }
@@ -47,7 +47,7 @@
         .bar-label-left { position: absolute; left: 10px; z-index: 2; font-size: 8px; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; }
         .bar-label-right { position: absolute; right: 10px; z-index: 2; font-size: 8px; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; }
         
-        .target-input-slim { width: calc(25% - 5px); height: 32px; font-size: 11px; padding: 0; color: var(--text-gray); flex-shrink: 0; }
+        .target-input-slim { width: 65px; height: 32px; font-size: 11px; padding: 0; color: var(--text-gray); flex-shrink: 0; }
 
         .qty-control { display: grid; grid-template-columns: 32px 1fr 32px; background: #111; border-radius: 8px; border: 1px solid #333; height: var(--h-unit); overflow: hidden; }
         .qty-btn { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 18px; display: flex; align-items: center; justify-content: center; font-family: inherit; }
@@ -62,15 +62,17 @@
         .btn-action-slim.submit-style { background: #222; border-color: #444; color: #fff; }
 
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 500px; }
+        
+        /* ALIGNMENT LOGICA: Gelijk aan invoervelden */
         .list-header-row { display: grid; grid-template-columns: 1fr 65px 65px 40px; gap: 6px; margin-bottom: 12px; }
         
-        /* DUBBELE BORDER LOGICA */
         .log-item { background: #0c0c0c; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid #222; border-left: 5px solid #333; border-right: 5px solid #333; }
         .log-item.status-wait { border-left-color: var(--color-wait); border-right-color: var(--color-wait); } 
         .log-item.status-future { border-left-color: var(--color-future); border-right-color: var(--color-future); }
         
-        .log-grid { display: grid; grid-template-columns: 50px 1fr 85px 50px; align-items: center; gap: 8px; }
-        .qty-pill { background: #000; padding: 5px; border-radius: 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; text-align: center; font-size: 11px; }
+        /* GRID DEFINITIE VOOR LOG ITEMS */
+        .log-grid { display: grid; grid-template-columns: 50px 1fr 85px 45px; align-items: center; gap: 8px; }
+        .qty-pill { background: #000; padding: 5px; border-radius: 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; text-align: center; font-size: 10px; }
         
         #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 20px; border-radius: 25px; font-size: 11px; z-index: 2000; display: none; font-weight: bold; }
     </style>
@@ -102,18 +104,18 @@
         </div>
 
         <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-top:10px;">
-            <div class="btn-action-slim" onclick="shareAsPDF()"><span class="symbol" style="font-size:16px;">share</span>DEEL</div>
-            <div class="btn-action-slim" onclick="manualExport()"><span class="symbol" style="font-size:16px;">output</span>EXP</div>
-            <div class="btn-action-slim" onclick="document.getElementById('importInput').click()"><span class="symbol" style="font-size:16px;">input</span>IMP</div>
-            <div class="btn-action-slim" onclick="if(confirm('WISSEN?')){localStorage.clear();location.reload();}"><span class="symbol" style="font-size:16px;">delete</span>CLR</div>
+            <div class="btn-action-slim" onclick="shareAsPDF()"><span class="symbol" style="font-size:16px;">share</span></div>
+            <div class="btn-action-slim" onclick="manualExport()"><span class="symbol" style="font-size:16px;">output</span></div>
+            <div class="btn-action-slim" onclick="document.getElementById('importInput').click()"><span class="symbol" style="font-size:16px;">input</span></div>
+            <div class="btn-action-slim" onclick="if(confirm('WISSEN?')){localStorage.clear();location.reload();}"><span class="symbol" style="font-size:16px;">delete</span></div>
         </div>
-        <input type="file" id="importInput" style="display:none" accept=".json,.csv,text/csv,application/vnd.ms-excel,text/plain" onchange="manualImport(event)">
+        <input type="file" id="importInput" style="display:none" accept=".json,.csv" onchange="manualImport(event)">
     </div>
 
     <div class="card">
         <form id="saleForm">
             <div style="display:flex; gap:6px; margin-bottom:8px;">
-                <input type="text" id="invoice" inputmode="numeric" placeholder="FACTUUR #" required style="flex:1;">
+                <input type="text" id="invoice" inputmode="numeric" placeholder="FACTUUR #" required style="flex:1; text-align:left; padding-left:10px;">
                 <input type="text" id="notes" placeholder="NOTITIE..." style="flex:1;">
             </div>
             <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
@@ -124,14 +126,14 @@
             <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px;">
                 <input type="date" id="dateInput" required>
                 <div id="waitBtn" class="btn-action-slim" onclick="toggleDateViaBox()"><span id="waitIcon" class="symbol" style="font-size:16px;">hourglass_empty</span>WACHT<input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)"></div>
-                <button type="submit" id="mainSubmitBtn" class="btn-action-slim submit-style"><span class="symbol" style="font-size:16px;">add_task</span>OPSLAAN</button>
+                <button type="submit" id="mainSubmitBtn" class="btn-action-slim submit-style"><span class="symbol" style="font-size:16px;">add_task</span>OK</button>
             </div>
         </form>
     </div>
 
     <div class="card">
         <div class="list-header-row">
-            <input type="text" id="searchInput" placeholder="ZOEK..." oninput="render()" style="text-align:left;">
+            <input type="text" id="searchInput" placeholder="ZOEK..." oninput="render()" style="text-align:left; padding-left:10px;">
             <select id="viewMonth" class="btn-action-slim" onchange="render()"></select>
             <select id="viewYear" class="btn-action-slim" onchange="render()"></select>
             <div id="eyeBtn" class="btn-action-slim" onclick="toggleRunningFilter()"><span id="eyeIcon" class="symbol" style="font-size:18px;">visibility_off</span></div>
@@ -165,10 +167,7 @@
         const csvContent = [headers.join(","), ...rows].join("\n");
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
-        const dl = document.createElement('a');
-        dl.setAttribute("href", url);
-        dl.setAttribute("download", `ss_backup_${getLocalDate()}.csv`);
-        dl.click();
+        const dl = document.createElement('a'); dl.href = url; dl.download = `ss_backup_${getLocalDate()}.csv`; dl.click();
     }
 
     function manualImport(e) {
@@ -178,33 +177,25 @@
         reader.onload = function(ev) {
             try {
                 let data = [];
-                const fileName = file.name.toLowerCase();
                 const content = ev.target.result;
-                if (fileName.endsWith('.json')) { data = JSON.parse(content); } 
+                if (file.name.toLowerCase().endsWith('.json')) { data = JSON.parse(content); } 
                 else { data = csvToJSON(content); }
-                if (Array.isArray(data) && data.length > 0) {
-                    sales = data;
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
-                    render();
-                    showToast("IMPORT OK");
-                }
-            } catch(ex) { showToast("FOUT BIJ IMPORT"); }
+                if (Array.isArray(data)) { sales = data; localStorage.setItem(STORAGE_KEY, JSON.stringify(sales)); render(); showToast("IMPORT OK"); }
+            } catch(x) { showToast("FOUT"); }
         };
         reader.readAsText(file);
-        e.target.value = '';
     }
 
     function csvToJSON(csv) {
         const lines = csv.split('\n');
         const result = [];
         for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (!line) continue;
+            const line = lines[i].trim(); if (!line) continue;
             const c = line.split(',');
             result.push({
-                id: parseInt(c[0]) || Date.now() + i, date: c[1], invoice: c[2].replace(/"/g, ''),
-                qtyFix: parseInt(c[3]) || 0, qtyFlex: parseInt(c[4]) || 0, qtyCal: parseInt(c[5]) || 0,
-                notes: c[6] ? c[6].replace(/"/g, '') : "", isWait: c[7] === "true" || c[1] === "2099-12-31"
+                id: parseInt(c[0]), date: c[1], invoice: c[2].replace(/"/g, ''),
+                qtyFix: parseInt(c[3])||0, qtyFlex: parseInt(c[4])||0, qtyCal: parseInt(c[5])||0,
+                notes: c[6] ? c[6].replace(/"/g, '') : "", isWait: c[7] === "true"
             });
         }
         return result;
@@ -245,19 +236,19 @@
             log.innerHTML += `
             <div class="log-item ${isWait ? 'status-wait' : (isFuture ? 'status-future' : '')}">
                 <div class="log-grid">
-                    <div style="font-size:10px; color:var(--text-gray); text-align:center;">${shortD}</div>
-                    <div style="font-size:12px; font-weight:900; overflow:hidden; text-overflow:ellipsis;">${s.invoice}</div>
+                    <div style="font-size:10px; color:var(--text-gray); text-align:center; line-height:1.1;">${shortD}</div>
+                    <div style="font-size:11px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.invoice}</div>
                     <div class="qty-pill">
                         <span style="color:var(--mm-red)">${s.qtyFix}</span>
                         <span style="color:var(--mm-orange)">${s.qtyFlex}</span>
                         <span style="color:var(--color-wait)">${s.qtyCal}</span>
                     </div>
-                    <div style="display:flex; gap:8px; justify-content:flex-end;">
+                    <div style="display:flex; gap:6px; justify-content:flex-end;">
                         <span class="symbol" style="font-size:18px; color:var(--text-gray); cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
                         <span class="symbol" style="font-size:18px; color:#444; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
                     </div>
                 </div>
-                ${s.notes ? `<div style="color:var(--mm-orange); font-size:10px; margin-top:5px; padding-left:58px; opacity:0.8;">${s.notes}</div>` : ''}
+                ${s.notes ? `<div style="color:var(--mm-orange); font-size:9px; margin-top:4px; padding-left:58px; opacity:0.8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.notes}</div>` : ''}
             </div>`;
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
@@ -274,7 +265,7 @@
         document.getElementById('dateInput').value = s.isWait ? getLocalDate() : s.date;
         document.getElementById('dateUnknown').checked = s.isWait;
         toggleDate(document.getElementById('dateUnknown'));
-        document.getElementById('mainSubmitBtn').innerHTML = '<span class="symbol">edit</span>UPDATE';
+        document.getElementById('mainSubmitBtn').innerHTML = '<span class="symbol">edit</span>';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -290,7 +281,7 @@
             const idx = sales.findIndex(x => x.id === editId);
             sales[idx] = { ...sales[idx], ...data };
             editId = null;
-            document.getElementById('mainSubmitBtn').innerHTML = '<span class="symbol">add_task</span>OPSLAAN';
+            document.getElementById('mainSubmitBtn').innerHTML = '<span class="symbol">add_task</span>OK';
         } else { sales.push({ id: Date.now(), ...data }); }
         this.reset(); document.getElementById('dateInput').value = getLocalDate(); toggleDate(document.getElementById('dateUnknown')); render();
     };
@@ -322,41 +313,19 @@
             const isWait = s.isWait || s.date === "2099-12-31";
             return isWait || (new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
         }).sort((a,b) => b.date.localeCompare(a.date));
-        if(visibleData.length === 0) { showToast("GEEN DATA"); return; }
-        doc.setFillColor(0, 0, 0); 
-        doc.rect(0, 0, 210, 297, 'F');
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(255, 51, 51);
-        doc.setFontSize(22);
-        doc.text("S&S TRACKER", 14, 20);
-        doc.setTextColor(153, 153, 153);
-        doc.setFontSize(10);
-        doc.text(`RAPPORT: ${months[selM]} ${selY}`, 14, 28);
-        let tFix = 0, tFlex = 0, tCal = 0;
-        const rows = visibleData.map(s => {
-            tFix += s.qtyFix; tFlex += s.qtyFlex; tCal += s.qtyCal;
-            return [s.date === "2099-12-31" ? "WACHT" : s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal];
-        });
+        if(visibleData.length === 0) return;
+        doc.setFillColor(0, 0, 0); doc.rect(0, 0, 210, 297, 'F');
+        doc.setTextColor(255, 51, 51); doc.setFontSize(22); doc.text("S&S TRACKER", 14, 20);
+        const rows = visibleData.map(s => [s.date === "2099-12-31" ? "WACHT" : s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal]);
         doc.autoTable({
             head: [['DATUM', 'FACTUUR', 'FIX', 'FLX', 'CAL']],
             body: rows,
             startY: 35,
             theme: 'grid',
-            styles: { fillColor: [22, 22, 22], textColor: [255, 255, 255], fontStyle: 'italic', font: 'helvetica', lineColor: [44, 44, 44] },
-            headStyles: { fillColor: [255, 51, 51], textColor: [255, 255, 255], fontStyle: 'bold' },
-            columnStyles: { 2: { textColor: [255, 51, 51] }, 3: { textColor: [255, 136, 0] }, 4: { textColor: [77, 184, 255] } }
+            styles: { fillColor: [22, 22, 22], textColor: [255, 255, 255] },
+            headStyles: { fillColor: [255, 51, 51] }
         });
-        const finalY = doc.lastAutoTable.finalY + 15;
-        doc.setTextColor(255, 255, 255);
-        doc.text(`TOTALEN DEZE PERIODE:`, 14, finalY);
-        doc.setTextColor(255, 51, 51); doc.text(`FIX: ${tFix}`, 14, finalY + 8);
-        doc.setTextColor(255, 136, 0); doc.text(`FLX: ${tFlex}`, 40, finalY + 8);
-        doc.setTextColor(77, 184, 255); doc.text(`CAL: ${tCal}`, 66, finalY + 8);
-        const pdfOutput = doc.output('blob');
-        const file = new File([pdfOutput], `SS_Rapport_${months[selM]}.pdf`, { type: 'application/pdf' });
-        if (navigator.share) {
-            try { await navigator.share({ files: [file], title: 'S&S Rapport' }); } catch (err) { showToast("DELEN MISLUKT"); }
-        } else { doc.save(`SS_Rapport_${months[selM]}.pdf`); }
+        doc.save(`Rapport.pdf`);
     }
 </script>
 </body>
