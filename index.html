@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V256-ACCESSIBILITY</title>
+    <title>S&S Tracker V274-THEME-FILTERS</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -16,161 +16,151 @@
         :root {
             --mm-red: #ff3333; --mm-orange: #ff8800;
             --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-gray: #999;
-            --color-wait: #4db8ff; --color-future: #00ff88; --mm-font: 'Arial Black', sans-serif;
+            --color-wait: #4db8ff; --color-future: #00ff88; --color-done: #444;
+            --mm-font: 'Arial Black', sans-serif;
             --h-unit: 38px;
+            --skew-deg: -10deg;
+            --unskew-deg: 10deg;
         }
         
         * { box-sizing: border-box; }
-
-        .symbol { font-family: 'Material Symbols Rounded'; font-weight: normal; font-size: 20px; display: inline-block; line-height: 1; font-style: normal; }
+        .symbol { font-family: 'Material Symbols Rounded'; font-weight: normal; font-size: 18px; display: inline-block; line-height: 1; font-style: normal; }
         body { font-family: var(--mm-font); font-weight: 900; font-style: italic; background: var(--bg); margin: 0; padding-bottom: env(safe-area-inset-bottom); color: var(--text-dark); text-transform: uppercase; overflow-x: hidden; }
         .container { padding: 0 8px; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; min-height: 100vh; }
         .card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-top: 10px; border: 1px solid #222; position: relative; }
-        
-        .subtle-header { font-size: 13px; letter-spacing: 1.2px; color: var(--text-gray); margin-bottom: 12px; text-align: center; }
-        .subtle-header span { color: var(--mm-red); }
+        .inner-txt { transform: skewX(var(--unskew-deg)); display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; gap: 6px; }
 
-        input, select, .btn-action-slim, .target-input-slim { 
-            height: var(--h-unit); border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; 
-            font-family: inherit; font-style: italic; font-weight: 900; padding: 0 8px; 
-            font-size: 10px; transition: all 0.2s; appearance: none; display: flex; align-items: center; 
-            text-transform: uppercase; width: 100%; justify-content: center;
+        .main-header { 
+            background: #0a0a0a; border: 1px solid #333; height: var(--h-unit);
+            display: flex; align-items: center; justify-content: center; font-size: 11px; 
+            letter-spacing: 1px; color: var(--text-gray); margin-bottom: 12px;
+            transform: skewX(var(--skew-deg)); border-radius: 6px;
         }
-        
-        select { background: #0a0a0a; border: 1px solid #222; text-align-last: center; cursor: pointer; color: var(--text-gray); }
-        input { text-align: center; }
-        input[type="date"] { color: var(--text-gray); color-scheme: dark; font-size: 9px; }
+        .main-header span { color: var(--mm-red); margin-left: 4px; }
 
-        #qtyFix::placeholder { color: var(--mm-red) !important; opacity: 0.7; }
-        #qtyFlex::placeholder { color: var(--mm-orange) !important; opacity: 0.7; }
-        #qtyCal::placeholder { color: var(--color-wait) !important; opacity: 0.7; }
-        
-        #qtyFix { color: var(--mm-red) !important; }
-        #qtyFlex { color: var(--mm-orange) !important; }
-        #qtyCal { color: var(--color-wait) !important; }
-
-        .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin-bottom: 8px; }
-        .col-6 { grid-column: span 6; }
-        .col-4 { grid-column: span 4; }
-        .col-3 { grid-column: span 3; }
-        .col-2 { grid-column: span 2; }
-
-        .progress-container { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-        .progress-bar-wrapper { 
-            flex: 1; height: 34px; background: #0a0a0a; border-radius: 6px; overflow: hidden; 
-            border: 1px solid #222; position: relative; display: flex; align-items: center;
-            transform: skewX(-10deg);
+        .input-skew { 
+            height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; 
+            font-family: inherit; font-style: italic; font-weight: 900; font-size: 10px;
+            text-transform: uppercase; width: 100%; transform: skewX(var(--skew-deg));
+            border-radius: 6px; outline: none; padding: 0; display: flex;
         }
-        .fill-segment { 
-            height: 100%; transition: width 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); 
-            box-shadow: 2px 0 10px rgba(0,0,0,0.4); position: absolute; top: 0;
+        .input-skew input, .input-skew select {
+            background: transparent; border: none; color: inherit; font-family: inherit;
+            font-style: inherit; font-weight: inherit; font-size: inherit; width: 100%;
+            height: 100%; text-align: center; transform: skewX(var(--unskew-deg));
+            outline: none; text-transform: uppercase;
         }
+        /* Style for options inside dropdown */
+        select option { background: #161616; color: #fff; text-transform: uppercase; }
+        
+        .btn-action-slim { 
+            cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111;
+            transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit);
+            display: flex; align-items: center; justify-content: center;
+            font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 9px;
+        }
+        .btn-action-slim.submit-style { border-color: #333; color: var(--color-future); background: #111; font-size: 11px; }
+        .btn-action-slim.active-wait { color: var(--color-wait); border-color: var(--color-wait); }
+        .btn-action-slim.active-eye { color: var(--color-future); border-color: var(--color-future); }
+
+        .qty-control-skew { 
+            display: grid; grid-template-columns: 25px 1fr 25px; background: #111; 
+            border: 1px solid #333; height: var(--h-unit); transform: skewX(var(--skew-deg));
+            border-radius: 6px; overflow: hidden;
+        }
+        .qty-btn-skew { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 14px; transform: skewX(var(--unskew-deg)); }
+        .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 11px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; }
+        
+        /* Placeholder Color Fixes */
+        #qtyFix::placeholder { color: var(--mm-red); opacity: 0.7; }
+        #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.7; }
+        #qtyCal::placeholder { color: var(--color-wait); opacity: 0.7; }
+
+        .progress-bar-wrapper { flex: 1; height: 34px; background: #0a0a0a; border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative; display: flex; align-items: center; transform: skewX(var(--skew-deg)); }
+        .fill-segment { height: 100%; transition: width 0.8s ease; position: absolute; top: 0; }
         #fillFix { background: linear-gradient(90deg, #660000, var(--mm-red)); z-index: 2; }
         #fillFlexSegment { background: linear-gradient(90deg, #663300, var(--mm-orange)); z-index: 1; }
         #fillBranded { background: linear-gradient(90deg, #004466, var(--color-wait)); }
 
-        .bar-label-left { position: absolute; left: 12px; z-index: 5; font-size: 9px; color: #fff; text-shadow: 0px 1px 3px #000; transform: skewX(10deg); pointer-events: none; }
-        .bar-label-right { position: absolute; right: 12px; z-index: 5; font-size: 9px; color: #fff; text-shadow: 0px 1px 3px #000; transform: skewX(10deg); pointer-events: none; }
+        .bar-label-left { position: absolute; left: 12px; z-index: 5; font-size: 9px; color: #fff; transform: skewX(var(--unskew-deg)); pointer-events: none; }
+        .bar-label-right { position: absolute; right: 12px; z-index: 5; font-size: 9px; color: #fff; transform: skewX(var(--unskew-deg)); pointer-events: none; }
         
-        .target-input-slim { width: 60px; height: 34px; font-size: 11px; border-radius: 6px; border-color: #222; background: #0a0a0a; transform: skewX(-10deg); }
-
-        .qty-control { display: grid; grid-template-columns: 30px 1fr 30px; background: #111; border-radius: 8px; border: 1px solid #333; height: var(--h-unit); overflow: hidden; }
-        .qty-btn { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: center; font-family: inherit; }
-        .qty-control input { width: 100%; border: none; background: transparent; text-align: center; padding: 0; font-size: 12px; height: 100%; font-family: inherit; font-weight: 900; }
-        
-        .btn-action-slim { cursor: pointer; color: var(--text-gray); }
-        .btn-action-slim.active-wait, .btn-action-slim.active-eye { color: var(--color-wait); border-color: var(--color-wait); }
-        .btn-action-slim.submit-style { background: #222; border-color: #444; color: #fff; }
-
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 500px; }
-        
         .log-item { 
             background: #0c0c0c; border-radius: 12px; padding: 10px; margin-bottom: 8px; 
-            border: 1px solid #222; position: relative; overflow: hidden;
-            border-left: 5px solid #333; border-right: 5px solid #333;
+            border: 1px solid #222; position: relative; 
+            border-left: 4px solid #333; border-right: 4px solid #333;
         }
-        
-        .log-item.status-wait { 
-            border-left: 5px solid var(--color-wait); border-right: 5px solid var(--color-wait);
-            box-shadow: inset 10px 0 15px -10px rgba(77, 184, 255, 0.2), inset -10px 0 15px -10px rgba(77, 184, 255, 0.2);
-        }
-        .log-item.status-future { 
-            border-left: 5px solid var(--color-future); border-right: 5px solid var(--color-future);
-            box-shadow: inset 10px 0 15px -10px rgba(0, 255, 136, 0.2), inset -10px 0 15px -10px rgba(0, 255, 136, 0.2);
-        }
-
-        /* UPDATED LOG GRID FOR LABELS */
         .log-grid { display: grid; grid-template-columns: 45px 1fr 115px 45px; align-items: center; gap: 6px; }
-        .qty-pill { 
-            background: #000; padding: 4px 6px; border-radius: 6px; 
-            display: flex; justify-content: space-between; gap: 4px; 
-            text-align: center; font-size: 8px; border: 1px solid #1a1a1a;
-        }
-        .qty-pill div { display: flex; flex-direction: column; line-height: 1; }
-        .qty-label { color: #555; font-size: 7px; margin-bottom: 2px; }
+        .qty-pill { background: #000; padding: 4px 6px; border-radius: 6px; display: flex; justify-content: space-between; border: 1px solid #1a1a1a; gap: 4px; }
         
-        #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 20px; border-radius: 25px; font-size: 11px; z-index: 2000; display: none; font-weight: bold; }
+        .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin-bottom: 8px; }
+        .col-6 { grid-column: span 6; } .col-4 { grid-column: span 4; } .col-3 { grid-column: span 3; } .col-2 { grid-column: span 2; }
     </style>
 </head>
 <body>
 
-<div id="toast">MELDING</div>
-
 <div class="container">
     <div class="card">
-        <div class="subtle-header">SERVICES & SOLUTIONS <span>TRACKER</span></div>
-        <div class="progress-container">
+        <div class="main-header"><div class="inner-txt">SERVICES & SOLUTIONS <span>TRACKER</span></div></div>
+        
+        <div class="grid-12" style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
             <div class="progress-bar-wrapper">
                 <div class="bar-label-left">INSURANCE</div>
-                <div class="bar-label-right">FIX:<b id="valFix">0</b> FLEX:<b id="valFlex">0</b> | <span id="percVerz">0%</span></div>
+                <div class="bar-label-right">FIX:<b id="valFix">0</b> FLX:<b id="valFlex">0</b> | <span id="percVerz">0%</span></div>
                 <div id="fillFix" class="fill-segment" style="width:0%;"></div>
                 <div id="fillFlexSegment" class="fill-segment" style="width:0%;"></div>
             </div>
-            <input type="number" id="targetVerz" class="target-input-slim" oninput="saveTargets()">
+            <div style="width: 60px; height: 34px; border: 1px solid #222; background: #0a0a0a; transform: skewX(var(--skew-deg)); border-radius: 6px;">
+                <input type="number" id="targetVerz" oninput="saveTargets()" style="width:100%;height:100%;background:transparent;border:none;color:#fff;text-align:center;font-family:inherit;transform:skewX(var(--unskew-deg));">
+            </div>
         </div>
-        <div class="progress-container">
+
+        <div class="grid-12" style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
             <div class="progress-bar-wrapper">
                 <div class="bar-label-left">CALIBRATION</div>
                 <div class="bar-label-right">CAL:<b id="valCal">0</b> | <span id="percBranded">0%</span></div>
                 <div id="fillBranded" class="fill-segment" style="width:0%;"></div>
             </div>
-            <input type="number" id="targetVerzCalibration" class="target-input-slim" oninput="saveTargets()">
+            <div style="width: 60px; height: 34px; border: 1px solid #222; background: #0a0a0a; transform: skewX(var(--skew-deg)); border-radius: 6px;">
+                <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="width:100%;height:100%;background:transparent;border:none;color:#fff;text-align:center;font-family:inherit;transform:skewX(var(--unskew-deg));">
+            </div>
         </div>
 
         <div class="grid-12" style="margin-top:10px; margin-bottom:0;">
-            <div class="btn-action-slim col-3" onclick="shareAsPDF()"><span class="symbol" style="font-size:14px; margin-right:4px;">share</span>DEEL</div>
-            <div class="btn-action-slim col-3" onclick="manualExport()"><span class="symbol" style="font-size:14px; margin-right:4px;">output</span>EXP</div>
-            <div class="btn-action-slim col-3" onclick="document.getElementById('importInput').click()"><span class="symbol" style="font-size:14px; margin-right:4px;">input</span>IMP</div>
-            <div class="btn-action-slim col-3" onclick="if(confirm('WISSEN?')){localStorage.clear();location.reload();}"><span class="symbol" style="font-size:14px; margin-right:4px;">delete</span>CLR</div>
+            <div class="btn-action-slim col-3" onclick="shareAsPDF()"><div class="inner-txt"><span class="symbol" style="font-size:14px;">share</span>SHARE</div></div>
+            <div class="btn-action-slim col-3" onclick="manualExport()"><div class="inner-txt"><span class="symbol" style="font-size:14px;">download</span>EXP</div></div>
+            <div class="btn-action-slim col-3" onclick="document.getElementById('importInput').click()"><div class="inner-txt"><span class="symbol" style="font-size:14px;">upload</span>IMP</div></div>
+            <div class="btn-action-slim col-3" onclick="if(confirm('DELETE ALL?')){localStorage.clear();location.reload();}"><div class="inner-txt"><span class="symbol" style="font-size:14px;">delete_forever</span>CLR</div></div>
         </div>
-        <input type="file" id="importInput" style="display:none" accept=".json,.csv,text/csv,application/json" onchange="manualImport(event)">
+        <input type="file" id="importInput" style="display:none" accept=".json,.csv" onchange="manualImport(event)">
     </div>
 
     <div class="card">
         <form id="saleForm">
             <div class="grid-12">
-                <input type="text" id="invoice" class="col-6" inputmode="numeric" placeholder="FACTUUR #" required style="text-align:left; padding-left:10px;">
-                <input type="text" id="notes" class="col-6" placeholder="NOTITIE..." style="text-align:left; padding-left:10px;">
+                <div class="input-skew col-6"><input type="text" id="invoice" inputmode="numeric" placeholder="INVOICE #" required style="text-align:left; padding-left:15px;"></div>
+                <div class="input-skew col-6"><input type="text" id="notes" placeholder="NOTE..." style="text-align:left; padding-left:15px;"></div>
             </div>
             <div class="grid-12">
-                <div class="qty-control col-4"><button type="button" class="qty-btn" onclick="adj('qtyFix',-1)">-</button><input type="number" id="qtyFix" placeholder="FIX"><button type="button" class="qty-btn" onclick="adj('qtyFix',1)">+</button></div>
-                <div class="qty-control col-4"><button type="button" class="qty-btn" onclick="adj('qtyFlex',-1)">-</button><input type="number" id="qtyFlex" placeholder="FLX"><button type="button" class="qty-btn" onclick="adj('qtyFlex',1)">+</button></div>
-                <div class="qty-control col-4"><button type="button" class="qty-btn" onclick="adj('qtyCal',-1)">-</button><input type="number" id="qtyCal" placeholder="CAL"><button type="button" class="qty-btn" onclick="adj('qtyCal',1)">+</button></div>
+                <div class="qty-control-skew col-4"><button type="button" class="qty-btn-skew" onclick="adj('qtyFix',-1)">-</button><input type="number" id="qtyFix" class="qty-input-skew" placeholder="FIX" style="color:var(--mm-red)"><button type="button" class="qty-btn-skew" onclick="adj('qtyFix',1)">+</button></div>
+                <div class="qty-control-skew col-4"><button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',-1)">-</button><input type="number" id="qtyFlex" class="qty-input-skew" placeholder="FLX" style="color:var(--mm-orange)"><button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',1)">+</button></div>
+                <div class="qty-control-skew col-4"><button type="button" class="qty-btn-skew" onclick="adj('qtyCal',-1)">-</button><input type="number" id="qtyCal" class="qty-input-skew" placeholder="CAL" style="color:var(--color-wait)"><button type="button" class="qty-btn-skew" onclick="adj('qtyCal',1)">+</button></div>
             </div>
             <div class="grid-12">
-                <input type="date" id="dateInput" class="col-4" required>
-                <div id="waitBtn" class="btn-action-slim col-4" onclick="toggleDateViaBox()"><span id="waitIcon" class="symbol" style="font-size:16px; margin-right:4px;">hourglass_empty</span>WACHT<input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)"></div>
-                <button type="submit" id="mainSubmitBtn" class="btn-action-slim submit-style col-4"><span class="symbol" style="font-size:16px; margin-right:4px;">add_task</span>OPSLAAN</button>
+                <div class="input-skew col-4"><input type="date" id="dateInput" required style="color:var(--text-gray)"></div>
+                <div id="waitBtn" class="btn-action-slim col-4" onclick="toggleDateViaBox()"><div class="inner-txt"><span id="waitIcon" class="symbol">hourglass_empty</span>WAIT</div><input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)"></div>
+                <button type="submit" id="mainSubmitBtn" class="btn-action-slim submit-style col-4"><div class="inner-txt"><span id="submitIcon" class="symbol">save</span>SAVE</div></button>
             </div>
         </form>
     </div>
 
     <div class="card">
         <div class="grid-12">
-            <input type="text" id="searchInput" class="col-6" placeholder="ZOEK..." oninput="render()" style="text-align:left; padding-left:10px;">
-            <select id="viewMonth" class="col-2" onchange="render()"></select>
-            <select id="viewYear" class="col-2" onchange="render()"></select>
-            <div id="eyeBtn" class="btn-action-slim col-2" onclick="toggleRunningFilter()"><span id="eyeIcon" class="symbol" style="font-size:18px;">visibility_off</span></div>
+            <div class="input-skew col-6"><input type="text" id="searchInput" placeholder="SEARCH..." oninput="render()" style="text-align:left; padding-left:15px;"></div>
+            <div class="input-skew col-2"><select id="viewMonth" onchange="render()"></select></div>
+            <div class="input-skew col-2"><select id="viewYear" onchange="render()"></select></div>
+            <div id="eyeBtn" class="btn-action-slim col-2" onclick="toggleRunningFilter()"><div class="inner-txt"><span id="eyeIcon" class="symbol">visibility_off</span></div></div>
         </div>
         <div id="salesLog"></div>
     </div>
@@ -180,66 +170,29 @@
     const STORAGE_KEY = 'SS_DATA_V184';
     let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let editId = null;
-    let showOnlyRunning = false;
-    const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+    let showOnlyOpen = false;
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     function getLocalDate() { return new Date().toISOString().split('T')[0]; }
-    function showToast(text) { const t = document.getElementById('toast'); t.innerText = text; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2000); }
     function adj(id, v) { const el = document.getElementById(id); el.value = Math.max(0, (parseInt(el.value) || 0) + v); }
     function toggleDateViaBox() { const cb = document.getElementById('dateUnknown'); cb.checked = !cb.checked; toggleDate(cb); }
     function toggleDate(cb) {
         const di = document.getElementById('dateInput'), btn = document.getElementById('waitBtn'), icon = document.getElementById('waitIcon');
-        if(cb.checked) { btn.classList.add('active-wait'); icon.innerText = "hourglass_full"; di.disabled = true; di.style.opacity = "0.2"; } 
-        else { btn.classList.remove('active-wait'); icon.innerText = "hourglass_empty"; di.disabled = false; di.style.opacity = "1"; }
+        if(cb.checked) { btn.classList.add('active-wait'); icon.innerText = "hourglass_full"; di.disabled = true; di.closest('.input-skew').style.opacity = "0.2"; } 
+        else { btn.classList.remove('active-wait'); icon.innerText = "hourglass_empty"; di.disabled = false; di.closest('.input-skew').style.opacity = "1"; }
     }
-    function toggleRunningFilter() { showOnlyRunning = !showOnlyRunning; document.getElementById('eyeBtn').classList.toggle('active-eye', showOnlyRunning); document.getElementById('eyeIcon').innerText = showOnlyRunning ? 'visibility' : 'visibility_off'; render(); }
-
-    function manualExport() {
-        if (sales.length === 0) { showToast("GEEN DATA"); return; }
-        const headers = ["id", "date", "invoice", "qtyFix", "qtyFlex", "qtyCal", "notes", "isWait"];
-        const rows = sales.map(s => [s.id, s.date, `"${s.invoice}"`, s.qtyFix, s.qtyFlex, s.qtyCal, `"${s.notes || ''}"`, s.isWait].join(","));
-        const csvContent = [headers.join(","), ...rows].join("\n");
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const dl = document.createElement('a'); dl.href = url; dl.download = `ss_backup_${getLocalDate()}.csv`; dl.click();
-    }
-
-    function manualImport(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            try {
-                let data = [];
-                const content = ev.target.result;
-                if (file.name.toLowerCase().endsWith('.json') || content.trim().startsWith('[') || content.trim().startsWith('{')) { data = JSON.parse(content); } 
-                else { data = csvToJSON(content); }
-                if (Array.isArray(data) && data.length > 0) { sales = data; localStorage.setItem(STORAGE_KEY, JSON.stringify(sales)); render(); showToast("IMPORT OK"); }
-            } catch(x) { showToast("FOUT"); }
-        };
-        reader.readAsText(file);
-    }
-
-    function csvToJSON(csv) {
-        const lines = csv.split(/\r?\n/);
-        const result = [];
-        for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim(); if (!line) continue;
-            const c = line.split(',');
-            if (c.length < 6) continue;
-            result.push({
-                id: parseInt(c[0]) || Date.now() + i, date: c[1], invoice: c[2].replace(/"/g, ''),
-                qtyFix: parseInt(c[3])||0, qtyFlex: parseInt(c[4])||0, qtyCal: parseInt(c[5])||0,
-                notes: c[6] ? c[6].replace(/"/g, '') : "", isWait: c[7] === "true" || c[1] === "2099-12-31"
-            });
-        }
-        return result;
+    
+    function toggleRunningFilter() { 
+        showOnlyOpen = !showOnlyOpen; 
+        document.getElementById('eyeBtn').classList.toggle('active-eye', showOnlyOpen); 
+        document.getElementById('eyeIcon').innerText = showOnlyOpen ? 'visibility' : 'visibility_off'; 
+        render(); 
     }
 
     function render() {
         const log = document.getElementById('salesLog'), selM = parseInt(document.getElementById('viewMonth').value), selY = parseInt(document.getElementById('viewYear').value), search = document.getElementById('searchInput').value.toLowerCase();
-        let mFx=0, mFl=0, mB=0; log.innerHTML = '';
         const today = getLocalDate();
+        let mFx=0, mFl=0, mB=0; log.innerHTML = '';
 
         sales.forEach(s => { 
             if(!s.isWait && s.date !== "2099-12-31") {
@@ -253,61 +206,47 @@
         const tV = parseInt(document.getElementById('targetVerz').value) || 1, tB = parseInt(document.getElementById('targetVerzCalibration').value) || 1;
         document.getElementById('valFix').innerText = mFx; document.getElementById('valFlex').innerText = mFl; document.getElementById('valCal').innerText = mB;
 
-        const fixPerc = Math.min((mFx/tV)*100, 100);
-        const flexPerc = Math.min((mFl/tV)*100, 100 - fixPerc);
-        document.getElementById('fillFix').style.width = fixPerc + '%';
-        document.getElementById('fillFlexSegment').style.width = flexPerc + '%';
-        document.getElementById('fillFlexSegment').style.left = fixPerc + '%';
-
+        const fixP = Math.min((mFx/tV)*100, 100);
+        const flexP = Math.min((mFl/tV)*100, 100 - fixP);
+        document.getElementById('fillFix').style.width = fixP + '%';
+        document.getElementById('fillFlexSegment').style.width = flexP + '%';
+        document.getElementById('fillFlexSegment').style.left = fixP + '%';
         document.getElementById('fillBranded').style.width = Math.min((mB/tB)*100, 100) + '%';
         document.getElementById('percVerz').innerText = Math.round(((mFx+mFl)/tV)*100) + '%';
         document.getElementById('percBranded').innerText = Math.round((mB/tB)*100) + '%';
 
         sales.sort((a,b) => b.date.localeCompare(a.date)).forEach(s => {
             const isWait = s.isWait || s.date === "2099-12-31";
-            const isFuture = !isWait && s.date > today;
+            const isFuture = s.date > today && !isWait;
+            const isCompleted = !isWait && s.date <= today;
+            if (showOnlyOpen && isCompleted) return;
             const inTime = isWait || (new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
-            
-            if (!inTime || (showOnlyRunning && !isWait && !isFuture)) return;
+            if (!inTime && !showOnlyOpen) return; 
             if (search && !s.invoice.toLowerCase().includes(search) && !(s.notes && s.notes.toLowerCase().includes(search))) return;
-
+            let statusColor = "var(--color-done)"; 
+            if (isWait) statusColor = "var(--color-wait)"; 
+            else if (isFuture) statusColor = "var(--color-future)"; 
             const dP = s.date.split('-');
             const shortD = isWait ? '---' : `${dP[2]}\n${months[parseInt(dP[1])-1]}`;
-
             log.innerHTML += `
-            <div class="log-item ${isWait ? 'status-wait' : (isFuture ? 'status-future' : '')}">
+            <div class="log-item" style="border-left-color:${statusColor}; border-right-color:${statusColor};">
                 <div class="log-grid">
                     <div style="font-size:9px; color:var(--text-gray); text-align:center; line-height:1.1;">${shortD}</div>
-                    <div style="font-size:11px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.invoice}</div>
+                    <div style="font-size:11px; font-weight:900;">${s.invoice}</div>
                     <div class="qty-pill">
-                        <div><span class="qty-label">FIX</span><span style="color:var(--mm-red); text-shadow: 0 0 5px rgba(255,51,51,0.4);">${s.qtyFix}</span></div>
-                        <div><span class="qty-label">FLX</span><span style="color:var(--mm-orange); text-shadow: 0 0 5px rgba(255,136,0,0.4);">${s.qtyFlex}</span></div>
-                        <div><span class="qty-label">CAL</span><span style="color:var(--color-wait); text-shadow: 0 0 5px rgba(77,184,255,0.4);">${s.qtyCal}</span></div>
+                        <div style="font-size:8px;text-align:center"><span style="color:#555;display:block">FIX</span><span style="color:var(--mm-red)">${s.qtyFix}</span></div>
+                        <div style="font-size:8px;text-align:center"><span style="color:#555;display:block">FLX</span><span style="color:var(--mm-orange)">${s.qtyFlex}</span></div>
+                        <div style="font-size:8px;text-align:center"><span style="color:#555;display:block">CAL</span><span style="color:var(--color-wait)">${s.qtyCal}</span></div>
                     </div>
                     <div style="display:flex; gap:6px; justify-content:flex-end;">
                         <span class="symbol" style="font-size:18px; color:var(--text-gray); cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
                         <span class="symbol" style="font-size:18px; color:#444; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
                     </div>
                 </div>
-                ${s.notes ? `<div style="color:var(--mm-orange); font-size:9px; margin-top:4px; padding-left:53px; opacity:0.8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.notes}</div>` : ''}
+                ${s.notes ? `<div style="color:var(--mm-orange); font-size:9px; margin-top:4px; padding-left:51px; opacity:0.8; font-style:italic;">${s.notes}</div>` : ''}
             </div>`;
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
-    }
-
-    function startEdit(id) {
-        const s = sales.find(x => x.id === id); if(!s) return;
-        editId = id;
-        document.getElementById('invoice').value = s.invoice;
-        document.getElementById('notes').value = s.notes || '';
-        document.getElementById('qtyFix').value = s.qtyFix;
-        document.getElementById('qtyFlex').value = s.qtyFlex;
-        document.getElementById('qtyCal').value = s.qtyCal;
-        document.getElementById('dateInput').value = s.isWait ? getLocalDate() : s.date;
-        document.getElementById('dateUnknown').checked = s.isWait;
-        toggleDate(document.getElementById('dateUnknown'));
-        document.getElementById('mainSubmitBtn').innerHTML = '<span class="symbol">edit</span>UPDATE';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     document.getElementById('saleForm').onsubmit = function(e) {
@@ -322,10 +261,25 @@
             const idx = sales.findIndex(x => x.id === editId);
             sales[idx] = { ...sales[idx], ...data };
             editId = null;
-            document.getElementById('mainSubmitBtn').innerHTML = '<span class="symbol">add_task</span>OPSLAAN';
+            document.getElementById('mainSubmitBtn').innerHTML = '<div class="inner-txt"><span id="submitIcon" class="symbol">save</span>SAVE</div>';
         } else { sales.push({ id: Date.now(), ...data }); }
         this.reset(); document.getElementById('dateInput').value = getLocalDate(); toggleDate(document.getElementById('dateUnknown')); render();
     };
+
+    function startEdit(id) {
+        const s = sales.find(x => x.id === id); if(!s) return;
+        editId = id;
+        document.getElementById('invoice').value = s.invoice;
+        document.getElementById('notes').value = s.notes || '';
+        document.getElementById('qtyFix').value = s.qtyFix;
+        document.getElementById('qtyFlex').value = s.qtyFlex;
+        document.getElementById('qtyCal').value = s.qtyCal;
+        document.getElementById('dateInput').value = s.isWait ? getLocalDate() : s.date;
+        document.getElementById('dateUnknown').checked = s.isWait;
+        toggleDate(document.getElementById('dateUnknown'));
+        document.getElementById('mainSubmitBtn').innerHTML = '<div class="inner-txt"><span id="submitIcon" class="symbol">edit</span>UPDATE</div>';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     function saveTargets() {
         localStorage.setItem('ss_t_v', document.getElementById('targetVerz').value);
@@ -333,7 +287,23 @@
         render();
     }
 
-    function confirmDelete(id) { if(confirm('WISSEN?')) { sales = sales.filter(x => x.id !== id); render(); } }
+    function manualExport() {
+        const headers = ["id", "date", "invoice", "qtyFix", "qtyFlex", "qtyCal", "notes", "isWait"];
+        const rows = sales.map(s => [s.id, s.date, `"${s.invoice}"`, s.qtyFix, s.qtyFlex, s.qtyCal, `"${s.notes || ''}"`, s.isWait].join(","));
+        const csvContent = [headers.join(","), ...rows].join("\n");
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const dl = document.createElement('a'); dl.href = url; dl.download = `ss_backup.csv`; dl.click();
+    }
+
+    function manualImport(e) {
+        const file = e.target.files[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) { try { sales = JSON.parse(ev.target.result); render(); } catch(e) { } };
+        reader.readAsText(file);
+    }
+
+    function confirmDelete(id) { if(confirm('DELETE RECORD?')) { sales = sales.filter(x => x.id !== id); render(); } }
 
     window.onload = function() {
         const mS = document.getElementById('viewMonth'), yS = document.getElementById('viewYear'), n = new Date();
@@ -350,47 +320,59 @@
         const doc = new jsPDF();
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
-        const visibleData = sales.filter(s => {
-            const isWait = s.isWait || s.date === "2099-12-31";
-            return isWait || (new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
-        }).sort((a,b) => b.date.localeCompare(a.date));
+        const fileName = `SS_Report_${months[selM].toUpperCase()}_${selY}.pdf`;
         
-        if(visibleData.length === 0) { showToast("GEEN DATA"); return; }
+        const filtered = sales.filter(s => {
+            if(s.isWait || s.date === "2099-12-31") return false;
+            const d = new Date(s.date);
+            return d.getMonth() === selM && d.getFullYear() === selY;
+        }).sort((a,b) => a.date.localeCompare(b.date));
+
+        const totalFix = filtered.reduce((a,b) => a + (parseInt(b.qtyFix)||0), 0);
+        const totalFlex = filtered.reduce((a,b) => a + (parseInt(b.qtyFlex)||0), 0);
+        const totalCal = filtered.reduce((a,b) => a + (parseInt(b.qtyCal)||0), 0);
+
+        doc.setFillColor(0, 0, 0); doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 51, 51); doc.setFont("helvetica", "bold"); doc.setFontSize(22);
+        doc.text("SERVICES & SOLUTIONS", 15, 20);
+        doc.setTextColor(255, 255, 255); doc.setFontSize(12);
+        doc.text(`REPORT: ${months[selM].toUpperCase()} ${selY}`, 15, 30);
+
+        doc.setTextColor(0, 0, 0); doc.setFontSize(14);
+        doc.text("MONTHLY TOTALS", 15, 55);
+        doc.setDrawColor(200, 200, 200); doc.line(15, 58, 195, 58);
         
-        doc.setFillColor(0, 0, 0); doc.rect(0, 0, 210, 297, 'F');
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(255, 51, 51); doc.setFontSize(22); doc.text("S&S TRACKER", 14, 20);
-        doc.setTextColor(153, 153, 153); doc.setFontSize(10); doc.text(`RAPPORT: ${months[selM]} ${selY}`, 14, 28);
-        
-        let tFix = 0, tFlex = 0, tCal = 0;
-        const rows = visibleData.map(s => {
-            tFix += s.qtyFix; tFlex += s.qtyFlex; tCal += s.qtyCal;
-            return [s.date === "2099-12-31" ? "WACHT" : s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal];
-        });
-        
+        doc.setFontSize(11);
+        doc.setTextColor(255, 51, 51); doc.text(`FIX: ${totalFix}`, 15, 68);
+        doc.setTextColor(255, 136, 0); doc.text(`FLEX: ${totalFlex}`, 60, 68);
+        doc.setTextColor(77, 184, 255); doc.text(`CALIBRATION: ${totalCal}`, 105, 68);
+
+        const tableBody = filtered.map(s => [s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '']);
         doc.autoTable({
-            head: [['DATUM', 'FACTUUR', 'FIX', 'FLX', 'CAL']],
-            body: rows,
-            startY: 35,
-            theme: 'grid',
-            styles: { fillColor: [22, 22, 22], textColor: [255, 255, 255], fontStyle: 'italic', font: 'helvetica', lineColor: [44, 44, 44] },
-            headStyles: { fillColor: [255, 51, 51], textColor: [255, 255, 255], fontStyle: 'bold' },
-            columnStyles: { 2: { textColor: [255, 51, 51] }, 3: { textColor: [255, 136, 0] }, 4: { textColor: [77, 184, 255] } }
+            startY: 75,
+            head: [['DATE', 'INVOICE', 'FIX', 'FLX', 'CAL', 'NOTES']],
+            body: tableBody,
+            headStyles: { fillColor: [22, 22, 22], textColor: [255, 255, 255] },
+            alternateRowStyles: { fillColor: [245, 245, 245] },
+            margin: { left: 15, right: 15 }
         });
-        
-        const finalY = doc.lastAutoTable.finalY + 15;
-        doc.setTextColor(255, 255, 255); doc.text(`TOTALEN DEZE PERIODE:`, 14, finalY);
-        doc.setTextColor(255, 51, 51); doc.text(`FIX: ${tFix}`, 14, finalY + 8);
-        doc.setTextColor(255, 136, 0); doc.text(`FLX: ${tFlex}`, 40, finalY + 8);
-        doc.setTextColor(77, 184, 255); doc.text(`CAL: ${tCal}`, 66, finalY + 8);
-        
+
         const pdfBlob = doc.output('blob');
-        const file = new File([pdfBlob], `SS_Rapport_${months[selM]}.pdf`, { type: 'application/pdf' });
-        
-        if (navigator.share) {
-            try { await navigator.share({ files: [file], title: 'S&S Tracker Rapport' }); } 
-            catch (err) { doc.save(`SS_Rapport_${months[selM]}.pdf`); }
-        } else { doc.save(`SS_Rapport_${months[selM]}.pdf`); }
+        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: 'S&S Tracker Report',
+                    text: `Services & Solutions report for ${months[selM]} ${selY}`
+                });
+            } catch (err) {
+                if(err.name !== "AbortError") doc.save(fileName);
+            }
+        } else {
+            doc.save(fileName);
+        }
     }
 </script>
 </body>
