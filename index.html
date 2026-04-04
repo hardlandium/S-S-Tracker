@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V249-GRID-PERFECTION</title>
+    <title>S&S Tracker V256-ACCESSIBILITY</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -17,10 +17,10 @@
             --mm-red: #ff3333; --mm-orange: #ff8800;
             --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-gray: #999;
             --color-wait: #4db8ff; --color-future: #00ff88; --mm-font: 'Arial Black', sans-serif;
-            --h-unit: 38px; /* Iets meer ademruimte */
+            --h-unit: 38px;
         }
         
-        * { box-sizing: border-box; } /* Cruciaal voor uitlijning */
+        * { box-sizing: border-box; }
 
         .symbol { font-family: 'Material Symbols Rounded'; font-weight: normal; font-size: 20px; display: inline-block; line-height: 1; font-style: normal; }
         body { font-family: var(--mm-font); font-weight: 900; font-style: italic; background: var(--bg); margin: 0; padding-bottom: env(safe-area-inset-bottom); color: var(--text-dark); text-transform: uppercase; overflow-x: hidden; }
@@ -30,7 +30,6 @@
         .subtle-header { font-size: 13px; letter-spacing: 1.2px; color: var(--text-gray); margin-bottom: 12px; text-align: center; }
         .subtle-header span { color: var(--mm-red); }
 
-        /* STANDAARD INPUT STYLING VOOR PERFECTE ALIGNMENT */
         input, select, .btn-action-slim, .target-input-slim { 
             height: var(--h-unit); border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; 
             font-family: inherit; font-style: italic; font-weight: 900; padding: 0 8px; 
@@ -38,31 +37,42 @@
             text-transform: uppercase; width: 100%; justify-content: center;
         }
         
+        select { background: #0a0a0a; border: 1px solid #222; text-align-last: center; cursor: pointer; color: var(--text-gray); }
         input { text-align: center; }
         input[type="date"] { color: var(--text-gray); color-scheme: dark; font-size: 9px; }
 
-        /* KLEUREN SERVICES */
         #qtyFix::placeholder { color: var(--mm-red) !important; opacity: 0.7; }
         #qtyFlex::placeholder { color: var(--mm-orange) !important; opacity: 0.7; }
         #qtyCal::placeholder { color: var(--color-wait) !important; opacity: 0.7; }
+        
         #qtyFix { color: var(--mm-red) !important; }
         #qtyFlex { color: var(--mm-orange) !important; }
         #qtyCal { color: var(--color-wait) !important; }
 
-        /* GRID SYSTEMEN */
         .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin-bottom: 8px; }
         .col-6 { grid-column: span 6; }
         .col-4 { grid-column: span 4; }
         .col-3 { grid-column: span 3; }
         .col-2 { grid-column: span 2; }
 
-        .progress-container { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
-        .progress-bar-wrapper { flex: 1; height: 32px; background: #111; border-radius: 8px; overflow: hidden; border: 1px solid #333; position: relative; display: flex; align-items: center; }
-        .fill { height: 100%; transition: width 0.6s ease; position: absolute; left: 0; top: 0; z-index: 1; }
-        .bar-label-left { position: absolute; left: 10px; z-index: 2; font-size: 8px; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; }
-        .bar-label-right { position: absolute; right: 10px; z-index: 2; font-size: 8px; color: #fff; text-shadow: 1px 1px 2px #000; pointer-events: none; }
+        .progress-container { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .progress-bar-wrapper { 
+            flex: 1; height: 34px; background: #0a0a0a; border-radius: 6px; overflow: hidden; 
+            border: 1px solid #222; position: relative; display: flex; align-items: center;
+            transform: skewX(-10deg);
+        }
+        .fill-segment { 
+            height: 100%; transition: width 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); 
+            box-shadow: 2px 0 10px rgba(0,0,0,0.4); position: absolute; top: 0;
+        }
+        #fillFix { background: linear-gradient(90deg, #660000, var(--mm-red)); z-index: 2; }
+        #fillFlexSegment { background: linear-gradient(90deg, #663300, var(--mm-orange)); z-index: 1; }
+        #fillBranded { background: linear-gradient(90deg, #004466, var(--color-wait)); }
+
+        .bar-label-left { position: absolute; left: 12px; z-index: 5; font-size: 9px; color: #fff; text-shadow: 0px 1px 3px #000; transform: skewX(10deg); pointer-events: none; }
+        .bar-label-right { position: absolute; right: 12px; z-index: 5; font-size: 9px; color: #fff; text-shadow: 0px 1px 3px #000; transform: skewX(10deg); pointer-events: none; }
         
-        .target-input-slim { width: 65px; height: 32px; font-size: 11px; padding: 0; color: var(--text-gray); flex-shrink: 0; }
+        .target-input-slim { width: 60px; height: 34px; font-size: 11px; border-radius: 6px; border-color: #222; background: #0a0a0a; transform: skewX(-10deg); }
 
         .qty-control { display: grid; grid-template-columns: 30px 1fr 30px; background: #111; border-radius: 8px; border: 1px solid #333; height: var(--h-unit); overflow: hidden; }
         .qty-btn { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: center; font-family: inherit; }
@@ -74,12 +84,30 @@
 
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 500px; }
         
-        .log-item { background: #0c0c0c; border-radius: 12px; padding: 10px; margin-bottom: 8px; border: 1px solid #222; border-left: 5px solid #333; border-right: 5px solid #333; }
-        .log-item.status-wait { border-left-color: var(--color-wait); border-right-color: var(--color-wait); } 
-        .log-item.status-future { border-left-color: var(--color-future); border-right-color: var(--color-future); }
+        .log-item { 
+            background: #0c0c0c; border-radius: 12px; padding: 10px; margin-bottom: 8px; 
+            border: 1px solid #222; position: relative; overflow: hidden;
+            border-left: 5px solid #333; border-right: 5px solid #333;
+        }
         
-        .log-grid { display: grid; grid-template-columns: 50px 1fr 85px 45px; align-items: center; gap: 8px; }
-        .qty-pill { background: #000; padding: 5px; border-radius: 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; text-align: center; font-size: 10px; }
+        .log-item.status-wait { 
+            border-left: 5px solid var(--color-wait); border-right: 5px solid var(--color-wait);
+            box-shadow: inset 10px 0 15px -10px rgba(77, 184, 255, 0.2), inset -10px 0 15px -10px rgba(77, 184, 255, 0.2);
+        }
+        .log-item.status-future { 
+            border-left: 5px solid var(--color-future); border-right: 5px solid var(--color-future);
+            box-shadow: inset 10px 0 15px -10px rgba(0, 255, 136, 0.2), inset -10px 0 15px -10px rgba(0, 255, 136, 0.2);
+        }
+
+        /* UPDATED LOG GRID FOR LABELS */
+        .log-grid { display: grid; grid-template-columns: 45px 1fr 115px 45px; align-items: center; gap: 6px; }
+        .qty-pill { 
+            background: #000; padding: 4px 6px; border-radius: 6px; 
+            display: flex; justify-content: space-between; gap: 4px; 
+            text-align: center; font-size: 8px; border: 1px solid #1a1a1a;
+        }
+        .qty-pill div { display: flex; flex-direction: column; line-height: 1; }
+        .qty-label { color: #555; font-size: 7px; margin-bottom: 2px; }
         
         #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 20px; border-radius: 25px; font-size: 11px; z-index: 2000; display: none; font-weight: bold; }
     </style>
@@ -93,17 +121,18 @@
         <div class="subtle-header">SERVICES & SOLUTIONS <span>TRACKER</span></div>
         <div class="progress-container">
             <div class="progress-bar-wrapper">
-                <div class="bar-label-left">TARGET INSURANCE</div>
-                <div class="bar-label-right">FIX:<b id="valFix">0</b> | FLX:<b id="valFlex">0</b> | <span id="percVerz">0%</span></div>
-                <div id="fillVerz" class="fill" style="background:var(--mm-red); width:0%;"></div>
+                <div class="bar-label-left">INSURANCE</div>
+                <div class="bar-label-right">FIX:<b id="valFix">0</b> FLEX:<b id="valFlex">0</b> | <span id="percVerz">0%</span></div>
+                <div id="fillFix" class="fill-segment" style="width:0%;"></div>
+                <div id="fillFlexSegment" class="fill-segment" style="width:0%;"></div>
             </div>
             <input type="number" id="targetVerz" class="target-input-slim" oninput="saveTargets()">
         </div>
         <div class="progress-container">
             <div class="progress-bar-wrapper">
-                <div class="bar-label-left">TARGET CALIBRATION</div>
+                <div class="bar-label-left">CALIBRATION</div>
                 <div class="bar-label-right">CAL:<b id="valCal">0</b> | <span id="percBranded">0%</span></div>
-                <div id="fillBranded" class="fill" style="background:var(--color-wait); width:0%;"></div>
+                <div id="fillBranded" class="fill-segment" style="width:0%;"></div>
             </div>
             <input type="number" id="targetVerzCalibration" class="target-input-slim" oninput="saveTargets()">
         </div>
@@ -139,8 +168,8 @@
     <div class="card">
         <div class="grid-12">
             <input type="text" id="searchInput" class="col-6" placeholder="ZOEK..." oninput="render()" style="text-align:left; padding-left:10px;">
-            <select id="viewMonth" class="col-2" onchange="render()" style="padding:0;"></select>
-            <select id="viewYear" class="col-2" onchange="render()" style="padding:0;"></select>
+            <select id="viewMonth" class="col-2" onchange="render()"></select>
+            <select id="viewYear" class="col-2" onchange="render()"></select>
             <div id="eyeBtn" class="btn-action-slim col-2" onclick="toggleRunningFilter()"><span id="eyeIcon" class="symbol" style="font-size:18px;">visibility_off</span></div>
         </div>
         <div id="salesLog"></div>
@@ -223,7 +252,13 @@
         
         const tV = parseInt(document.getElementById('targetVerz').value) || 1, tB = parseInt(document.getElementById('targetVerzCalibration').value) || 1;
         document.getElementById('valFix').innerText = mFx; document.getElementById('valFlex').innerText = mFl; document.getElementById('valCal').innerText = mB;
-        document.getElementById('fillVerz').style.width = Math.min(((mFx+mFl)/tV)*100, 100) + '%';
+
+        const fixPerc = Math.min((mFx/tV)*100, 100);
+        const flexPerc = Math.min((mFl/tV)*100, 100 - fixPerc);
+        document.getElementById('fillFix').style.width = fixPerc + '%';
+        document.getElementById('fillFlexSegment').style.width = flexPerc + '%';
+        document.getElementById('fillFlexSegment').style.left = fixPerc + '%';
+
         document.getElementById('fillBranded').style.width = Math.min((mB/tB)*100, 100) + '%';
         document.getElementById('percVerz').innerText = Math.round(((mFx+mFl)/tV)*100) + '%';
         document.getElementById('percBranded').innerText = Math.round((mB/tB)*100) + '%';
@@ -242,19 +277,19 @@
             log.innerHTML += `
             <div class="log-item ${isWait ? 'status-wait' : (isFuture ? 'status-future' : '')}">
                 <div class="log-grid">
-                    <div style="font-size:10px; color:var(--text-gray); text-align:center; line-height:1.1;">${shortD}</div>
+                    <div style="font-size:9px; color:var(--text-gray); text-align:center; line-height:1.1;">${shortD}</div>
                     <div style="font-size:11px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.invoice}</div>
                     <div class="qty-pill">
-                        <span style="color:var(--mm-red)">${s.qtyFix}</span>
-                        <span style="color:var(--mm-orange)">${s.qtyFlex}</span>
-                        <span style="color:var(--color-wait)">${s.qtyCal}</span>
+                        <div><span class="qty-label">FIX</span><span style="color:var(--mm-red); text-shadow: 0 0 5px rgba(255,51,51,0.4);">${s.qtyFix}</span></div>
+                        <div><span class="qty-label">FLX</span><span style="color:var(--mm-orange); text-shadow: 0 0 5px rgba(255,136,0,0.4);">${s.qtyFlex}</span></div>
+                        <div><span class="qty-label">CAL</span><span style="color:var(--color-wait); text-shadow: 0 0 5px rgba(77,184,255,0.4);">${s.qtyCal}</span></div>
                     </div>
                     <div style="display:flex; gap:6px; justify-content:flex-end;">
                         <span class="symbol" style="font-size:18px; color:var(--text-gray); cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
                         <span class="symbol" style="font-size:18px; color:#444; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
                     </div>
                 </div>
-                ${s.notes ? `<div style="color:var(--mm-orange); font-size:9px; margin-top:4px; padding-left:58px; opacity:0.8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.notes}</div>` : ''}
+                ${s.notes ? `<div style="color:var(--mm-orange); font-size:9px; margin-top:4px; padding-left:53px; opacity:0.8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.notes}</div>` : ''}
             </div>`;
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
