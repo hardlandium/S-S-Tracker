@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V296-PLACEHOLDER-FIX</title>
+    <title>S&S Tracker V298-SHARE-FIX</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -37,19 +37,15 @@
 
         .inner-txt { transform: skewX(var(--unskew-deg)); display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; gap: 6px; }
 
-        .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 10px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; }
+        .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 10px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; overflow: hidden; }
         .input-skew input, .input-skew select { background: transparent; border: none; color: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; font-size: inherit; width: 100%; height: 100%; text-align: center; transform: skewX(var(--unskew-deg)); outline: none; text-transform: uppercase; }
         
-        /* Placeholder Color Fix */
-        #qtyFix::placeholder { color: var(--mm-red); opacity: 0.6; }
-        #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.6; }
-        #qtyCal::placeholder { color: var(--color-wait); opacity: 0.6; }
-        #invoice::placeholder, #notes::placeholder { color: #555; }
+        #qtyFix::placeholder { color: var(--mm-red); opacity: 0.8; }
+        #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.8; }
+        #qtyCal::placeholder { color: var(--color-wait); opacity: 0.8; }
 
         .btn-action-slim { cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111; transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit); display: flex; align-items: center; justify-content: center; font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 8px; transition: all 0.2s; }
         .btn-action-slim.submit-style { color: var(--color-future); font-size: 11px; }
-        .btn-action-slim.active-wait { color: var(--color-wait); border-color: var(--color-wait); }
-        .btn-action-slim.active-eye { color: var(--color-future); border-color: var(--color-future); }
         .btn-success { color: #000 !important; background: var(--color-future) !important; border-color: var(--color-future) !important; }
 
         .qty-control-skew { display: grid; grid-template-columns: 25px 1fr 25px; background: #111; border: 1px solid #333; height: var(--h-unit); transform: skewX(var(--skew-deg)); border-radius: 6px; overflow: hidden; }
@@ -67,8 +63,8 @@
         .log-item { background: #0c0c0c; border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
         .log-main-grid { display: grid; grid-template-columns: 45px 1fr 130px 35px; align-items: center; gap: 8px; padding: 0 4px; }
         
-        .status-bar-left { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
-        .status-bar-right { position: absolute; right: 0; top: 0; bottom: 0; width: 4px; }
+        .status-bar-left, .status-bar-right { position: absolute; top: 0; bottom: 0; width: 4px; }
+        .status-bar-left { left: 0; } .status-bar-right { right: 0; }
 
         .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 6px 2px; border: 1px solid #1a1a1a; }
         .qty-col { display: flex; flex-direction: column; gap: 1px; }
@@ -98,8 +94,8 @@
                 <div id="fillFix" class="fill-segment" style="width:0%;"></div>
                 <div id="fillFlexSegment" class="fill-segment" style="width:0%;"></div>
             </div>
-            <div style="width: 60px; height: 34px; border: 1px solid var(--mm-orange); background: #0a0a0a; transform: skewX(var(--skew-deg)); border-radius: 6px;">
-                <input type="number" id="targetVerz" oninput="saveTargets()" style="width:100%;height:100%;background:transparent;border:none;color:var(--mm-orange);text-align:center;font-family:inherit;font-weight:900;transform:skewX(var(--unskew-deg));">
+            <div class="input-skew" style="width: 60px; height: 34px; border-color: var(--mm-orange); background: #0a0a0a;">
+                <input type="number" id="targetVerz" oninput="saveTargets()" style="color:var(--mm-orange);">
             </div>
         </div>
 
@@ -111,8 +107,8 @@
                 </div>
                 <div id="fillBranded" class="fill-segment" style="width:0%;"></div>
             </div>
-            <div style="width: 60px; height: 34px; border: 1px solid var(--color-wait); background: #0a0a0a; transform: skewX(var(--skew-deg)); border-radius: 6px;">
-                <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="width:100%;height:100%;background:transparent;border:none;color:var(--color-wait);text-align:center;font-family:inherit;font-weight:900;transform:skewX(var(--unskew-deg));">
+            <div class="input-skew" style="width: 60px; height: 34px; border-color: var(--color-wait); background: #0a0a0a;">
+                <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="color:var(--color-wait);">
             </div>
         </div>
 
@@ -182,7 +178,7 @@
     function render() {
         const log = document.getElementById('salesLog'), selM = parseInt(document.getElementById('viewMonth').value), selY = parseInt(document.getElementById('viewYear').value), search = document.getElementById('searchInput').value.toLowerCase();
         const today = getLocalDate();
-        let mFx=0, mFl=0, mB=0, listCount=0; log.innerHTML = '';
+        let mFx=0, mFl=0, mB=0; log.innerHTML = '';
         
         sales.forEach(s => { 
             if(!s.isWait && s.date !== "2099-12-31") {
@@ -208,7 +204,6 @@
             const isInPeriod = isWait || (sD.getMonth() === selM && sD.getFullYear() === selY);
             if (!isInPeriod || (showOnlyOpen && !isWait && s.date <= today) || (search && !s.invoice.toLowerCase().includes(search) && !(s.notes && s.notes.toLowerCase().includes(search)))) return;
             
-            listCount++; 
             const dP = s.date.split('-'); 
             const shortD = isWait ? '---' : `${dP[2]}\n${months[parseInt(dP[1])-1]}`;
             const statusColor = isWait ? 'var(--color-wait)' : (s.date > today ? 'var(--color-future)' : 'var(--color-done)');
@@ -232,7 +227,6 @@
                 </div>
             </div>`;
         });
-        if(listCount === 0) log.innerHTML = `<div style="text-align:center; padding:40px; color:#333; font-size:10px;">NO DATA FOUND</div>`;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
     }
 
@@ -290,12 +284,37 @@
     };
 
     async function shareAsPDF() {
-        const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        const selM = parseInt(document.getElementById('viewMonth').value), selY = parseInt(document.getElementById('viewYear').value);
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const selM = parseInt(document.getElementById('viewMonth').value);
+        const selY = parseInt(document.getElementById('viewYear').value);
+        const fileName = `S-S_Report_${months[selM]}_${selY}.pdf`;
+
         const filtered = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
+        
         doc.text(`S&S REPORT: ${months[selM]} ${selY}`, 15, 20);
-        doc.autoTable({ startY: 30, head: [['DATE', 'INVOICE', 'FIX', 'FLX', 'CAL', 'NOTES']], body: filtered.map(s => [s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '']) });
-        doc.save(`S-S_Report_${months[selM]}_${selY}.pdf`);
+        doc.autoTable({
+            startY: 30,
+            head: [['DATE', 'INVOICE', 'FIX', 'FLX', 'CAL', 'NOTES']],
+            body: filtered.map(s => [s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || ''])
+        });
+
+        const pdfBlob = doc.output('blob');
+        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: fileName,
+                    text: `Hier is het overzicht van ${months[selM]} ${selY}`
+                });
+            } catch (err) {
+                if (err.name !== 'AbortError') doc.save(fileName);
+            }
+        } else {
+            doc.save(fileName);
+        }
     }
 </script>
 </body>
