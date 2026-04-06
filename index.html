@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V301-TEXT-HD</title>
+    <title>S&S Tracker V302-COPY-READY</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -72,6 +72,9 @@
         .qty-col-val { font-size: 14px; font-weight: 900; }
         .log-actions { display: flex; flex-direction: column; gap: 8px; align-items: center; }
         
+        .invoice-tap { cursor: pointer; transition: color 0.2s; -webkit-user-select: none; user-select: none; }
+        .invoice-tap:active { color: var(--color-future); }
+
         .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin-bottom: 8px; }
         .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; }
     </style>
@@ -171,6 +174,14 @@
         document.getElementById('eyeIcon').innerText = showOnlyOpen ? 'visibility' : 'visibility_off'; render(); 
     }
 
+    function copyToClipboard(val, el) {
+        navigator.clipboard.writeText(val).then(() => {
+            const oldColor = el.style.color;
+            el.style.color = 'var(--color-future)';
+            setTimeout(() => { el.style.color = oldColor; }, 500);
+        });
+    }
+
     function render() {
         const log = document.getElementById('salesLog'), selM = parseInt(document.getElementById('viewMonth').value), selY = parseInt(document.getElementById('viewYear').value), search = document.getElementById('searchInput').value.toLowerCase();
         const today = getLocalDate();
@@ -211,7 +222,7 @@
                 <div class="log-main-grid">
                     <div style="font-size:9px; color:var(--text-gray); text-align:center;">${shortD}</div>
                     <div style="overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                        <div style="font-size:14px; font-weight:900; color:#fff; letter-spacing:0.5px;">#${s.invoice}</div>
+                        <div class="invoice-tap" onclick="copyToClipboard('${s.invoice}', this)" style="font-size:14px; font-weight:900; color:#fff; letter-spacing:0.5px;">${s.invoice}</div>
                         <div style="font-size:12px; font-weight:900; color:var(--mm-orange); font-style:normal; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px; opacity:1;">${s.notes || '-'}</div>
                     </div>
                     <div class="log-qty-cols">
