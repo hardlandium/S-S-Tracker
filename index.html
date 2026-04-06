@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V298-SHARE-FIX</title>
+    <title>S&S Tracker V299-NOTE-ENHANCED</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -60,17 +60,19 @@
         .bar-label-left, .bar-label-right { position: absolute; z-index: 5; font-size: 9px; color: #fff; transform: skewX(var(--unskew-deg)); pointer-events: none; }
 
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 450px; }
-        .log-item { background: #0c0c0c; border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
-        .log-main-grid { display: grid; grid-template-columns: 45px 1fr 130px 35px; align-items: center; gap: 8px; padding: 0 4px; }
+        .log-item { background: #0c0c0c; border-radius: 12px; padding: 10px 8px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
+        
+        /* Optimized Grid for Notes */
+        .log-main-grid { display: grid; grid-template-columns: 45px 1fr 110px 35px; align-items: center; gap: 8px; }
         
         .status-bar-left, .status-bar-right { position: absolute; top: 0; bottom: 0; width: 4px; }
         .status-bar-left { left: 0; } .status-bar-right { right: 0; }
 
-        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 6px 2px; border: 1px solid #1a1a1a; }
-        .qty-col { display: flex; flex-direction: column; gap: 1px; }
-        .qty-col-label { font-size: 7px; color: #444; }
-        .qty-col-val { font-size: 15px; font-weight: 900; }
-        .log-actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 4px 2px; border: 1px solid #1a1a1a; }
+        .qty-col { display: flex; flex-direction: column; gap: 0px; }
+        .qty-col-label { font-size: 7px; color: #555; }
+        .qty-col-val { font-size: 14px; font-weight: 900; }
+        .log-actions { display: flex; flex-direction: column; gap: 8px; align-items: center; }
         
         .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin-bottom: 8px; }
         .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; }
@@ -214,15 +216,18 @@
                 <div class="status-bar-right" style="background:${statusColor}"></div>
                 <div class="log-main-grid">
                     <div style="font-size:9px; color:var(--text-gray); text-align:center;">${shortD}</div>
-                    <div style="overflow:hidden;"><div style="font-size:14px; font-weight:900;">${s.invoice}</div><div style="font-size:9px; color:var(--mm-orange); opacity:0.8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.notes || ''}</div></div>
+                    <div style="overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
+                        <div style="font-size:12px; font-weight:900; color:#fff;">#${s.invoice}</div>
+                        <div style="font-size:11px; color:var(--mm-orange); opacity:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${s.notes || '-'}</div>
+                    </div>
                     <div class="log-qty-cols">
                         <div class="qty-col"><span class="qty-col-label">FIX</span><span class="qty-col-val" style="color:var(--mm-red)">${s.qtyFix}</span></div>
                         <div class="qty-col"><span class="qty-col-label">FLX</span><span class="qty-col-val" style="color:var(--mm-orange)">${s.qtyFlex}</span></div>
                         <div class="qty-col"><span class="qty-col-label">CAL</span><span class="qty-col-val" style="color:var(--color-wait)">${s.qtyCal}</span></div>
                     </div>
                     <div class="log-actions">
-                        <span class="material-icons" style="color:#eee; font-size:18px; cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
-                        <span class="material-icons" style="color:#444; font-size:18px; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
+                        <span class="material-icons" style="color:#eee; font-size:16px; cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
+                        <span class="material-icons" style="color:#444; font-size:16px; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
                     </div>
                 </div>
             </div>`;
@@ -307,7 +312,7 @@
                 await navigator.share({
                     files: [file],
                     title: fileName,
-                    text: `Hier is het overzicht van ${months[selM]} ${selY}`
+                    text: `Overzicht ${months[selM]} ${selY}`
                 });
             } catch (err) {
                 if (err.name !== 'AbortError') doc.save(fileName);
