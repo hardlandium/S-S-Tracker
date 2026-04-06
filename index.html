@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V299-NOTE-ENHANCED</title>
+    <title>S&S Tracker V301-TEXT-HD</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -14,7 +14,7 @@
     
     <style>
         :root {
-            --mm-red: #ff3333; --mm-orange: #ff8800;
+            --mm-red: #ff3333; --mm-orange: #ff9900;
             --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-gray: #999;
             --color-wait: #4db8ff; --color-future: #00ff88; --color-done: #444;
             --mm-font: 'Arial Black', sans-serif;
@@ -60,15 +60,13 @@
         .bar-label-left, .bar-label-right { position: absolute; z-index: 5; font-size: 9px; color: #fff; transform: skewX(var(--unskew-deg)); pointer-events: none; }
 
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 450px; }
-        .log-item { background: #0c0c0c; border-radius: 12px; padding: 10px 8px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
-        
-        /* Optimized Grid for Notes */
-        .log-main-grid { display: grid; grid-template-columns: 45px 1fr 110px 35px; align-items: center; gap: 8px; }
+        .log-item { background: #0c0c0c; border-radius: 12px; padding: 12px 8px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
+        .log-main-grid { display: grid; grid-template-columns: 45px 1fr 110px 35px; align-items: center; gap: 10px; }
         
         .status-bar-left, .status-bar-right { position: absolute; top: 0; bottom: 0; width: 4px; }
         .status-bar-left { left: 0; } .status-bar-right { right: 0; }
 
-        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 4px 2px; border: 1px solid #1a1a1a; }
+        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 5px 2px; border: 1px solid #1a1a1a; }
         .qty-col { display: flex; flex-direction: column; gap: 0px; }
         .qty-col-label { font-size: 7px; color: #555; }
         .qty-col-val { font-size: 14px; font-weight: 900; }
@@ -147,7 +145,6 @@
             <div class="input-skew" style="flex:2;"><input type="text" id="searchInput" placeholder="SEARCH..." oninput="render()" style="text-align:left; padding-left:15px;"></div>
             <div class="input-skew" style="flex:1;"><select id="viewMonth" onchange="render()"></select></div>
             <div class="input-skew" style="flex:1;"><select id="viewYear" onchange="render()"></select></div>
-            <div class="btn-action-slim" style="width:40px;" onclick="resetToToday()"><div class="inner-txt"><span class="material-icons">today</span></div></div>
             <div id="eyeBtn" class="btn-action-slim" style="width:40px;" onclick="toggleRunningFilter()"><div class="inner-txt"><span id="eyeIcon" class="material-icons">visibility_off</span></div></div>
         </div>
         <div id="salesLog"></div>
@@ -168,9 +165,6 @@
         const di = document.getElementById('dateInput'), btn = document.getElementById('waitBtn');
         if(cb.checked) { btn.classList.add('active-wait'); di.disabled = true; di.closest('.input-skew').style.opacity = "0.2"; } 
         else { btn.classList.remove('active-wait'); di.disabled = false; di.closest('.input-skew').style.opacity = "1"; }
-    }
-    function resetToToday() {
-        const n = new Date(); document.getElementById('viewMonth').value = n.getMonth(); document.getElementById('viewYear').value = n.getFullYear(); render();
     }
     function toggleRunningFilter() { 
         showOnlyOpen = !showOnlyOpen; document.getElementById('eyeBtn').classList.toggle('active-eye', showOnlyOpen);
@@ -217,8 +211,8 @@
                 <div class="log-main-grid">
                     <div style="font-size:9px; color:var(--text-gray); text-align:center;">${shortD}</div>
                     <div style="overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                        <div style="font-size:12px; font-weight:900; color:#fff;">#${s.invoice}</div>
-                        <div style="font-size:11px; color:var(--mm-orange); opacity:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${s.notes || '-'}</div>
+                        <div style="font-size:14px; font-weight:900; color:#fff; letter-spacing:0.5px;">#${s.invoice}</div>
+                        <div style="font-size:12px; font-weight:900; color:var(--mm-orange); font-style:normal; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px; opacity:1;">${s.notes || '-'}</div>
                     </div>
                     <div class="log-qty-cols">
                         <div class="qty-col"><span class="qty-col-label">FIX</span><span class="qty-col-val" style="color:var(--mm-red)">${s.qtyFix}</span></div>
@@ -282,7 +276,7 @@
     window.onload = function() {
         const mS = document.getElementById('viewMonth'), yS = document.getElementById('viewYear'), n = new Date();
         months.forEach((m, i) => mS.innerHTML += `<option value="${i}" ${i === n.getMonth() ? 'selected' : ''}>${m.toUpperCase()}</option>`);
-        [n.getFullYear(), n.getFullYear()-1].forEach(y => yS.innerHTML += `<option value="${y}" ${y === n.getFullYear() ? 'selected' : ''}>${y}</option>`);
+        [n.getFullYear(), n.getFullYear()-1, n.getFullYear()-2].forEach(y => yS.innerHTML += `<option value="${y}" ${y === n.getFullYear() ? 'selected' : ''}>${y}</option>`);
         document.getElementById('targetVerz').value = localStorage.getItem('ss_t_v') || 40; 
         document.getElementById('targetVerzCalibration').value = localStorage.getItem('ss_t_b_c') || 10;
         document.getElementById('dateInput').value = getLocalDate(); render();
