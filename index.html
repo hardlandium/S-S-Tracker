@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V305-MAX-READ</title>
+    <title>S&S Tracker V308-ROBUST-IMP</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -18,7 +18,7 @@
             --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-gray: #999;
             --color-wait: #4db8ff; --color-future: #00ff88; --color-done: #444;
             --mm-font: 'Arial Black', sans-serif;
-            --h-unit: 46px; /* Increased for better touch and text fit */
+            --h-unit: 46px;
             --skew-deg: -10deg;
             --unskew-deg: 10deg;
         }
@@ -40,23 +40,21 @@
         .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 15px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; overflow: hidden; }
         .input-skew input, .input-skew select { background: transparent; border: none; color: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; font-size: inherit; width: 100%; height: 100%; text-align: center; transform: skewX(var(--unskew-deg)); outline: none; text-transform: uppercase; }
         
-        input::placeholder { font-style: italic; text-transform: uppercase; }
         #qtyFix::placeholder { color: var(--mm-red); opacity: 0.9; }
         #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.9; }
         #qtyCal::placeholder { color: var(--color-wait); opacity: 0.9; }
+        input::placeholder { font-style: italic; text-transform: uppercase; }
 
         .btn-action-slim { cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111; transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit); display: flex; align-items: center; justify-content: center; font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 13px; transition: all 0.2s; }
         .btn-action-slim.submit-style { color: var(--color-future); font-size: 16px; }
         .btn-success { color: #000 !important; background: var(--color-future) !important; border-color: var(--color-future) !important; }
-        
-        /* Blue Wait State */
         .active-wait { background: var(--color-wait) !important; color: #000 !important; border-color: var(--color-wait) !important; }
 
-        .qty-control-skew { display: grid; grid-template-columns: 35px 1fr 35px; background: #111; border: 1px solid #333; height: var(--h-unit); transform: skewX(var(--skew-deg)); border-radius: 6px; overflow: hidden; }
-        .qty-btn-skew { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 22px; transform: skewX(var(--unskew-deg)); font-style: italic; }
-        .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 16px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; font-style: italic; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; align-items: center; }
+        .progress-container { grid-column: span 3; }
+        .target-container { grid-column: span 1; }
 
-        .progress-bar-wrapper { flex: 1; height: 42px; background: #0a0a0a; border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative; display: flex; align-items: center; transform: skewX(var(--skew-deg)); }
+        .progress-bar-wrapper { height: 42px; background: #0a0a0a; border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative; display: flex; align-items: center; transform: skewX(var(--skew-deg)); }
         .fill-segment { height: 100%; transition: width 0.8s ease; position: absolute; top: 0; }
         #fillFix { background: linear-gradient(90deg, #660000, var(--mm-red)); z-index: 2; }
         #fillFlexSegment { background: linear-gradient(90deg, #663300, var(--mm-orange)); z-index: 1; }
@@ -66,8 +64,9 @@
         .bar-label-left { left: 12px; }
         .bar-label-right { right: 12px; }
 
-        .filter-row { display: flex; gap: 6px; margin-bottom: 12px; }
-        .filter-row .input-skew { font-size: 12px; }
+        .qty-control-skew { display: grid; grid-template-columns: 35px 1fr 35px; background: #111; border: 1px solid #333; height: var(--h-unit); transform: skewX(var(--skew-deg)); border-radius: 6px; overflow: hidden; }
+        .qty-btn-skew { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 22px; transform: skewX(var(--unskew-deg)); font-style: italic; }
+        .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 16px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; font-style: italic; }
 
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 450px; }
         .log-item { background: #0c0c0c; border-radius: 12px; padding: 12px 8px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
@@ -82,8 +81,6 @@
         .qty-col-val { font-size: 14px; font-weight: 900; font-style: italic; }
         
         .log-actions { display: flex; flex-direction: column; gap: 8px; align-items: center; }
-        .invoice-tap { cursor: pointer; transition: color 0.2s; font-style: italic; -webkit-user-select: none; user-select: none; }
-
         .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; margin-bottom: 10px; }
         .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; }
     </style>
@@ -97,30 +94,38 @@
             <div class="header-title">SALES & SOLUTIONS</div>
         </div>
         
-        <div class="grid-12" style="display: flex; align-items: center;">
-            <div class="progress-bar-wrapper">
-                <div class="bar-label-left">INSURANCE</div>
-                <div class="bar-label-right">
-                    FIX:<b id="valFix">0</b> FLX:<b id="valFlex">0</b> | <span id="percVerz">0%</span>
+        <div class="stats-grid">
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div class="bar-label-left">INSURANCE</div>
+                    <div class="bar-label-right">
+                        FIX:<b id="valFix">0</b> FLX:<b id="valFlex">0</b> | <span id="percVerz">0%</span>
+                    </div>
+                    <div id="fillFix" class="fill-segment" style="width:0%;"></div>
+                    <div id="fillFlexSegment" class="fill-segment" style="width:0%;"></div>
                 </div>
-                <div id="fillFix" class="fill-segment" style="width:0%;"></div>
-                <div id="fillFlexSegment" class="fill-segment" style="width:0%;"></div>
             </div>
-            <div class="input-skew" style="width: 85px; height: 42px; border-color: var(--mm-orange); background: #0a0a0a;">
-                <input type="number" id="targetVerz" oninput="saveTargets()" style="color:var(--mm-orange); font-size:16px;">
+            <div class="target-container">
+                <div class="input-skew" style="border-color: #333; background: #0a0a0a;">
+                    <input type="number" id="targetVerz" oninput="saveTargets()" style="color:#fff; font-size:16px;">
+                </div>
             </div>
         </div>
 
-        <div class="grid-12" style="display: flex; align-items: center;">
-            <div class="progress-bar-wrapper">
-                <div class="bar-label-left">CALIBRATION</div>
-                <div class="bar-label-right">
-                    CAL:<b id="valCal">0</b> | <span id="percBranded">0%</span>
+        <div class="stats-grid">
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div class="bar-label-left">CALIBRATION</div>
+                    <div class="bar-label-right">
+                        CAL:<b id="valCal">0</b> | <span id="percBranded">0%</span>
+                    </div>
+                    <div id="fillBranded" class="fill-segment" style="width:0%;"></div>
                 </div>
-                <div id="fillBranded" class="fill-segment" style="width:0%;"></div>
             </div>
-            <div class="input-skew" style="width: 85px; height: 42px; border-color: var(--color-wait); background: #0a0a0a;">
-                <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="color:var(--color-wait); font-size:16px;">
+            <div class="target-container">
+                <div class="input-skew" style="border-color: #333; background: #0a0a0a;">
+                    <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="color:#fff; font-size:16px;">
+                </div>
             </div>
         </div>
 
@@ -153,11 +158,11 @@
     </div>
 
     <div class="card" style="flex:1; display:flex; flex-direction:column;">
-        <div class="filter-row">
-            <div class="input-skew" style="flex:2;"><input type="text" id="searchInput" placeholder="SEARCH..." oninput="render()" style="text-align:left; padding-left:15px;"></div>
-            <div class="input-skew" style="flex:1.2;"><select id="viewMonth" onchange="render()"></select></div>
-            <div class="input-skew" style="flex:1.2;"><select id="viewYear" onchange="render()"></select></div>
-            <div id="eyeBtn" class="btn-action-slim" style="width:50px;" onclick="toggleRunningFilter()"><div class="inner-txt"><span id="eyeIcon" class="material-icons" style="font-size:24px;">visibility_off</span></div></div>
+        <div class="grid-12" style="margin-bottom:12px; gap:6px;">
+            <div class="input-skew" style="grid-column: span 5;"><input type="text" id="searchInput" placeholder="SEARCH..." oninput="render()" style="text-align:left; padding-left:15px;"></div>
+            <div class="input-skew" style="grid-column: span 3;"><select id="viewMonth" onchange="render()"></select></div>
+            <div class="input-skew" style="grid-column: span 2;"><select id="viewYear" onchange="render()"></select></div>
+            <div id="eyeBtn" class="btn-action-slim" style="grid-column: span 2;" onclick="toggleRunningFilter()"><div class="inner-txt"><span id="eyeIcon" class="material-icons" style="font-size:24px;">visibility_off</span></div></div>
         </div>
         <div id="salesLog"></div>
     </div>
@@ -280,14 +285,32 @@
                 const text = e.target.result;
                 const lines = text.split(/\r?\n/); const imported = [];
                 for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i].trim()) continue;
-                    const cols = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    // Improved split: supports comma and semicolon, handles quotes
+                    const cols = line.split(/[,;](?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (cols.length >= 6) {
-                        imported.push({ id: parseInt(cols[0]) || Date.now() + i, date: cols[1], invoice: cols[2].replace(/"/g, ''), qtyFix: parseInt(cols[3]) || 0, qtyFlex: parseInt(cols[4]) || 0, qtyCal: parseInt(cols[5]) || 0, notes: cols[6] ? cols[6].replace(/"/g, '') : '', isWait: cols[7] ? cols[7].trim() === 'true' : false });
+                        imported.push({ 
+                            id: parseInt(cols[0]) || Date.now() + i, 
+                            date: cols[1].trim(), 
+                            invoice: cols[2].replace(/"/g, '').trim(), 
+                            qtyFix: parseInt(cols[3]) || 0, 
+                            qtyFlex: parseInt(cols[4]) || 0, 
+                            qtyCal: parseInt(cols[5]) || 0, 
+                            notes: cols[6] ? cols[6].replace(/"/g, '').trim() : '', 
+                            isWait: cols[7] ? cols[7].trim().toLowerCase() === 'true' : false 
+                        });
                     }
                 }
-                if (imported.length > 0) { sales = imported; render(); alert("IMPORT SUCCESS"); }
-            } catch (err) { alert("IMPORT FAILED"); }
+                if (imported.length > 0) { 
+                    sales = imported; 
+                    render(); 
+                    alert(`SUCCESS: ${imported.length} ORDERS IMPORTED`); 
+                } else {
+                    alert("NO VALID ORDERS FOUND IN FILE");
+                }
+            } catch (err) { alert("IMPORT FAILED: CHECK FILE FORMAT"); }
             event.target.value = '';
         }; reader.readAsText(file);
     }
