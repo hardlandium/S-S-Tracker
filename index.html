@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V302-COPY-READY</title>
+    <title>S&S Tracker V305-MAX-READ</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -18,46 +18,56 @@
             --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-gray: #999;
             --color-wait: #4db8ff; --color-future: #00ff88; --color-done: #444;
             --mm-font: 'Arial Black', sans-serif;
-            --h-unit: 38px;
+            --h-unit: 46px; /* Increased for better touch and text fit */
             --skew-deg: -10deg;
             --unskew-deg: 10deg;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        .material-icons { font-size: 16px; display: inline-block; line-height: 1; vertical-align: middle; }
+        .material-icons { font-size: 20px; display: inline-block; line-height: 1; vertical-align: middle; }
         
         body { font-family: var(--mm-font); font-weight: 900; font-style: italic; background: var(--bg); margin: 0; padding-bottom: env(safe-area-inset-bottom); color: var(--text-dark); text-transform: uppercase; overflow-x: hidden; }
         .container { padding: 0 8px; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; min-height: 100vh; }
-        .card { background: var(--card-bg); border-radius: 16px; padding: 12px; margin-top: 10px; border: 1px solid #222; position: relative; }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 14px 12px; margin-top: 10px; border: 1px solid #222; position: relative; }
         
         .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; }
-        .logo-box { background: #000; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid #333; }
-        .logo-s { color: var(--mm-red); font-size: 18px; font-weight: 900; }
-        .header-title { font-size: 14px; letter-spacing: 0.5px; color: #fff; }
+        .logo-box { background: #000; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid #333; }
+        .logo-s { color: var(--mm-red); font-size: 22px; font-weight: 900; }
+        .header-title { font-size: 18px; letter-spacing: 0.5px; color: #fff; font-style: italic; }
 
-        .inner-txt { transform: skewX(var(--unskew-deg)); display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; gap: 6px; }
+        .inner-txt { transform: skewX(var(--unskew-deg)); display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; gap: 6px; font-style: italic; }
 
-        .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 10px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; overflow: hidden; }
+        .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 15px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; overflow: hidden; }
         .input-skew input, .input-skew select { background: transparent; border: none; color: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; font-size: inherit; width: 100%; height: 100%; text-align: center; transform: skewX(var(--unskew-deg)); outline: none; text-transform: uppercase; }
         
-        #qtyFix::placeholder { color: var(--mm-red); opacity: 0.8; }
-        #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.8; }
-        #qtyCal::placeholder { color: var(--color-wait); opacity: 0.8; }
+        input::placeholder { font-style: italic; text-transform: uppercase; }
+        #qtyFix::placeholder { color: var(--mm-red); opacity: 0.9; }
+        #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.9; }
+        #qtyCal::placeholder { color: var(--color-wait); opacity: 0.9; }
 
-        .btn-action-slim { cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111; transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit); display: flex; align-items: center; justify-content: center; font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 8px; transition: all 0.2s; }
-        .btn-action-slim.submit-style { color: var(--color-future); font-size: 11px; }
+        .btn-action-slim { cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111; transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit); display: flex; align-items: center; justify-content: center; font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 13px; transition: all 0.2s; }
+        .btn-action-slim.submit-style { color: var(--color-future); font-size: 16px; }
         .btn-success { color: #000 !important; background: var(--color-future) !important; border-color: var(--color-future) !important; }
+        
+        /* Blue Wait State */
+        .active-wait { background: var(--color-wait) !important; color: #000 !important; border-color: var(--color-wait) !important; }
 
-        .qty-control-skew { display: grid; grid-template-columns: 25px 1fr 25px; background: #111; border: 1px solid #333; height: var(--h-unit); transform: skewX(var(--skew-deg)); border-radius: 6px; overflow: hidden; }
-        .qty-btn-skew { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 14px; transform: skewX(var(--unskew-deg)); }
-        .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 11px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; }
+        .qty-control-skew { display: grid; grid-template-columns: 35px 1fr 35px; background: #111; border: 1px solid #333; height: var(--h-unit); transform: skewX(var(--skew-deg)); border-radius: 6px; overflow: hidden; }
+        .qty-btn-skew { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 22px; transform: skewX(var(--unskew-deg)); font-style: italic; }
+        .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 16px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; font-style: italic; }
 
-        .progress-bar-wrapper { flex: 1; height: 34px; background: #0a0a0a; border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative; display: flex; align-items: center; transform: skewX(var(--skew-deg)); }
+        .progress-bar-wrapper { flex: 1; height: 42px; background: #0a0a0a; border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative; display: flex; align-items: center; transform: skewX(var(--skew-deg)); }
         .fill-segment { height: 100%; transition: width 0.8s ease; position: absolute; top: 0; }
         #fillFix { background: linear-gradient(90deg, #660000, var(--mm-red)); z-index: 2; }
         #fillFlexSegment { background: linear-gradient(90deg, #663300, var(--mm-orange)); z-index: 1; }
         #fillBranded { background: linear-gradient(90deg, #004466, var(--color-wait)); }
-        .bar-label-left, .bar-label-right { position: absolute; z-index: 5; font-size: 9px; color: #fff; transform: skewX(var(--unskew-deg)); pointer-events: none; }
+        
+        .bar-label-left, .bar-label-right { position: absolute; z-index: 5; font-size: 12px; color: #fff; transform: skewX(var(--unskew-deg)); pointer-events: none; font-style: italic; }
+        .bar-label-left { left: 12px; }
+        .bar-label-right { right: 12px; }
+
+        .filter-row { display: flex; gap: 6px; margin-bottom: 12px; }
+        .filter-row .input-skew { font-size: 12px; }
 
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 450px; }
         .log-item { background: #0c0c0c; border-radius: 12px; padding: 12px 8px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
@@ -66,16 +76,15 @@
         .status-bar-left, .status-bar-right { position: absolute; top: 0; bottom: 0; width: 4px; }
         .status-bar-left { left: 0; } .status-bar-right { right: 0; }
 
-        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 5px 2px; border: 1px solid #1a1a1a; }
-        .qty-col { display: flex; flex-direction: column; gap: 0px; }
-        .qty-col-label { font-size: 7px; color: #555; }
-        .qty-col-val { font-size: 14px; font-weight: 900; }
-        .log-actions { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 5px 2px; border: 1px solid #1a1a1a; transform: skewX(var(--skew-deg)); }
+        .qty-col { display: flex; flex-direction: column; gap: 0px; transform: skewX(var(--unskew-deg)); }
+        .qty-col-label { font-size: 7px; color: #555; font-style: italic; }
+        .qty-col-val { font-size: 14px; font-weight: 900; font-style: italic; }
         
-        .invoice-tap { cursor: pointer; transition: color 0.2s; -webkit-user-select: none; user-select: none; }
-        .invoice-tap:active { color: var(--color-future); }
+        .log-actions { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+        .invoice-tap { cursor: pointer; transition: color 0.2s; font-style: italic; -webkit-user-select: none; user-select: none; }
 
-        .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin-bottom: 8px; }
+        .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; margin-bottom: 10px; }
         .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; }
     </style>
 </head>
@@ -88,30 +97,30 @@
             <div class="header-title">SALES & SOLUTIONS</div>
         </div>
         
-        <div class="grid-12" style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+        <div class="grid-12" style="display: flex; align-items: center;">
             <div class="progress-bar-wrapper">
-                <div class="bar-label-left" style="left:12px;">INSURANCE</div>
-                <div class="bar-label-right" style="right:12px; position:absolute; z-index:5; font-size:9px; transform:skewX(var(--unskew-deg));">
+                <div class="bar-label-left">INSURANCE</div>
+                <div class="bar-label-right">
                     FIX:<b id="valFix">0</b> FLX:<b id="valFlex">0</b> | <span id="percVerz">0%</span>
                 </div>
                 <div id="fillFix" class="fill-segment" style="width:0%;"></div>
                 <div id="fillFlexSegment" class="fill-segment" style="width:0%;"></div>
             </div>
-            <div class="input-skew" style="width: 60px; height: 34px; border-color: var(--mm-orange); background: #0a0a0a;">
-                <input type="number" id="targetVerz" oninput="saveTargets()" style="color:var(--mm-orange);">
+            <div class="input-skew" style="width: 85px; height: 42px; border-color: var(--mm-orange); background: #0a0a0a;">
+                <input type="number" id="targetVerz" oninput="saveTargets()" style="color:var(--mm-orange); font-size:16px;">
             </div>
         </div>
 
-        <div class="grid-12" style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+        <div class="grid-12" style="display: flex; align-items: center;">
             <div class="progress-bar-wrapper">
-                <div class="bar-label-left" style="left:12px;">CALIBRATION</div>
-                <div class="bar-label-right" style="right:12px; position:absolute; z-index:5; font-size:9px; transform:skewX(var(--unskew-deg));">
+                <div class="bar-label-left">CALIBRATION</div>
+                <div class="bar-label-right">
                     CAL:<b id="valCal">0</b> | <span id="percBranded">0%</span>
                 </div>
                 <div id="fillBranded" class="fill-segment" style="width:0%;"></div>
             </div>
-            <div class="input-skew" style="width: 60px; height: 34px; border-color: var(--color-wait); background: #0a0a0a;">
-                <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="color:var(--color-wait);">
+            <div class="input-skew" style="width: 85px; height: 42px; border-color: var(--color-wait); background: #0a0a0a;">
+                <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="color:var(--color-wait); font-size:16px;">
             </div>
         </div>
 
@@ -136,7 +145,7 @@
                 <div class="qty-control-skew col-4"><button type="button" class="qty-btn-skew" onclick="adj('qtyCal',-1)">-</button><input type="number" id="qtyCal" class="qty-input-skew" placeholder="CAL" style="color:var(--color-wait)"><button type="button" class="qty-btn-skew" onclick="adj('qtyCal',1)">+</button></div>
             </div>
             <div class="grid-12">
-                <div class="input-skew col-4"><input type="date" id="dateInput" required style="color:var(--text-gray)"></div>
+                <div class="input-skew col-4"><input type="date" id="dateInput" required style="color:var(--text-gray); font-size:12px;"></div>
                 <div id="waitBtn" class="btn-action-slim col-4" onclick="toggleDateViaBox()"><div class="inner-txt"><span class="material-icons">hourglass_empty</span>WAIT</div><input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)"></div>
                 <button type="submit" id="mainSubmitBtn" class="btn-action-slim submit-style col-4"><div class="inner-txt"><span class="material-icons">save</span><span id="btnText">SAVE</span></div></button>
             </div>
@@ -144,11 +153,11 @@
     </div>
 
     <div class="card" style="flex:1; display:flex; flex-direction:column;">
-        <div class="filter-row" style="display:flex; gap:6px; margin-bottom:12px;">
+        <div class="filter-row">
             <div class="input-skew" style="flex:2;"><input type="text" id="searchInput" placeholder="SEARCH..." oninput="render()" style="text-align:left; padding-left:15px;"></div>
-            <div class="input-skew" style="flex:1;"><select id="viewMonth" onchange="render()"></select></div>
-            <div class="input-skew" style="flex:1;"><select id="viewYear" onchange="render()"></select></div>
-            <div id="eyeBtn" class="btn-action-slim" style="width:40px;" onclick="toggleRunningFilter()"><div class="inner-txt"><span id="eyeIcon" class="material-icons">visibility_off</span></div></div>
+            <div class="input-skew" style="flex:1.2;"><select id="viewMonth" onchange="render()"></select></div>
+            <div class="input-skew" style="flex:1.2;"><select id="viewYear" onchange="render()"></select></div>
+            <div id="eyeBtn" class="btn-action-slim" style="width:50px;" onclick="toggleRunningFilter()"><div class="inner-txt"><span id="eyeIcon" class="material-icons" style="font-size:24px;">visibility_off</span></div></div>
         </div>
         <div id="salesLog"></div>
     </div>
@@ -164,11 +173,13 @@
     function getLocalDate() { return new Date().toISOString().split('T')[0]; }
     function adj(id, v) { const el = document.getElementById(id); el.value = Math.max(0, (parseInt(el.value) || 0) + v); }
     function toggleDateViaBox() { const cb = document.getElementById('dateUnknown'); cb.checked = !cb.checked; toggleDate(cb); }
+    
     function toggleDate(cb) {
         const di = document.getElementById('dateInput'), btn = document.getElementById('waitBtn');
         if(cb.checked) { btn.classList.add('active-wait'); di.disabled = true; di.closest('.input-skew').style.opacity = "0.2"; } 
         else { btn.classList.remove('active-wait'); di.disabled = false; di.closest('.input-skew').style.opacity = "1"; }
     }
+
     function toggleRunningFilter() { 
         showOnlyOpen = !showOnlyOpen; document.getElementById('eyeBtn').classList.toggle('active-eye', showOnlyOpen);
         document.getElementById('eyeIcon').innerText = showOnlyOpen ? 'visibility' : 'visibility_off'; render(); 
@@ -220,10 +231,10 @@
                 <div class="status-bar-left" style="background:${statusColor}"></div>
                 <div class="status-bar-right" style="background:${statusColor}"></div>
                 <div class="log-main-grid">
-                    <div style="font-size:9px; color:var(--text-gray); text-align:center;">${shortD}</div>
+                    <div style="font-size:9px; color:var(--text-gray); text-align:center; font-style:italic;">${shortD}</div>
                     <div style="overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                        <div class="invoice-tap" onclick="copyToClipboard('${s.invoice}', this)" style="font-size:14px; font-weight:900; color:#fff; letter-spacing:0.5px;">${s.invoice}</div>
-                        <div style="font-size:12px; font-weight:900; color:var(--mm-orange); font-style:normal; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px; opacity:1;">${s.notes || '-'}</div>
+                        <div class="invoice-tap" onclick="copyToClipboard('${s.invoice}', this)" style="font-size:16px; font-weight:900; color:#fff; letter-spacing:0.5px;">${s.invoice}</div>
+                        <div style="font-size:13px; font-weight:900; color:var(--mm-orange); font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px;">${s.notes || '-'}</div>
                     </div>
                     <div class="log-qty-cols">
                         <div class="qty-col"><span class="qty-col-label">FIX</span><span class="qty-col-val" style="color:var(--mm-red)">${s.qtyFix}</span></div>
@@ -231,8 +242,8 @@
                         <div class="qty-col"><span class="qty-col-label">CAL</span><span class="qty-col-val" style="color:var(--color-wait)">${s.qtyCal}</span></div>
                     </div>
                     <div class="log-actions">
-                        <span class="material-icons" style="color:#eee; font-size:16px; cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
-                        <span class="material-icons" style="color:#444; font-size:16px; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
+                        <span class="material-icons" style="color:#eee; font-size:20px; cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
+                        <span class="material-icons" style="color:#444; font-size:20px; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
                     </div>
                 </div>
             </div>`;
@@ -299,32 +310,19 @@
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
         const fileName = `S-S_Report_${months[selM]}_${selY}.pdf`;
-
         const filtered = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
-        
         doc.text(`S&S REPORT: ${months[selM]} ${selY}`, 15, 20);
         doc.autoTable({
             startY: 30,
             head: [['DATE', 'INVOICE', 'FIX', 'FLX', 'CAL', 'NOTES']],
             body: filtered.map(s => [s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || ''])
         });
-
         const pdfBlob = doc.output('blob');
         const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-                await navigator.share({
-                    files: [file],
-                    title: fileName,
-                    text: `Overzicht ${months[selM]} ${selY}`
-                });
-            } catch (err) {
-                if (err.name !== 'AbortError') doc.save(fileName);
-            }
-        } else {
-            doc.save(fileName);
-        }
+            try { await navigator.share({ files: [file], title: fileName, text: `Overzicht ${months[selM]} ${selY}` }); } 
+            catch (err) { if (err.name !== 'AbortError') doc.save(fileName); }
+        } else { doc.save(fileName); }
     }
 </script>
 </body>
