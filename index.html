@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V308-ROBUST-IMP</title>
+    <title>S&S Tracker V313-DATE-ICON</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -37,16 +37,15 @@
 
         .inner-txt { transform: skewX(var(--unskew-deg)); display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; gap: 6px; font-style: italic; }
 
-        .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 15px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; overflow: hidden; }
+        .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 15px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; overflow: hidden; align-items: center; }
         .input-skew input, .input-skew select { background: transparent; border: none; color: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; font-size: inherit; width: 100%; height: 100%; text-align: center; transform: skewX(var(--unskew-deg)); outline: none; text-transform: uppercase; }
         
-        #qtyFix::placeholder { color: var(--mm-red); opacity: 0.9; }
-        #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.9; }
-        #qtyCal::placeholder { color: var(--color-wait); opacity: 0.9; }
+        #qtyFix::placeholder { color: var(--mm-red); opacity: 0.8; }
+        #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.8; }
+        #qtyCal::placeholder { color: var(--color-wait); opacity: 0.8; }
         input::placeholder { font-style: italic; text-transform: uppercase; }
 
         .btn-action-slim { cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111; transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit); display: flex; align-items: center; justify-content: center; font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 13px; transition: all 0.2s; }
-        .btn-action-slim.submit-style { color: var(--color-future); font-size: 16px; }
         .btn-success { color: #000 !important; background: var(--color-future) !important; border-color: var(--color-future) !important; }
         .active-wait { background: var(--color-wait) !important; color: #000 !important; border-color: var(--color-wait) !important; }
 
@@ -65,7 +64,7 @@
         .bar-label-right { right: 12px; }
 
         .qty-control-skew { display: grid; grid-template-columns: 35px 1fr 35px; background: #111; border: 1px solid #333; height: var(--h-unit); transform: skewX(var(--skew-deg)); border-radius: 6px; overflow: hidden; }
-        .qty-btn-skew { background: #222; border: none; color: var(--text-gray); cursor: pointer; font-weight: 900; font-size: 22px; transform: skewX(var(--unskew-deg)); font-style: italic; }
+        .qty-btn-skew { background: #222; border: none; cursor: pointer; font-weight: 900; font-size: 22px; transform: skewX(var(--unskew-deg)); font-style: italic; }
         .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 16px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; font-style: italic; }
 
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 450px; }
@@ -83,6 +82,8 @@
         .log-actions { display: flex; flex-direction: column; gap: 8px; align-items: center; }
         .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; margin-bottom: 10px; }
         .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; }
+        
+        .invoice-tap { cursor: pointer; transition: color 0.2s; font-style: italic; -webkit-user-select: none; user-select: none; }
     </style>
 </head>
 <body>
@@ -107,7 +108,7 @@
             </div>
             <div class="target-container">
                 <div class="input-skew" style="border-color: #333; background: #0a0a0a;">
-                    <input type="number" id="targetVerz" oninput="saveTargets()" style="color:#fff; font-size:16px;">
+                    <input type="number" id="targetVerz" oninput="saveTargets()" style="color:#555; font-size:16px;">
                 </div>
             </div>
         </div>
@@ -124,15 +125,15 @@
             </div>
             <div class="target-container">
                 <div class="input-skew" style="border-color: #333; background: #0a0a0a;">
-                    <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="color:#fff; font-size:16px;">
+                    <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="color:#555; font-size:16px;">
                 </div>
             </div>
         </div>
 
         <div class="grid-12" style="margin-top:10px; margin-bottom:0;">
-            <div class="btn-action-slim col-3" onclick="shareAsPDF()"><div class="inner-txt"><span class="material-icons">share</span>SHARE</div></div>
-            <div class="btn-action-slim col-3" onclick="manualExport()"><div class="inner-txt"><span class="material-icons">file_download</span>EXP</div></div>
-            <div class="btn-action-slim col-3" onclick="document.getElementById('importInput').click()"><div class="inner-txt"><span class="material-icons">file_upload</span>IMP</div></div>
+            <div class="btn-action-slim col-3" onclick="shareAsPDF()"><div class="inner-txt"><span class="material-icons" style="color:#fff">share</span>SHARE</div></div>
+            <div class="btn-action-slim col-3" onclick="manualExport()"><div class="inner-txt"><span class="material-icons" style="color:var(--mm-orange)">file_download</span>EXP</div></div>
+            <div class="btn-action-slim col-3" onclick="document.getElementById('importInput').click()"><div class="inner-txt"><span class="material-icons" style="color:var(--color-future)">file_upload</span>IMP</div></div>
             <div class="btn-action-slim col-3" onclick="if(confirm('CLEAR ALL?')){localStorage.clear();location.reload();}"><div class="inner-txt"><span class="material-icons" style="color:var(--mm-red)">delete_sweep</span>CLR</div></div>
         </div>
         <input type="file" id="importInput" style="display:none" accept=".csv, .json, text/csv, text/plain" onchange="manualImport(event)">
@@ -145,14 +146,31 @@
                 <div class="input-skew col-6"><input type="text" id="notes" placeholder="NOTE..." style="text-align:left; padding-left:15px;"></div>
             </div>
             <div class="grid-12">
-                <div class="qty-control-skew col-4"><button type="button" class="qty-btn-skew" onclick="adj('qtyFix',-1)">-</button><input type="number" id="qtyFix" class="qty-input-skew" placeholder="FIX" style="color:var(--mm-red)"><button type="button" class="qty-btn-skew" onclick="adj('qtyFix',1)">+</button></div>
-                <div class="qty-control-skew col-4"><button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',-1)">-</button><input type="number" id="qtyFlex" class="qty-input-skew" placeholder="FLX" style="color:var(--mm-orange)"><button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',1)">+</button></div>
-                <div class="qty-control-skew col-4"><button type="button" class="qty-btn-skew" onclick="adj('qtyCal',-1)">-</button><input type="number" id="qtyCal" class="qty-input-skew" placeholder="CAL" style="color:var(--color-wait)"><button type="button" class="qty-btn-skew" onclick="adj('qtyCal',1)">+</button></div>
+                <div class="qty-control-skew col-4">
+                    <button type="button" class="qty-btn-skew" onclick="adj('qtyFix',-1)" style="color:var(--mm-red)">-</button>
+                    <input type="number" id="qtyFix" class="qty-input-skew" placeholder="FIX" style="color:var(--mm-red)">
+                    <button type="button" class="qty-btn-skew" onclick="adj('qtyFix',1)" style="color:var(--mm-red)">+</button>
+                </div>
+                <div class="qty-control-skew col-4">
+                    <button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',-1)" style="color:var(--mm-orange)">-</button>
+                    <input type="number" id="qtyFlex" class="qty-input-skew" placeholder="FLX" style="color:var(--mm-orange)">
+                    <button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',1)" style="color:var(--mm-orange)">+</button>
+                </div>
+                <div class="qty-control-skew col-4">
+                    <button type="button" class="qty-btn-skew" onclick="adj('qtyCal',-1)" style="color:var(--color-wait)">-</button>
+                    <input type="number" id="qtyCal" class="qty-input-skew" placeholder="CAL" style="color:var(--color-wait)">
+                    <button type="button" class="qty-btn-skew" onclick="adj('qtyCal',1)" style="color:var(--color-wait)">+</button>
+                </div>
             </div>
             <div class="grid-12">
-                <div class="input-skew col-4"><input type="date" id="dateInput" required style="color:var(--text-gray); font-size:12px;"></div>
-                <div id="waitBtn" class="btn-action-slim col-4" onclick="toggleDateViaBox()"><div class="inner-txt"><span class="material-icons">hourglass_empty</span>WAIT</div><input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)"></div>
-                <button type="submit" id="mainSubmitBtn" class="btn-action-slim submit-style col-4"><div class="inner-txt"><span class="material-icons">save</span><span id="btnText">SAVE</span></div></button>
+                <div class="input-skew col-4">
+                    <div class="inner-txt" style="justify-content: flex-start; padding-left: 10px; gap: 4px;">
+                        <span class="material-icons" style="color:var(--text-gray); font-size: 18px;">event</span>
+                        <input type="date" id="dateInput" required style="color:var(--text-gray); font-size:12px; width: auto; flex: 1;">
+                    </div>
+                </div>
+                <div id="waitBtn" class="btn-action-slim col-4" onclick="toggleDateViaBox()"><div class="inner-txt"><span class="material-icons" style="color:var(--color-wait);">hourglass_empty</span>WAIT</div><input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)"></div>
+                <button type="submit" id="mainSubmitBtn" class="btn-action-slim col-4"><div class="inner-txt"><span class="material-icons" style="color:var(--color-future);">content_paste_go</span><span id="btnText" style="color:var(--text-gray);">SAVE</span></div></button>
             </div>
         </form>
     </div>
@@ -181,8 +199,17 @@
     
     function toggleDate(cb) {
         const di = document.getElementById('dateInput'), btn = document.getElementById('waitBtn');
-        if(cb.checked) { btn.classList.add('active-wait'); di.disabled = true; di.closest('.input-skew').style.opacity = "0.2"; } 
-        else { btn.classList.remove('active-wait'); di.disabled = false; di.closest('.input-skew').style.opacity = "1"; }
+        const container = di.closest('.input-skew');
+        if(cb.checked) { 
+            btn.classList.add('active-wait'); 
+            di.disabled = true; 
+            container.style.opacity = "0.2"; 
+        } 
+        else { 
+            btn.classList.remove('active-wait'); 
+            di.disabled = false; 
+            container.style.opacity = "1"; 
+        }
     }
 
     function toggleRunningFilter() { 
@@ -287,29 +314,12 @@
                 for (let i = 1; i < lines.length; i++) {
                     const line = lines[i].trim();
                     if (!line) continue;
-                    
-                    // Improved split: supports comma and semicolon, handles quotes
                     const cols = line.split(/[,;](?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (cols.length >= 6) {
-                        imported.push({ 
-                            id: parseInt(cols[0]) || Date.now() + i, 
-                            date: cols[1].trim(), 
-                            invoice: cols[2].replace(/"/g, '').trim(), 
-                            qtyFix: parseInt(cols[3]) || 0, 
-                            qtyFlex: parseInt(cols[4]) || 0, 
-                            qtyCal: parseInt(cols[5]) || 0, 
-                            notes: cols[6] ? cols[6].replace(/"/g, '').trim() : '', 
-                            isWait: cols[7] ? cols[7].trim().toLowerCase() === 'true' : false 
-                        });
+                        imported.push({ id: parseInt(cols[0]) || Date.now() + i, date: cols[1].trim(), invoice: cols[2].replace(/"/g, '').trim(), qtyFix: parseInt(cols[3]) || 0, qtyFlex: parseInt(cols[4]) || 0, qtyCal: parseInt(cols[5]) || 0, notes: cols[6] ? cols[6].replace(/"/g, '').trim() : '', isWait: cols[7] ? cols[7].trim().toLowerCase() === 'true' : false });
                     }
                 }
-                if (imported.length > 0) { 
-                    sales = imported; 
-                    render(); 
-                    alert(`SUCCESS: ${imported.length} ORDERS IMPORTED`); 
-                } else {
-                    alert("NO VALID ORDERS FOUND IN FILE");
-                }
+                if (imported.length > 0) { sales = imported; render(); alert(`SUCCESS: ${imported.length} ORDERS IMPORTED`); }
             } catch (err) { alert("IMPORT FAILED: CHECK FILE FORMAT"); }
             event.target.value = '';
         }; reader.readAsText(file);
