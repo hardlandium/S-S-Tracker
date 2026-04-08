@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V317-COLLAPSE</title>
+    <title>S&S Tracker V326-COLOR-SYNC</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -15,7 +14,8 @@
     <style>
         :root {
             --mm-red: #ff3333; --mm-orange: #ff9900;
-            --bg: #000; --card-bg: #161616; --text-dark: #fff; --text-gray: #999;
+            --bg: #000; --card-bg: #161616; --text-dark: #fff; 
+            --text-gray: #999999; /* EXACTE KLEUR VAN DE KNOP-TEXT */
             --color-wait: #4db8ff; --color-future: #00ff88; --color-done: #444;
             --mm-font: 'Arial Black', sans-serif;
             --h-unit: 46px;
@@ -30,6 +30,23 @@
         .container { padding: 0 8px; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; min-height: 100vh; }
         .card { background: var(--card-bg); border-radius: 16px; padding: 14px 12px; margin-top: 10px; border: 1px solid #222; position: relative; }
         
+        /* UNIFORM PLACEHOLDER SYNC */
+        #invoice::-webkit-input-placeholder, #notes::-webkit-input-placeholder, 
+        #targetVerz::-webkit-input-placeholder, #targetVerzCalibration::-webkit-input-placeholder, 
+        #searchInput::-webkit-input-placeholder { color: var(--text-gray) !important; opacity: 1 !important; }
+
+        #invoice::placeholder, #notes::placeholder, 
+        #targetVerz::placeholder, #targetVerzCalibration::placeholder, 
+        #searchInput::placeholder { color: var(--text-gray) !important; opacity: 1 !important; }
+
+        /* INPUT TEKST KLEUR */
+        #invoice, #notes, #targetVerz, #targetVerzCalibration, #searchInput, #viewMonth, #viewYear { color: var(--text-gray); }
+
+        /* SERVICE PLACEHOLDERS */
+        #qtyFix::placeholder { color: var(--mm-red) !important; opacity: 0.7 !important; }
+        #qtyFlex::placeholder { color: var(--mm-orange) !important; opacity: 0.7 !important; }
+        #qtyCal::placeholder { color: var(--color-wait) !important; opacity: 0.7 !important; }
+
         .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; }
         .logo-box { background: #000; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid #333; }
         .logo-s { color: var(--mm-red); font-size: 22px; font-weight: 900; }
@@ -40,10 +57,6 @@
         .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 15px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; overflow: hidden; align-items: center; }
         .input-skew input, .input-skew select { background: transparent; border: none; color: inherit; font-family: inherit; font-style: inherit; font-weight: inherit; font-size: inherit; width: 100%; height: 100%; text-align: center; transform: skewX(var(--unskew-deg)); outline: none; text-transform: uppercase; }
         
-        #qtyFix::placeholder { color: var(--mm-red); opacity: 0.8; }
-        #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.8; }
-        #qtyCal::placeholder { color: var(--color-wait); opacity: 0.8; }
-
         .btn-action-slim { cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111; transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit); display: flex; align-items: center; justify-content: center; font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 13px; transition: all 0.2s; }
         .btn-success { color: #000 !important; background: var(--color-future) !important; border-color: var(--color-future) !important; }
         .active-wait { background: var(--color-wait) !important; color: #000 !important; border-color: var(--color-wait) !important; }
@@ -66,36 +79,36 @@
         .qty-btn-skew { background: #222; border: none; cursor: pointer; font-weight: 900; font-size: 22px; transform: skewX(var(--unskew-deg)); font-style: italic; }
         .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 16px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; font-style: italic; }
 
-        #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 450px; }
+        #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 500px; }
         
-        /* Collapse Styles */
         .date-group { margin-bottom: 12px; }
         .date-header { 
-            background: #222; padding: 8px 12px; border-radius: 6px; cursor: pointer; 
-            display: flex; justify-content: space-between; align-items: center; 
-            font-size: 12px; color: var(--text-gray); margin-bottom: 6px;
+            background: #222; padding: 10px 12px; border-radius: 6px; cursor: pointer; 
+            font-size: 14px; color: #eee; margin-bottom: 6px;
             transform: skewX(var(--skew-deg)); border: 1px solid #333;
         }
-        .date-header-inner { transform: skewX(var(--unskew-deg)); display: flex; width: 100%; justify-content: space-between; }
+        .date-header-inner { transform: skewX(var(--unskew-deg)); display: flex; align-items: center; width: 100%; }
         .date-content { display: none; }
         .date-content.open { display: block; }
 
-        .log-item { background: #0c0c0c; border-radius: 12px; padding: 12px 8px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
-        .log-main-grid { display: grid; grid-template-columns: 45px 1fr 110px 35px; align-items: center; gap: 10px; }
+        .log-item { background: #0c0c0c; border-radius: 12px; padding: 14px 10px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
+        .log-main-grid { display: grid; grid-template-columns: 1fr 130px 45px; align-items: center; gap: 12px; }
         
         .status-bar-left, .status-bar-right { position: absolute; top: 0; bottom: 0; width: 4px; }
         .status-bar-left { left: 0; } .status-bar-right { right: 0; }
 
-        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 5px 2px; border: 1px solid #1a1a1a; transform: skewX(var(--skew-deg)); }
+        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 6px 4px; border: 1px solid #1a1a1a; transform: skewX(var(--skew-deg)); }
         .qty-col { display: flex; flex-direction: column; gap: 0px; transform: skewX(var(--unskew-deg)); }
         .qty-col-label { font-size: 7px; color: #555; font-style: italic; }
-        .qty-col-val { font-size: 14px; font-weight: 900; font-style: italic; }
+        .qty-col-val { font-size: 16px; font-weight: 900; font-style: italic; }
         
-        .log-actions { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+        .log-actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+        .action-icon { font-size: 24px !important; cursor: pointer; transition: transform 0.1s; }
+
         .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; margin-bottom: 10px; }
         .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; }
         
-        .invoice-tap { cursor: pointer; transition: color 0.2s; font-style: italic; -webkit-user-select: none; user-select: none; }
+        .invoice-tap { cursor: pointer; transition: color 0.2s; font-style: italic; }
     </style>
 </head>
 <body>
@@ -120,7 +133,7 @@
             </div>
             <div class="target-container">
                 <div class="input-skew" style="border-color: #333; background: #0a0a0a;">
-                    <input type="number" id="targetVerz" oninput="saveTargets()" style="color:#555; font-size:16px;">
+                    <input type="number" id="targetVerz" oninput="saveTargets()" placeholder="TGT">
                 </div>
             </div>
         </div>
@@ -137,7 +150,7 @@
             </div>
             <div class="target-container">
                 <div class="input-skew" style="border-color: #333; background: #0a0a0a;">
-                    <input type="number" id="targetVerzCalibration" oninput="saveTargets()" style="color:#555; font-size:16px;">
+                    <input type="number" id="targetVerzCalibration" oninput="saveTargets()" placeholder="TGT">
                 </div>
             </div>
         </div>
@@ -222,10 +235,7 @@
         document.getElementById('eyeIcon').innerText = showOnlyOpen ? 'visibility' : 'visibility_off'; render(); 
     }
 
-    function toggleGroup(date) {
-        collapsedDates[date] = !collapsedDates[date];
-        render();
-    }
+    function toggleGroup(date) { collapsedDates[date] = !collapsedDates[date]; render(); }
 
     function copyToClipboard(val, el) {
         navigator.clipboard.writeText(val).then(() => {
@@ -259,34 +269,39 @@
         document.getElementById('percVerz').innerText = Math.round(((mFx+mFl)/tV)*100) + '%'; 
         document.getElementById('percBranded').innerText = Math.round((mB/tB)*100) + '%';
 
-        // Grouping logic
         const groups = {};
         sales.sort((a,b) => b.date.localeCompare(a.date)).forEach(s => {
             const isWait = s.isWait || s.date === "2099-12-31"; 
             const sD = new Date(s.date); 
             const isInPeriod = isWait || (sD.getMonth() === selM && sD.getFullYear() === selY);
-            
             if (!isInPeriod || (showOnlyOpen && !isWait && s.date <= today) || (search && !s.invoice.toLowerCase().includes(search) && !(s.notes && s.notes.toLowerCase().includes(search)))) return;
-            
             if (!groups[s.date]) groups[s.date] = [];
             groups[s.date].push(s);
         });
 
         Object.keys(groups).forEach((dateKey, index) => {
             const isWaitGroup = dateKey === "2099-12-31";
-            const dP = dateKey.split('-');
-            const headerLabel = isWaitGroup ? "WAITING / OPEN ORDERS" : `${dP[2]} ${months[parseInt(dP[1])-1]} ${dP[0]}`;
-            
-            // Auto-open first group or if searching
+            const headerLabel = isWaitGroup ? "WACHTPRYS / OPEN" : `${dateKey.split('-')[2]} ${months[parseInt(dateKey.split('-')[1])-1]} ${dateKey.split('-')[0]}`;
+            let gFix = 0, gFlex = 0, gCal = 0;
+            groups[dateKey].forEach(s => { gFix += (parseInt(s.qtyFix)||0); gFlex += (parseInt(s.qtyFlex)||0); gCal += (parseInt(s.qtyCal)||0); });
             const isCollapsed = collapsedDates[dateKey] === undefined ? (index !== 0 && !search) : collapsedDates[dateKey];
-            const displayDate = isWaitGroup ? '---' : `${dP[2]}\n${months[parseInt(dP[1])-1]}`;
 
             let groupHTML = `
                 <div class="date-group">
                     <div class="date-header" onclick="toggleGroup('${dateKey}')">
                         <div class="date-header-inner">
-                            <span>${headerLabel}</span>
-                            <span class="material-icons">${isCollapsed ? 'expand_more' : 'expand_less'}</span>
+                            <div style="flex: 1; display: flex; flex-direction: column;">
+                                <span style="font-size: 14px;">${headerLabel}</span>
+                                <span style="font-size: 10px; color: var(--text-gray); margin-top: 4px; font-weight: 900;">
+                                    <span style="color:var(--mm-orange)">${Math.round(((gFix+gFlex)/tV)*100)}% INS</span> | <span style="color:var(--color-wait)">${Math.round((gCal/tB)*100)}% CAL</span>
+                                </span>
+                            </div>
+                            <div style="display: flex; gap: 10px; margin-right: 15px; align-items: center;">
+                                <div style="display: flex; flex-direction: column; align-items: center; min-width: 32px;"><span style="font-size: 8px; color: #555;">FIX</span><span style="font-size: 15px; color: var(--mm-red);">${gFix}</span></div>
+                                <div style="display: flex; flex-direction: column; align-items: center; min-width: 32px;"><span style="font-size: 8px; color: #555;">FLX</span><span style="font-size: 15px; color: var(--mm-orange);">${gFlex}</span></div>
+                                <div style="display: flex; flex-direction: column; align-items: center; min-width: 32px;"><span style="font-size: 8px; color: #555;">CAL</span><span style="font-size: 15px; color: var(--color-wait);">${gCal}</span></div>
+                            </div>
+                            <span class="material-icons" style="font-size: 22px;">${isCollapsed ? 'expand_more' : 'expand_less'}</span>
                         </div>
                     </div>
                     <div class="date-content ${!isCollapsed ? 'open' : ''}">
@@ -299,10 +314,9 @@
                     <div class="status-bar-left" style="background:${statusColor}"></div>
                     <div class="status-bar-right" style="background:${statusColor}"></div>
                     <div class="log-main-grid">
-                        <div style="font-size:9px; color:var(--text-gray); text-align:center; font-style:italic;">${displayDate}</div>
-                        <div style="overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                            <div class="invoice-tap" onclick="copyToClipboard('${s.invoice}', this)" style="font-size:16px; font-weight:900; color:#fff; letter-spacing:0.5px;">${s.invoice}</div>
-                            <div style="font-size:13px; font-weight:900; color:var(--mm-orange); font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px;">${s.notes || '-'}</div>
+                        <div style="overflow:hidden; display:flex; flex-direction:column; justify-content:center; padding-left: 5px;">
+                            <div class="invoice-tap" onclick="copyToClipboard('${s.invoice}', this)" style="font-size:18px; font-weight:900; color:#fff; letter-spacing:0.5px;">${s.invoice}</div>
+                            <div style="font-size:14px; font-weight:900; color:var(--mm-orange); font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px;">${s.notes || '-'}</div>
                         </div>
                         <div class="log-qty-cols">
                             <div class="qty-col"><span class="qty-col-label">FIX</span><span class="qty-col-val" style="color:var(--mm-red)">${s.qtyFix}</span></div>
@@ -310,17 +324,15 @@
                             <div class="qty-col"><span class="qty-col-label">CAL</span><span class="qty-col-val" style="color:var(--color-wait)">${s.qtyCal}</span></div>
                         </div>
                         <div class="log-actions">
-                            <span class="material-icons" style="color:#eee; font-size:20px; cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
-                            <span class="material-icons" style="color:#444; font-size:20px; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
+                            <span class="material-icons action-icon" style="color:#eee;" onclick="startEdit(${s.id})">edit</span>
+                            <span class="material-icons action-icon" style="color:#444;" onclick="confirmDelete(${s.id})">delete</span>
                         </div>
                     </div>
                 </div>`;
             });
-
             groupHTML += `</div></div>`;
             log.innerHTML += groupHTML;
         });
-
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
     }
 
@@ -359,8 +371,8 @@
                         imported.push({ id: parseInt(cols[0]) || Date.now() + i, date: cols[1].trim(), invoice: cols[2].replace(/"/g, '').trim(), qtyFix: parseInt(cols[3]) || 0, qtyFlex: parseInt(cols[4]) || 0, qtyCal: parseInt(cols[5]) || 0, notes: cols[6] ? cols[6].replace(/"/g, '').trim() : '', isWait: cols[7] ? cols[7].trim().toLowerCase() === 'true' : false });
                     }
                 }
-                if (imported.length > 0) { sales = imported; render(); alert(`SUCCESS: ${imported.length} ORDERS IMPORTED`); }
-            } catch (err) { alert("IMPORT FAILED: CHECK FILE FORMAT"); }
+                if (imported.length > 0) { sales = imported; render(); alert(`SUCCESS: ${imported.length} IMPORTED`); }
+            } catch (err) { alert("IMPORT FAILED"); }
             event.target.value = '';
         }; reader.readAsText(file);
     }
@@ -378,35 +390,26 @@
     };
 
     async function shareAsPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
         const filtered = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
         let tFix = 0, tFlex = 0, tCal = 0;
         filtered.forEach(s => { tFix += (parseInt(s.qtyFix)||0); tFlex += (parseInt(s.qtyFlex)||0); tCal += (parseInt(s.qtyCal)||0); });
-
         doc.setFillColor(0, 0, 0); doc.rect(0, 0, 210, 297, 'F');
         doc.setFont("helvetica", "bold"); doc.setFontSize(28); doc.setTextColor(255, 51, 51);
-        doc.text("S", 15, 25); 
-        doc.setTextColor(255, 255, 255); doc.text("ALES & SOLUTIONS", 23, 25);
+        doc.text("S", 15, 25); doc.setTextColor(255, 255, 255); doc.text("ALES & SOLUTIONS", 23, 25);
         doc.setFontSize(14); doc.setTextColor(153, 153, 153);
         doc.text(`${months[selM].toUpperCase()} ${selY} TRACKER`, 15, 35);
-
         doc.autoTable({
-            startY: 45,
-            head: [['DATE', 'INVOICE', 'FIX', 'FLX', 'CAL', 'NOTES']],
+            startY: 45, head: [['DATE', 'INVOICE', 'FIX', 'FLX', 'CAL', 'NOTES']],
             body: filtered.sort((a,b) => a.date.localeCompare(b.date)).map(s => [s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '']),
-            theme: 'plain',
-            headStyles: { fillColor: [22, 22, 22], textColor: [255, 255, 255], fontStyle: 'bold' },
+            theme: 'plain', headStyles: { fillColor: [22, 22, 22], textColor: [255, 255, 255], fontStyle: 'bold' },
             bodyStyles: { textColor: [200, 200, 200], fillColor: [12, 12, 12] },
-            alternateRowStyles: { fillColor: [18, 18, 18] },
-            margin: { left: 15, right: 15 }
+            alternateRowStyles: { fillColor: [18, 18, 18] }, margin: { left: 15, right: 15 }
         });
-
         const finalY = doc.lastAutoTable.finalY + 15;
         doc.setFillColor(22, 22, 22); doc.rect(15, finalY, 180, 60, 'F');
-        doc.setDrawColor(51, 51, 51); doc.rect(15, finalY, 180, 60, 'S');
         doc.setFontSize(11); doc.setTextColor(255, 255, 255);
         doc.text("INSURANCE OVERVIEW", 20, finalY + 10);
         doc.setFont("helvetica", "normal"); doc.setTextColor(255, 51, 51);
@@ -415,17 +418,13 @@
         doc.text("- FLEX ORDERS:", 25, finalY + 26); doc.text(tFlex.toString(), 185, finalY + 26, {align: 'right'});
         doc.setFont("helvetica", "bolditalic"); doc.setTextColor(255, 255, 255);
         doc.text("SUBTOTAL INSURANCE:", 25, finalY + 34); doc.text((tFix + tFlex).toString(), 185, finalY + 34, {align: 'right'});
-        doc.setDrawColor(68, 68, 68); doc.line(20, finalY + 38, 185, finalY + 38);
         doc.text("CALIBRATION OVERVIEW", 20, finalY + 48);
         doc.setFont("helvetica", "normal"); doc.setTextColor(77, 184, 255);
         doc.text("- CALIBRATION ORDERS:", 25, finalY + 56); doc.text(tCal.toString(), 185, finalY + 56, {align: 'right'});
-
         const fileName = `S-S_Report_${months[selM]}_${selY}.pdf`;
-        const pdfBlob = doc.output('blob');
-        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+        const pdfBlob = doc.output('blob'); const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try { await navigator.share({ files: [file], title: fileName }); } 
-            catch (err) { if (err.name !== 'AbortError') doc.save(fileName); }
+            try { await navigator.share({ files: [file], title: fileName }); } catch (err) { if (err.name !== 'AbortError') doc.save(fileName); }
         } else { doc.save(fileName); }
     }
 </script>
