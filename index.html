@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>S&S Tracker V314-LAYOUT-FIX</title>
+    <title>S&S Tracker V317-COLLAPSE</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -43,7 +43,6 @@
         #qtyFix::placeholder { color: var(--mm-red); opacity: 0.8; }
         #qtyFlex::placeholder { color: var(--mm-orange); opacity: 0.8; }
         #qtyCal::placeholder { color: var(--color-wait); opacity: 0.8; }
-        input::placeholder { font-style: italic; text-transform: uppercase; }
 
         .btn-action-slim { cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111; transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit); display: flex; align-items: center; justify-content: center; font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 13px; transition: all 0.2s; }
         .btn-success { color: #000 !important; background: var(--color-future) !important; border-color: var(--color-future) !important; }
@@ -68,6 +67,19 @@
         .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 16px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; font-style: italic; }
 
         #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 450px; }
+        
+        /* Collapse Styles */
+        .date-group { margin-bottom: 12px; }
+        .date-header { 
+            background: #222; padding: 8px 12px; border-radius: 6px; cursor: pointer; 
+            display: flex; justify-content: space-between; align-items: center; 
+            font-size: 12px; color: var(--text-gray); margin-bottom: 6px;
+            transform: skewX(var(--skew-deg)); border: 1px solid #333;
+        }
+        .date-header-inner { transform: skewX(var(--unskew-deg)); display: flex; width: 100%; justify-content: space-between; }
+        .date-content { display: none; }
+        .date-content.open { display: block; }
+
         .log-item { background: #0c0c0c; border-radius: 12px; padding: 12px 8px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
         .log-main-grid { display: grid; grid-template-columns: 45px 1fr 110px 35px; align-items: center; gap: 10px; }
         
@@ -191,6 +203,7 @@
     let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let editId = null;
     let showOnlyOpen = false;
+    let collapsedDates = {}; 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     function getLocalDate() { return new Date().toISOString().split('T')[0]; }
@@ -207,6 +220,11 @@
     function toggleRunningFilter() { 
         showOnlyOpen = !showOnlyOpen; document.getElementById('eyeBtn').classList.toggle('active-eye', showOnlyOpen);
         document.getElementById('eyeIcon').innerText = showOnlyOpen ? 'visibility' : 'visibility_off'; render(); 
+    }
+
+    function toggleGroup(date) {
+        collapsedDates[date] = !collapsedDates[date];
+        render();
     }
 
     function copyToClipboard(val, el) {
@@ -241,37 +259,68 @@
         document.getElementById('percVerz').innerText = Math.round(((mFx+mFl)/tV)*100) + '%'; 
         document.getElementById('percBranded').innerText = Math.round((mB/tB)*100) + '%';
 
+        // Grouping logic
+        const groups = {};
         sales.sort((a,b) => b.date.localeCompare(a.date)).forEach(s => {
-            const isWait = s.isWait || s.date === "2099-12-31"; const sD = new Date(s.date); 
+            const isWait = s.isWait || s.date === "2099-12-31"; 
+            const sD = new Date(s.date); 
             const isInPeriod = isWait || (sD.getMonth() === selM && sD.getFullYear() === selY);
+            
             if (!isInPeriod || (showOnlyOpen && !isWait && s.date <= today) || (search && !s.invoice.toLowerCase().includes(search) && !(s.notes && s.notes.toLowerCase().includes(search)))) return;
             
-            const dP = s.date.split('-'); 
-            const shortD = isWait ? '---' : `${dP[2]}\n${months[parseInt(dP[1])-1]}`;
-            const statusColor = isWait ? 'var(--color-wait)' : (s.date > today ? 'var(--color-future)' : 'var(--color-done)');
-            
-            log.innerHTML += `
-            <div class="log-item">
-                <div class="status-bar-left" style="background:${statusColor}"></div>
-                <div class="status-bar-right" style="background:${statusColor}"></div>
-                <div class="log-main-grid">
-                    <div style="font-size:9px; color:var(--text-gray); text-align:center; font-style:italic;">${shortD}</div>
-                    <div style="overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                        <div class="invoice-tap" onclick="copyToClipboard('${s.invoice}', this)" style="font-size:16px; font-weight:900; color:#fff; letter-spacing:0.5px;">${s.invoice}</div>
-                        <div style="font-size:13px; font-weight:900; color:var(--mm-orange); font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px;">${s.notes || '-'}</div>
-                    </div>
-                    <div class="log-qty-cols">
-                        <div class="qty-col"><span class="qty-col-label">FIX</span><span class="qty-col-val" style="color:var(--mm-red)">${s.qtyFix}</span></div>
-                        <div class="qty-col"><span class="qty-col-label">FLX</span><span class="qty-col-val" style="color:var(--mm-orange)">${s.qtyFlex}</span></div>
-                        <div class="qty-col"><span class="qty-col-label">CAL</span><span class="qty-col-val" style="color:var(--color-wait)">${s.qtyCal}</span></div>
-                    </div>
-                    <div class="log-actions">
-                        <span class="material-icons" style="color:#eee; font-size:20px; cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
-                        <span class="material-icons" style="color:#444; font-size:20px; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
-                    </div>
-                </div>
-            </div>`;
+            if (!groups[s.date]) groups[s.date] = [];
+            groups[s.date].push(s);
         });
+
+        Object.keys(groups).forEach((dateKey, index) => {
+            const isWaitGroup = dateKey === "2099-12-31";
+            const dP = dateKey.split('-');
+            const headerLabel = isWaitGroup ? "WAITING / OPEN ORDERS" : `${dP[2]} ${months[parseInt(dP[1])-1]} ${dP[0]}`;
+            
+            // Auto-open first group or if searching
+            const isCollapsed = collapsedDates[dateKey] === undefined ? (index !== 0 && !search) : collapsedDates[dateKey];
+            const displayDate = isWaitGroup ? '---' : `${dP[2]}\n${months[parseInt(dP[1])-1]}`;
+
+            let groupHTML = `
+                <div class="date-group">
+                    <div class="date-header" onclick="toggleGroup('${dateKey}')">
+                        <div class="date-header-inner">
+                            <span>${headerLabel}</span>
+                            <span class="material-icons">${isCollapsed ? 'expand_more' : 'expand_less'}</span>
+                        </div>
+                    </div>
+                    <div class="date-content ${!isCollapsed ? 'open' : ''}">
+            `;
+
+            groups[dateKey].forEach(s => {
+                const statusColor = s.isWait || s.date === "2099-12-31" ? 'var(--color-wait)' : (s.date > today ? 'var(--color-future)' : 'var(--color-done)');
+                groupHTML += `
+                <div class="log-item">
+                    <div class="status-bar-left" style="background:${statusColor}"></div>
+                    <div class="status-bar-right" style="background:${statusColor}"></div>
+                    <div class="log-main-grid">
+                        <div style="font-size:9px; color:var(--text-gray); text-align:center; font-style:italic;">${displayDate}</div>
+                        <div style="overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
+                            <div class="invoice-tap" onclick="copyToClipboard('${s.invoice}', this)" style="font-size:16px; font-weight:900; color:#fff; letter-spacing:0.5px;">${s.invoice}</div>
+                            <div style="font-size:13px; font-weight:900; color:var(--mm-orange); font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:3px;">${s.notes || '-'}</div>
+                        </div>
+                        <div class="log-qty-cols">
+                            <div class="qty-col"><span class="qty-col-label">FIX</span><span class="qty-col-val" style="color:var(--mm-red)">${s.qtyFix}</span></div>
+                            <div class="qty-col"><span class="qty-col-label">FLX</span><span class="qty-col-val" style="color:var(--mm-orange)">${s.qtyFlex}</span></div>
+                            <div class="qty-col"><span class="qty-col-label">CAL</span><span class="qty-col-val" style="color:var(--color-wait)">${s.qtyCal}</span></div>
+                        </div>
+                        <div class="log-actions">
+                            <span class="material-icons" style="color:#eee; font-size:20px; cursor:pointer;" onclick="startEdit(${s.id})">edit</span>
+                            <span class="material-icons" style="color:#444; font-size:20px; cursor:pointer;" onclick="confirmDelete(${s.id})">delete</span>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            groupHTML += `</div></div>`;
+            log.innerHTML += groupHTML;
+        });
+
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
     }
 
@@ -333,18 +382,49 @@
         const doc = new jsPDF();
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
-        const fileName = `S-S_Report_${months[selM]}_${selY}.pdf`;
         const filtered = sales.filter(s => !s.isWait && new Date(s.date).getMonth() === selM && new Date(s.date).getFullYear() === selY);
-        doc.text(`S&S REPORT: ${months[selM]} ${selY}`, 15, 20);
+        let tFix = 0, tFlex = 0, tCal = 0;
+        filtered.forEach(s => { tFix += (parseInt(s.qtyFix)||0); tFlex += (parseInt(s.qtyFlex)||0); tCal += (parseInt(s.qtyCal)||0); });
+
+        doc.setFillColor(0, 0, 0); doc.rect(0, 0, 210, 297, 'F');
+        doc.setFont("helvetica", "bold"); doc.setFontSize(28); doc.setTextColor(255, 51, 51);
+        doc.text("S", 15, 25); 
+        doc.setTextColor(255, 255, 255); doc.text("ALES & SOLUTIONS", 23, 25);
+        doc.setFontSize(14); doc.setTextColor(153, 153, 153);
+        doc.text(`${months[selM].toUpperCase()} ${selY} TRACKER`, 15, 35);
+
         doc.autoTable({
-            startY: 30,
+            startY: 45,
             head: [['DATE', 'INVOICE', 'FIX', 'FLX', 'CAL', 'NOTES']],
-            body: filtered.map(s => [s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || ''])
+            body: filtered.sort((a,b) => a.date.localeCompare(b.date)).map(s => [s.date, s.invoice, s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '']),
+            theme: 'plain',
+            headStyles: { fillColor: [22, 22, 22], textColor: [255, 255, 255], fontStyle: 'bold' },
+            bodyStyles: { textColor: [200, 200, 200], fillColor: [12, 12, 12] },
+            alternateRowStyles: { fillColor: [18, 18, 18] },
+            margin: { left: 15, right: 15 }
         });
+
+        const finalY = doc.lastAutoTable.finalY + 15;
+        doc.setFillColor(22, 22, 22); doc.rect(15, finalY, 180, 60, 'F');
+        doc.setDrawColor(51, 51, 51); doc.rect(15, finalY, 180, 60, 'S');
+        doc.setFontSize(11); doc.setTextColor(255, 255, 255);
+        doc.text("INSURANCE OVERVIEW", 20, finalY + 10);
+        doc.setFont("helvetica", "normal"); doc.setTextColor(255, 51, 51);
+        doc.text("- FIX ORDERS:", 25, finalY + 18); doc.text(tFix.toString(), 185, finalY + 18, {align: 'right'});
+        doc.setTextColor(255, 153, 0);
+        doc.text("- FLEX ORDERS:", 25, finalY + 26); doc.text(tFlex.toString(), 185, finalY + 26, {align: 'right'});
+        doc.setFont("helvetica", "bolditalic"); doc.setTextColor(255, 255, 255);
+        doc.text("SUBTOTAL INSURANCE:", 25, finalY + 34); doc.text((tFix + tFlex).toString(), 185, finalY + 34, {align: 'right'});
+        doc.setDrawColor(68, 68, 68); doc.line(20, finalY + 38, 185, finalY + 38);
+        doc.text("CALIBRATION OVERVIEW", 20, finalY + 48);
+        doc.setFont("helvetica", "normal"); doc.setTextColor(77, 184, 255);
+        doc.text("- CALIBRATION ORDERS:", 25, finalY + 56); doc.text(tCal.toString(), 185, finalY + 56, {align: 'right'});
+
+        const fileName = `S-S_Report_${months[selM]}_${selY}.pdf`;
         const pdfBlob = doc.output('blob');
         const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try { await navigator.share({ files: [file], title: fileName, text: `Overzicht ${months[selM]} ${selY}` }); } 
+            try { await navigator.share({ files: [file], title: fileName }); } 
             catch (err) { if (err.name !== 'AbortError') doc.save(fileName); }
         } else { doc.save(fileName); }
     }
