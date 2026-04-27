@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>S&S Tracker V326-ICON-FIX</title>
+    <title>S&S Tracker V368-SCROLL-FIX</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 font-weight=%22bold%22 fill=%22%23ff3333%22 font-family=%22Arial%22>S</text></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -14,400 +14,387 @@
     <style>
         :root {
             --mm-red: #ff3333; --mm-orange: #ff9900;
-            --bg: #000; --card-bg: #161616; --text-dark: #fff; 
+            --bg: #000; --card-bg: #161616;
+            --log-bg: #000;
+            --header-bg: #161616;
             --text-gray: #999999; 
-            --color-wait: #4db8ff; --color-future: #00ff88; --color-done: #444;
+            --color-wait: #4db8ff; --color-future: #00ff88;
             --mm-font: 'Arial Black', sans-serif;
-            --h-unit: 46px;
+            --h-unit: 44px;
             --skew-deg: -10deg;
-            --unskew-deg: 10deg;
-            
             --c-mda: #ffffff; --c-sda: #ffcc00; --c-tel: #00ff66;
             --c-it: #0099ff; --c-ktv: #ff3333; --c-hifi: #cc33ff;
+            --btn-save: #006633;
+            --btn-update: #0055ff;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        .material-icons { font-size: 18px; display: inline-block; line-height: 1; vertical-align: middle; }
+        body { font-family: var(--mm-font); font-weight: 900; font-style: italic; background: var(--bg); margin: 0; padding-bottom: 80px; color: #fff; text-transform: uppercase; }
+        .container { padding: 0 8px; max-width: 480px; margin: 0 auto; display: block; min-height: 100vh; }
         
-        body { font-family: var(--mm-font); font-weight: 900; font-style: italic; background: var(--bg); margin: 0; padding-bottom: env(safe-area-inset-bottom); color: var(--text-dark); text-transform: uppercase; overflow-x: hidden; }
-        .container { padding: 0 8px; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; min-height: 100vh; }
         .card { background: var(--card-bg); border-radius: 16px; padding: 14px 12px; margin-top: 10px; border: 1px solid #222; position: relative; }
         
-        .inner-txt { transform: skewX(var(--unskew-deg)); display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; gap: 6px; font-style: italic; }
+        .skew-content { transform: skewX(var(--skew-deg)); display: inline-block; }
 
-        .input-skew { height: var(--h-unit); border: 1px solid #333; background: #111; color: #fff; font-family: inherit; font-style: italic; font-weight: 900; font-size: 15px; transform: skewX(var(--skew-deg)); border-radius: 6px; outline: none; padding: 0; display: flex; overflow: hidden; align-items: center; }
-        .input-skew input { background: transparent; border: none; color: #fff; font-family: inherit; font-style: inherit; font-weight: inherit; font-size: 15px; width: 100%; height: 100%; text-align: center; transform: skewX(var(--unskew-deg)); outline: none; text-transform: uppercase; }
+        .btn-base { cursor: pointer; color: #fff; transform: skewX(var(--skew-deg)); border-radius: 6px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-family: var(--mm-font); font-style: italic; font-weight: 900; border: none; }
+        .btn-base .inner-txt { display: flex; align-items: center; gap: 4px; }
 
-        .dept-btn-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
-        .dept-chip { height: 40px; background: #111; border: 1px solid #333; border-radius: 6px; transform: skewX(var(--skew-deg)); cursor: pointer; transition: all 0.2s; position: relative; }
+        .input-skew { height: var(--h-unit); border: 1px solid #333; background: #000; transform: skewX(var(--skew-deg)); border-radius: 6px; display: flex; overflow: hidden; position: relative; }
+        .input-skew input, .input-skew select { background: transparent; border: none; color: #fff; font-family: var(--mm-font); font-style: italic; font-weight: 900; font-size: 14px; width: 100%; text-align: center; outline: none; appearance: none; padding: 0 10px; }
+
+        .qty-control-skew { display: grid; grid-template-columns: 32px 1fr 32px; background: #000; border: 1px solid #222; height: var(--h-unit); transform: skewX(var(--skew-deg)); border-radius: 6px; overflow: hidden; }
+        .qty-btn-skew { background: #1a1a1a; border: none; cursor: pointer; font-family: var(--mm-font); font-weight: 900; font-size: 20px; color: #fff; }
+        .qty-input-skew { background: transparent; border: none; text-align: center; font-family: var(--mm-font); font-weight: 900; font-size: 16px; width: 100%; outline: none; font-style: italic; color: #fff; }
+
+        .progress-bar-wrapper { height: 32px; background: #000; border-radius: 4px; overflow: hidden; border: 1px solid #222; position: relative; display: flex; align-items: center; transform: skewX(var(--skew-deg)); }
+        .fill-segment { height: 100%; transition: width 0.8s ease; position: absolute; }
+        #fillFix { background: linear-gradient(90deg, #600, var(--mm-red)); z-index: 1; }
+        #fillFlexSegment { background: linear-gradient(90deg, #630, var(--mm-orange)); z-index: 1; }
+        #fillBranded { background: linear-gradient(90deg, #036, var(--color-wait)); z-index: 1; }
+
+        .chart-stat { position: relative; z-index: 10; font-size: 11px; display: flex; align-items: center; gap: 4px; padding: 0 10px; width: 100%; justify-content: space-around; pointer-events: none; }
+        .chart-stat .label { font-size: 7px; opacity: 0.6; }
+
+        .dept-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; padding: 0 4px; }
+        .dept-legend-item { font-size: 9px; display: flex; align-items: center; gap: 3px; font-weight: 900; transform: skewX(var(--skew-deg)); }
+        .dept-legend-item .dot { width: 6px; height: 6px; border-radius: 1px; }
+
+        /* LIST SCROLL OPTIMIZED */
+        .date-header { background: var(--header-bg); padding: 10px 14px; border-radius: 12px; cursor: pointer; margin-bottom: 6px; border: 1px solid #282828; display: flex; justify-content: space-between; align-items: center; }
+        .log-item { background: var(--log-bg); border-radius: 12px; padding: 10px; margin-bottom: 4px; border: 1px solid #1a1a1a; }
+        .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; background: #161616; padding: 3px; border-radius: 4px; border: 1px solid #222; transform: skewX(var(--skew-deg)); }
+        .s-val { font-size: 13px; font-weight: 900; line-height: 1; text-align: center; }
+
+        .dept-chip { color: var(--text-gray); font-size: 9px; background: #000; border: 1px solid #333; height: 38px; }
+        .dept-chip.active { border-color: #fff; background: rgba(255,255,255,0.15); color: #fff; }
         
-        /* Horizontale Layout voor iconen naast tekst */
-        .dept-chip .inner-chip { transform: skewX(var(--unskew-deg)); display: flex; flex-direction: row; align-items: center; justify-content: center; height: 100%; pointer-events: none; gap: 8px; }
-        .dept-chip span { font-size: 11px; color: var(--text-gray); font-weight: 900; }
+        .dept-tag { font-size: 8px; display: flex; align-items: center; gap: 2px; font-weight: 900; margin-top: 4px; transform: skewX(var(--skew-deg)); }
+        .tag-MDA { color: var(--c-mda); } .tag-SDA { color: var(--c-sda); } .tag-TELCO { color: var(--c-tel); }
+        .tag-IT { color: var(--c-it); } .tag-KTV { color: var(--c-ktv); } .tag-HIFI { color: var(--c-hifi); }
         
-        .dept-chip.mda .material-icons { color: var(--c-mda); }
-        .dept-chip.sda .material-icons { color: var(--c-sda); }
-        .dept-chip.tel .material-icons { color: var(--c-tel); }
-        .dept-chip.it .material-icons { color: var(--c-it); }
-        .dept-chip.ktv .material-icons { color: var(--c-ktv); }
-        .dept-chip.hifi .material-icons { color: var(--c-hifi); }
-        .dept-chip.active { background: rgba(255,255,255,0.1); border-color: #555; }
-        .dept-chip.active span { color: #fff; }
-
-        .btn-action-slim { cursor: pointer; color: var(--text-gray); border: 1px solid #333; background: #111; transform: skewX(var(--skew-deg)); border-radius: 6px; height: var(--h-unit); display: flex; align-items: center; justify-content: center; font-family: inherit; font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 13px; }
-        .active-wait { background: var(--color-wait) !important; color: #000 !important; border-color: var(--color-wait) !important; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; align-items: center; }
-        .progress-container { grid-column: span 3; }
-        .progress-bar-wrapper { height: 42px; background: #0a0a0a; border-radius: 6px; overflow: hidden; border: 1px solid #222; position: relative; display: flex; align-items: center; transform: skewX(var(--skew-deg)); }
-        .fill-segment { height: 100%; transition: width 0.8s ease; position: absolute; top: 0; }
-        #fillFix { background: linear-gradient(90deg, #660000, var(--mm-red)); z-index: 2; }
-        #fillFlexSegment { background: linear-gradient(90deg, #663300, var(--mm-orange)); z-index: 1; }
-        #fillBranded { background: linear-gradient(90deg, #004466, var(--color-wait)); }
-        
-        .bar-label-left, .bar-label-right { position: absolute; z-index: 5; font-size: 12px; color: #fff; transform: skewX(var(--unskew-deg)); pointer-events: none; font-style: italic; }
-        .bar-label-left { left: 12px; } .bar-label-right { right: 12px; }
-
-        .qty-control-skew { display: grid; grid-template-columns: 35px 1fr 35px; background: #111; border: 1px solid #333; height: var(--h-unit); transform: skewX(var(--skew-deg)); border-radius: 6px; overflow: hidden; }
-        .qty-btn-skew { background: #222; border: none; cursor: pointer; font-weight: 900; font-size: 22px; transform: skewX(var(--unskew-deg)); font-style: italic; }
-        .qty-input-skew { background: transparent; border: none; text-align: center; font-family: inherit; font-weight: 900; font-size: 16px; transform: skewX(var(--unskew-deg)); width: 100%; outline: none; font-style: italic; }
-        
-        #salesLog { flex: 1; overflow-y: auto; margin: 8px 0; max-height: 500px; }
-        .date-header { background: #222; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; color: #eee; margin-bottom: 6px; transform: skewX(var(--skew-deg)); border: 1px solid #333; }
-        .date-header-inner { transform: skewX(var(--unskew-deg)); display: flex; align-items: center; width: 100%; justify-content: space-between; }
-        
-        .date-content { display: none; }
-        .date-content.open { display: block; }
-
-        .log-item { background: #0c0c0c; border-radius: 12px; padding: 14px 10px; margin-bottom: 10px; border: 1px solid #222; position: relative; overflow: hidden; }
-        .log-main-grid { display: grid; grid-template-columns: 1fr 130px 45px; align-items: center; gap: 12px; }
-        .status-bar-left { position: absolute; top: 0; bottom: 0; width: 4px; left: 0; }
-
-        .log-qty-cols { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; background: #000; border-radius: 8px; padding: 4px 2px; border: 1px solid #1a1a1a; transform: skewX(var(--skew-deg)); }
-        .qty-col { display: flex; flex-direction: column; transform: skewX(var(--unskew-deg)); }
-        .qty-col-label { font-size: 6px; color: #555; font-style: italic; line-height: 1; margin-bottom: 1px; }
-        .qty-col-val { font-size: 14px; font-weight: 900; font-style: italic; line-height: 1.1; }
-        
-        .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; margin-bottom: 10px; }
-        .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-5 { grid-column: span 5; } .col-7 { grid-column: span 7; }
-        .invoice-tap { cursor: pointer; font-style: italic; color: #fff; font-size: 18px; }
-        .dept-tag { font-size: 8px; color: var(--text-gray); border: 1px solid #333; padding: 1px 4px; border-radius: 3px; vertical-align: middle; margin-left: 6px; }
+        .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="card">
-        <div class="card-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px;">
-            <div style="background: #000; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid #333;"><span style="color: var(--mm-red); font-size: 22px; font-weight: 900;">S</span></div>
-            <div style="font-size: 18px; letter-spacing: 0.5px; color: #fff; font-style: italic;">SALES & SOLUTIONS</div>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="progress-container">
-                <div class="progress-bar-wrapper">
-                    <div class="bar-label-left">INSURANCE</div>
-                    <div class="bar-label-right">FIX:<b id="valFix">0</b> FLX:<b id="valFlex">0</b> | <span id="percVerz">0%</span></div>
-                    <div id="fillFix" class="fill-segment" style="width:0%;"></div>
-                    <div id="fillFlexSegment" class="fill-segment" style="width:0%;"></div>
-                </div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="background: var(--mm-red); width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; transform: skewX(-10deg);"><span style="color: #000; font-size: 16px;">S</span></div>
+                <div style="font-size: 11px; letter-spacing: 1px; color: var(--text-gray);">PERFORMANCE HUB V368</div>
             </div>
-            <div style="grid-column: span 1;"><div class="input-skew" style="background: #0a0a0a;"><input type="number" id="targetVerz" oninput="saveTargets()" placeholder="TGT"></div></div>
+            <div id="percGlobal" style="font-size: 20px; color: var(--color-future);">0%</div>
         </div>
 
-        <div class="stats-grid">
-            <div class="progress-container">
+        <div class="grid-12" style="align-items: center; margin-bottom: 4px;">
+            <div style="grid-column: span 9;">
                 <div class="progress-bar-wrapper">
-                    <div class="bar-label-left">CALIBRATION</div>
-                    <div class="bar-label-right">CAL:<b id="valCal">0</b> | <span id="percBranded">0%</span></div>
-                    <div id="fillBranded" class="fill-segment" style="width:0%;"></div>
+                    <div class="chart-stat">
+                        <span><span class="label">FIX</span> <span id="chartFix" style="color:var(--mm-red)">0</span></span>
+                        <span><span class="label">FLX</span> <span id="chartFlex" style="color:var(--mm-orange)">0</span></span>
+                    </div>
+                    <div id="fillFix" class="fill-segment"></div>
+                    <div id="fillFlexSegment" class="fill-segment"></div>
                 </div>
             </div>
-            <div style="grid-column: span 1;"><div class="input-skew" style="background: #0a0a0a;"><input type="number" id="targetVerzCalibration" oninput="saveTargets()" placeholder="TGT"></div></div>
+            <div style="grid-column: span 3;"><div class="input-skew" style="height:32px;"><input type="number" id="targetVerz" oninput="saveTargets()" placeholder="TGT"></div></div>
         </div>
 
-        <div class="grid-12" style="margin-top:10px;">
-            <div class="btn-action-slim col-3" onclick="shareAsPDF()"><div class="inner-txt"><span class="material-icons" style="color:#fff">share</span>SHARE</div></div>
-            <div class="btn-action-slim col-3" onclick="manualExport()"><div class="inner-txt"><span class="material-icons" style="color:var(--mm-orange)">file_download</span>EXP</div></div>
-            <div class="btn-action-slim col-3" onclick="document.getElementById('importInput').click()"><div class="inner-txt"><span class="material-icons" style="color:var(--color-future)">file_upload</span>IMP</div></div>
-            <div class="btn-action-slim col-3" onclick="if(confirm('CLEAR ALL?')){localStorage.clear();location.reload();}"><div class="inner-txt"><span class="material-icons" style="color:var(--mm-red)">delete_sweep</span>CLR</div></div>
+        <div class="grid-12" style="align-items: center; margin-bottom: 4px;">
+            <div style="grid-column: span 9;">
+                <div class="progress-bar-wrapper">
+                    <div class="chart-stat" style="justify-content: center;">
+                        <span><span class="label">CALIBRATION</span> <span id="chartCal" style="color:var(--color-wait)">0</span></span>
+                    </div>
+                    <div id="fillBranded" class="fill-segment"></div>
+                </div>
+            </div>
+            <div style="grid-column: span 3;"><div class="input-skew" style="height:32px;"><input type="number" id="targetCal" oninput="saveTargets()" placeholder="TGT"></div></div>
         </div>
-        <input type="file" id="importInput" style="display:none" accept=".csv" onchange="manualImport(event)">
+
+        <div class="dept-legend" id="deptLegend"></div>
+
+        <div class="grid-12" style="margin-top: 12px; border-top: 1px solid #222; padding-top: 10px;">
+            <div class="btn-base" style="grid-column: span 3; color: var(--text-gray);" onclick="shareAsPDF()"><div class="inner-txt"><span class="material-icons" style="color:var(--mm-orange); font-size:14px;">share</span>PDF</div></div>
+            <div class="btn-base" style="grid-column: span 3; color: var(--text-gray);" onclick="manualExport()"><div class="inner-txt"><span class="material-icons" style="color:var(--color-future); font-size:14px;">download</span>EXP</div></div>
+            <div class="btn-base" style="grid-column: span 3; color: var(--text-gray);" onclick="document.getElementById('impInp').click()"><div class="inner-txt"><span class="material-icons" style="color:var(--color-wait); font-size:14px;">upload</span>IMP</div></div>
+            <div class="btn-base" style="grid-column: span 3; color: var(--text-gray);" onclick="if(confirm('WISSEN?')){localStorage.clear();location.reload();}"><div class="inner-txt"><span class="material-icons" style="color:var(--mm-red); font-size:14px;">delete_forever</span>CLR</div></div>
+        </div>
+        <input type="file" id="impInp" style="display:none" accept=".csv" onchange="manualImport(event)">
     </div>
 
     <div class="card">
         <form id="saleForm">
-            <div class="dept-btn-row" id="deptSelector">
-                <div class="dept-chip mda" onclick="toggleDept(this, 'MDA')"><div class="inner-chip"><span class="material-icons">local_laundry_service</span><span>MDA</span></div></div>
-                <div class="dept-chip sda" onclick="toggleDept(this, 'SDA')"><div class="inner-chip"><span class="material-icons">cleaning_services</span><span>SDA</span></div></div>
-                <div class="dept-chip tel" onclick="toggleDept(this, 'TELCO')"><div class="inner-chip"><span class="material-icons">smartphone</span><span>TEL</span></div></div>
-                <div class="dept-chip it" onclick="toggleDept(this, 'IT')"><div class="inner-chip"><span class="material-icons">laptop</span><span>IT</span></div></div>
-                <div class="dept-chip ktv" onclick="toggleDept(this, 'KTV')"><div class="inner-chip"><span class="material-icons">tv</span><span>KTV</span></div></div>
-                <div class="dept-chip hifi" onclick="toggleDept(this, 'HIFI')"><div class="inner-chip"><span class="material-icons">speaker</span><span>HIFI</span></div></div>
+            <div class="grid-12" style="margin-bottom: 8px; gap: 4px;">
+                <div class="btn-base dept-chip" data-dept="MDA" onclick="toggleDept(this, 'MDA')" style="grid-column: span 4;"><div class="inner-txt"><span class="material-icons" style="color:var(--c-mda); font-size:12px;">local_laundry_service</span>MDA</div></div>
+                <div class="btn-base dept-chip" data-dept="SDA" onclick="toggleDept(this, 'SDA')" style="grid-column: span 4;"><div class="inner-txt"><span class="material-icons" style="color:var(--c-sda); font-size:12px;">cleaning_services</span>SDA</div></div>
+                <div class="btn-base dept-chip" data-dept="TELCO" onclick="toggleDept(this, 'TELCO')" style="grid-column: span 4;"><div class="inner-txt"><span class="material-icons" style="color:var(--c-tel); font-size:12px;">smartphone</span>TEL</div></div>
+                <div class="btn-base dept-chip" data-dept="IT" onclick="toggleDept(this, 'IT')" style="grid-column: span 4;"><div class="inner-txt"><span class="material-icons" style="color:var(--c-it); font-size:12px;">laptop</span>IT</div></div>
+                <div class="btn-base dept-chip" data-dept="KTV" onclick="toggleDept(this, 'KTV')" style="grid-column: span 4;"><div class="inner-txt"><span class="material-icons" style="color:var(--c-ktv); font-size:12px;">tv</span>KTV</div></div>
+                <div class="btn-base dept-chip" data-dept="HIFI" onclick="toggleDept(this, 'HIFI')" style="grid-column: span 4;"><div class="inner-txt"><span class="material-icons" style="color:var(--c-hifi); font-size:12px;">speaker</span>HIFI</div></div>
             </div>
             
             <div class="grid-12">
-                <div class="input-skew col-5"><input type="text" id="invoice" inputmode="numeric" placeholder="INV #" required style="text-align:left; padding-left:15px;"></div>
-                <div class="input-skew col-7"><input type="text" id="notes" placeholder="NOTE..." style="text-align:left; padding-left:10px;"></div>
+                <div class="input-skew" style="grid-column: span 5;"><input type="text" id="invoice" placeholder="INV #" required></div>
+                <div class="input-skew" style="grid-column: span 7;"><input type="text" id="notes" placeholder="NOTITIES..."></div>
             </div>
+
             <div class="grid-12">
-                <div class="qty-control-skew col-4">
-                    <button type="button" class="qty-btn-skew" onclick="adj('qtyFix',-1)" style="color:var(--mm-red)">-</button>
-                    <input type="number" id="qtyFix" class="qty-input-skew" placeholder="FIX" style="color:var(--mm-red)">
-                    <button type="button" class="qty-btn-skew" onclick="adj('qtyFix',1)" style="color:var(--mm-red)">+</button>
-                </div>
-                <div class="qty-control-skew col-4">
-                    <button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',-1)" style="color:var(--mm-orange)">-</button>
-                    <input type="number" id="qtyFlex" class="qty-input-skew" placeholder="FLX" style="color:var(--mm-orange)">
-                    <button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',1)" style="color:var(--mm-orange)">+</button>
-                </div>
-                <div class="qty-control-skew col-4">
-                    <button type="button" class="qty-btn-skew" onclick="adj('qtyCal',-1)" style="color:var(--color-wait)">-</button>
-                    <input type="number" id="qtyCal" class="qty-input-skew" placeholder="CAL" style="color:var(--color-wait)">
-                    <button type="button" class="qty-btn-skew" onclick="adj('qtyCal',1)" style="color:var(--color-wait)">+</button>
-                </div>
+                <div class="qty-control-skew" style="grid-column: span 4;"><button type="button" class="qty-btn-skew" onclick="adj('qtyFix',-1)" style="color:var(--mm-red)">-</button><input type="number" id="qtyFix" class="qty-input-skew" placeholder="FIX"><button type="button" class="qty-btn-skew" onclick="adj('qtyFix',1)" style="color:var(--mm-red)">+</button></div>
+                <div class="qty-control-skew" style="grid-column: span 4;"><button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',-1)" style="color:var(--mm-orange)">-</button><input type="number" id="qtyFlex" class="qty-input-skew" placeholder="FLX"><button type="button" class="qty-btn-skew" onclick="adj('qtyFlex',1)" style="color:var(--mm-orange)">+</button></div>
+                <div class="qty-control-skew" style="grid-column: span 4;"><button type="button" class="qty-btn-skew" onclick="adj('qtyCal',-1)" style="color:var(--color-wait)">-</button><input type="number" id="qtyCal" class="qty-input-skew" placeholder="CAL"><button type="button" class="qty-btn-skew" onclick="adj('qtyCal',1)" style="color:var(--color-wait)">+</button></div>
             </div>
+
             <div class="grid-12">
-                <div class="input-skew col-4">
-                    <div class="inner-txt" style="justify-content: flex-start; padding-left: 10px;">
-                        <span class="material-icons" style="color:var(--text-gray); font-size: 18px;">event</span>
-                        <input type="date" id="dateInput" required style="color:var(--text-gray); font-size:12px; flex: 1;">
-                    </div>
-                </div>
-                <div id="waitBtn" class="btn-action-slim col-4" onclick="toggleDateViaBox()"><div class="inner-txt"><span class="material-icons" style="color:var(--color-wait);">hourglass_empty</span>WAIT</div><input type="checkbox" id="dateUnknown" style="display:none" onchange="toggleDate(this)"></div>
-                <button type="submit" id="mainSubmitBtn" class="btn-action-slim col-4"><div class="inner-txt"><span class="material-icons" style="color:var(--color-future);">content_paste_go</span><span id="btnText" style="color:var(--text-gray);">SAVE</span></div></button>
+                <div class="input-skew" style="grid-column: span 5;"><input type="date" id="dateInput" required></div>
+                <button type="submit" id="submitBtn" class="btn-base" style="grid-column: span 7; background: var(--btn-save);">
+                    <div class="inner-txt"><span class="material-icons" id="btnIcon" style="font-size:16px;">save</span><span id="btnText">SAVE</span></div>
+                </button>
             </div>
         </form>
     </div>
 
-    <div class="card" style="flex:1; display:flex; flex-direction:column;">
-        <div class="grid-12" style="margin-bottom:12px; gap:6px;">
-            <div class="input-skew" style="grid-column: span 4;"><input type="text" id="searchInput" placeholder="SEARCH..." oninput="render()" style="text-align:left; padding-left:15px;"></div>
-            <div class="input-skew" style="grid-column: span 4;"><select id="viewMonth" onchange="render()" style="background:transparent; border:none; color:var(--text-gray); width:100%; height:100%; font-family:inherit; font-style:italic; font-weight:900; text-align:center; outline:none;"></select></div>
-            <div class="input-skew" style="grid-column: span 3;"><select id="viewYear" onchange="render()" style="background:transparent; border:none; color:var(--text-gray); width:100%; height:100%; font-family:inherit; font-style:italic; font-weight:900; text-align:center; outline:none;"></select></div>
-            <div id="eyeBtn" class="btn-action-slim" style="grid-column: span 1;" onclick="toggleRunningFilter()"><div class="inner-txt"><span id="eyeIcon" class="material-icons" style="font-size:24px;">visibility_off</span></div></div>
+    <div class="card" style="padding: 10px;">
+        <div class="grid-12" style="margin-bottom: 8px;">
+            <div class="input-skew" style="grid-column: span 6;"><select id="viewMonth" onchange="render()"></select></div>
+            <div class="input-skew" style="grid-column: span 6;"><select id="viewYear" onchange="render()"></select></div>
         </div>
-        <div id="salesLog"></div>
+        
+        <div class="input-skew" style="border-color: #444;">
+            <input type="text" id="searchInput" placeholder="ZOEKEN OP INV OF NOTITIE..." oninput="render()">
+            <span class="material-icons" style="position: absolute; right: 12px; top: 11px; font-size: 18px; color: #444;">search</span>
+        </div>
     </div>
+
+    <div style="padding: 0 4px; margin-top:15px;" id="salesLog"></div>
 </div>
 
 <script>
     const STORAGE_KEY = 'SS_DATA_MASTER';
-    const DEPT_COLORS = { 'MDA': [255,255,255], 'SDA': [255,204,0], 'TELCO': [0,255,102], 'IT': [0,153,255], 'KTV': [255,51,51], 'HIFI': [204,51,255] };
-    let sales = [];
+    let sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let selectedDepts = [];
     let editId = null;
-    let showOnlyOpen = false;
     let collapsedDates = {}; 
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const months = ["JANUARI", "FEBRUARI", "MAART", "APRIL", "MEI", "JUNI", "JULI", "AUGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DECEMBER"];
+    
+    const DEPT_CFG = {
+        'MDA': { icon: 'local_laundry_service', color: 'var(--c-mda)' },
+        'SDA': { icon: 'cleaning_services', color: 'var(--c-sda)' },
+        'TELCO': { icon: 'smartphone', color: 'var(--c-tel)' },
+        'IT': { icon: 'laptop', color: 'var(--c-it)' },
+        'KTV': { icon: 'tv', color: 'var(--c-ktv)' },
+        'HIFI': { icon: 'speaker', color: 'var(--c-hifi)' }
+    };
 
     function toggleDept(el, dept) {
         if (selectedDepts.includes(dept)) { selectedDepts = selectedDepts.filter(d => d !== dept); el.classList.remove('active'); } 
         else { selectedDepts.push(dept); el.classList.add('active'); }
     }
-    function resetDepts() { selectedDepts = []; document.querySelectorAll('.dept-chip').forEach(c => c.classList.remove('active')); }
-    function getLocalDate() { return new Date().toISOString().split('T')[0]; }
-    function adj(id, v) { const el = document.getElementById(id); el.value = Math.max(0, (parseInt(el.value) || 0) + v); }
-    function toggleDateViaBox() { const cb = document.getElementById('dateUnknown'); cb.checked = !cb.checked; toggleDate(cb); }
-    function toggleDate(cb) {
-        const di = document.getElementById('dateInput'), btn = document.getElementById('waitBtn'), container = di.closest('.input-skew');
-        if(cb.checked) { btn.classList.add('active-wait'); di.disabled = true; container.style.opacity = "0.2"; } 
-        else { btn.classList.remove('active-wait'); di.disabled = false; container.style.opacity = "1"; }
-    }
-    function toggleRunningFilter() { showOnlyOpen = !showOnlyOpen; document.getElementById('eyeIcon').innerText = showOnlyOpen ? 'visibility' : 'visibility_off'; render(); }
-    
-    function toggleGroup(date) { 
-        collapsedDates[date] = !collapsedDates[date]; 
-        render(); 
-    }
 
-    function loadData() { sales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    function adj(id, v) { const el = document.getElementById(id); el.value = Math.max(0, (parseInt(el.value) || 0) + v); }
+    function toggleGroup(date) { collapsedDates[date] = !collapsedDates[date]; render(); }
 
     function render() {
-        const log = document.getElementById('salesLog'), selM = parseInt(document.getElementById('viewMonth').value), selY = parseInt(document.getElementById('viewYear').value), search = document.getElementById('searchInput').value.toLowerCase();
-        const today = getLocalDate();
-        let mFx=0, mFl=0, mB=0; log.innerHTML = '';
+        const log = document.getElementById('salesLog');
+        const selM = parseInt(document.getElementById('viewMonth').value);
+        const selY = parseInt(document.getElementById('viewYear').value);
+        const searchQ = document.getElementById('searchInput').value.toLowerCase();
         
-        sales.forEach(s => { if(!s.isWait && s.date !== "2099-12-31") { const d = new Date(s.date); if(d.getMonth() === selM && d.getFullYear() === selY) { mFx += parseInt(s.qtyFix)||0; mFl += parseInt(s.qtyFlex)||0; mB += parseInt(s.qtyCal)||0; } } });
-        const tV = parseInt(document.getElementById('targetVerz').value) || 1, tB = parseInt(document.getElementById('targetVerzCalibration').value) || 1;
-        document.getElementById('valFix').innerText = mFx; document.getElementById('valFlex').innerText = mFl; document.getElementById('valCal').innerText = mB;
-        const fixW = Math.min((mFx/tV)*100, 100); document.getElementById('fillFix').style.width = fixW + '%';
-        const flxW = (mFl/tV)*100; document.getElementById('fillFlexSegment').style.width = Math.min(flxW, 100 - fixW) + '%'; 
-        document.getElementById('fillFlexSegment').style.left = fixW + '%'; document.getElementById('fillBranded').style.width = Math.min((mB/tB)*100, 100) + '%';
-        document.getElementById('percVerz').innerText = Math.round(((mFx+mFl)/tV)*100) + '%'; document.getElementById('percBranded').innerText = Math.round((mB/tB)*100) + '%';
-        
-        const groups = {};
-        sales.sort((a,b) => b.date.localeCompare(a.date)).forEach(s => {
-            const isWait = s.isWait || s.date === "2099-12-31"; const sD = new Date(s.date); 
-            const isInPeriod = isWait || (sD.getMonth() === selM && sD.getFullYear() === selY);
-            if (!isInPeriod || (showOnlyOpen && !isWait && s.date <= today) || (search && !s.invoice.toLowerCase().includes(search))) return;
-            if (!groups[s.date]) groups[s.date] = []; groups[s.date].push(s);
+        let mFx=0, mFl=0, mB=0; 
+        let deptTotals = { MDA:0, SDA:0, TELCO:0, IT:0, KTV:0, HIFI:0 };
+        log.innerHTML = '';
+
+        const filteredSales = sales.filter(s => {
+            const d = new Date(s.date);
+            const dateMatch = d.getMonth() === selM && d.getFullYear() === selY;
+            const searchMatch = s.invoice.toLowerCase().includes(searchQ) || (s.notes && s.notes.toLowerCase().includes(searchQ));
+            return dateMatch && searchMatch;
         });
 
-        Object.keys(groups).forEach((dateKey, index) => {
-            const headerLabel = dateKey === "2099-12-31" ? "WACHTLIJST" : `${dateKey.split('-')[2]} ${months[parseInt(dateKey.split('-')[1])-1]}`;
-            let dayFix = 0, dayFlex = 0, dayCal = 0; groups[dateKey].forEach(s => { dayFix += (parseInt(s.qtyFix) || 0); dayFlex += (parseInt(s.qtyFlex) || 0); dayCal += (parseInt(s.qtyCal) || 0); });
-            const isCollapsed = collapsedDates[dateKey] === undefined ? (index !== 0 && !search) : collapsedDates[dateKey];
-            
-            let groupHTML = `<div class="date-group">
-                <div class="date-header" onclick="toggleGroup('${dateKey}')">
-                    <div class="date-header-inner">
-                        <div style="flex: 1;">${headerLabel}</div>
-                        <div class="summary-box">
-                            <div class="log-qty-cols">
-                                <div class="qty-col"><span class="qty-col-label">FIX</span><span class="qty-col-val" style="color:var(--mm-red)">${dayFix}</span></div>
-                                <div class="qty-col"><span class="qty-col-label">FLX</span><span class="qty-col-val" style="color:var(--mm-orange)">${dayFlex}</span></div>
-                                <div class="qty-col"><span class="qty-col-label">CAL</span><span class="qty-col-val" style="color:var(--color-wait)">${dayCal}</span></div>
+        filteredSales.forEach(s => { 
+            mFx += s.qtyFix; mFl += s.qtyFlex; mB += s.qtyCal;
+            s.dept.forEach(d => { if(deptTotals[d] !== undefined) deptTotals[d] += (s.qtyFix + s.qtyFlex + s.qtyCal); });
+        });
+
+        document.getElementById('chartFix').innerText = mFx;
+        document.getElementById('chartFlex').innerText = mFl;
+        document.getElementById('chartCal').innerText = mB;
+
+        const tV = parseInt(document.getElementById('targetVerz').value) || 1, tC = parseInt(document.getElementById('targetCal').value) || 1;
+        document.getElementById('percGlobal').innerText = Math.round(((mFx+mFl)/tV)*100) + '%';
+        
+        const fW = Math.min((mFx/tV)*100, 100);
+        document.getElementById('fillFix').style.width = fW + '%';
+        document.getElementById('fillFlexSegment').style.width = Math.min((mFl/tV)*100, 100-fW) + '%';
+        document.getElementById('fillFlexSegment').style.left = fW + '%';
+        document.getElementById('fillBranded').style.width = Math.min((mB/tC)*100, 100) + '%';
+
+        const dLegend = document.getElementById('deptLegend');
+        dLegend.innerHTML = '';
+        Object.keys(deptTotals).forEach(d => {
+            if(deptTotals[d] > 0) {
+                dLegend.innerHTML += `<div class="dept-legend-item" style="color:${DEPT_CFG[d].color}"><div class="dot" style="background:${DEPT_CFG[d].color}"></div>${d}: ${deptTotals[d]}</div>`;
+            }
+        });
+
+        const groups = {};
+        filteredSales.sort((a,b) => b.date.localeCompare(a.date)).forEach(s => {
+            if(!groups[s.date]) groups[s.date] = { items: [], fix: 0, flx: 0, cal: 0 };
+            groups[s.date].items.push(s);
+            groups[s.date].fix += s.qtyFix; groups[s.date].flx += s.qtyFlex; groups[s.date].cal += s.qtyCal;
+        });
+
+        if (filteredSales.length === 0) {
+            log.innerHTML = `<div style="text-align:center; padding:40px; color:#444; font-size:11px; letter-spacing:1px;">GEEN RESULTATEN</div>`;
+            return;
+        }
+
+        Object.keys(groups).forEach((date, idx) => {
+            const g = groups[date];
+            const isCollapsed = collapsedDates[date] === undefined ? (idx !== 0 && searchQ === "") : collapsedDates[date];
+            const dLabel = `${date.split('-')[2]} ${months[parseInt(date.split('-')[1])-1].substring(0,3)}`;
+
+            let html = `
+                <div class="date-header" onclick="toggleGroup('${date}')" style="margin-top:10px;">
+                    <div style="display:flex; width:100%; justify-content:space-between; align-items:center;">
+                        <div class="skew-content" style="font-size:13px; font-weight:900; color:var(--text-gray);">${dLabel}</div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="service-grid" style="width:100px;">
+                                <div class="service-box"><span class="s-val" style="color:var(--mm-red)">${g.fix}</span></div>
+                                <div class="service-box"><span class="s-val" style="color:var(--mm-orange)">${g.flx}</span></div>
+                                <div class="service-box"><span class="s-val" style="color:var(--color-wait)">${g.cal}</span></div>
                             </div>
+                            <span class="material-icons" style="color:#444; font-size:18px;">${isCollapsed ? 'expand_more' : 'expand_less'}</span>
                         </div>
-                        <span class="material-icons" style="margin-left:10px;">${isCollapsed ? 'expand_more' : 'expand_less'}</span>
                     </div>
                 </div>
-                <div class="date-content ${!isCollapsed ? 'open' : ''}">`;
+                <div style="display:${isCollapsed ? 'none' : 'block'}; padding: 0 4px;">
+            `;
 
-            groups[dateKey].forEach(s => {
-                const statusColor = s.isWait || s.date === "2099-12-31" ? 'var(--color-wait)' : (s.date > today ? 'var(--color-future)' : 'var(--color-done)');
-                groupHTML += `<div class="log-item">
-                    <div class="status-bar-left" style="background:${statusColor}"></div>
-                    <div class="log-main-grid">
-                        <div>
-                            <div class="invoice-tap">${s.invoice}<span class="dept-tag">${s.dept.join(', ')}</span></div>
-                            <div style="font-size:12px; color:var(--mm-orange);">${s.notes || '-'}</div>
-                        </div>
-                        <div class="log-qty-cols">
-                            <div class="qty-col"><span class="qty-col-label">FIX</span><span class="qty-col-val" style="color:var(--mm-red)">${s.qtyFix}</span></div>
-                            <div class="qty-col"><span class="qty-col-label">FLX</span><span class="qty-col-val" style="color:var(--mm-orange)">${s.qtyFlex}</span></div>
-                            <div class="qty-col"><span class="qty-col-label">CAL</span><span class="qty-col-val" style="color:var(--color-wait)">${s.qtyCal}</span></div>
-                        </div>
-                        <div style="text-align:right;">
-                            <span class="material-icons" style="color:#eee; margin-right:8px;" onclick="startEdit(${s.id})">edit</span>
-                            <span class="material-icons" style="color:#444;" onclick="confirmDelete(${s.id})">delete</span>
+            g.items.forEach(s => {
+                const depts = s.dept.map(d => `<span class="dept-tag tag-${d}"><span class="material-icons" style="font-size:9px;">${DEPT_CFG[d].icon}</span>${d}</span>`).join('');
+                html += `
+                    <div class="log-item">
+                        <div style="display:grid; grid-template-columns: 1fr 90px 35px; align-items:center; gap:8px;">
+                            <div style="overflow:hidden;">
+                                <div class="skew-content" style="font-size:12px; color:#fff; white-space:nowrap; text-overflow:ellipsis;">${s.invoice}</div>
+                                <div style="display:flex; gap:4px; flex-wrap:wrap;">${depts}</div>
+                                ${s.notes ? `<div style="font-size:9px; color:#555; font-style:italic; margin-top:2px; text-transform:none;">${s.notes}</div>` : ''}
+                            </div>
+                            <div class="service-grid">
+                                <div class="service-box"><span class="s-val" style="color:var(--mm-red)">${s.qtyFix}</span></div>
+                                <div class="service-box"><span class="s-val" style="color:var(--mm-orange)">${s.qtyFlex}</span></div>
+                                <div class="service-box"><span class="s-val" style="color:var(--color-wait)">${s.qtyCal}</span></div>
+                            </div>
+                            <div style="display:flex; justify-content:flex-end;">
+                                <span class="material-icons" style="color:#444; font-size:18px;" onclick="startEdit(${s.id})">edit</span>
+                            </div>
                         </div>
                     </div>
-                </div>`;
-            }); 
-            log.innerHTML += groupHTML + `</div></div>`;
+                `;
+            });
+            log.innerHTML += html + `</div>`;
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
     }
 
     document.getElementById('saleForm').onsubmit = function(e) {
-        e.preventDefault(); const wait = document.getElementById('dateUnknown').checked;
-        const data = { invoice: document.getElementById('invoice').value, dept: selectedDepts.length > 0 ? [...selectedDepts] : ['MDA'], notes: document.getElementById('notes').value, qtyFix: parseInt(document.getElementById('qtyFix').value)||0, qtyFlex: parseInt(document.getElementById('qtyFlex').value)||0, qtyCal: parseInt(document.getElementById('qtyCal').value)||0, date: wait ? "2099-12-31" : document.getElementById('dateInput').value, isWait: wait };
-        if(editId) { sales[sales.findIndex(x => x.id === editId)] = { id: editId, ...data }; editId = null; document.getElementById('btnText').innerText = 'SAVE'; } 
-        else { sales.push({ id: Date.now(), ...data }); }
-        this.reset(); resetDepts(); document.getElementById('dateInput').value = getLocalDate(); toggleDate(document.getElementById('dateUnknown')); render();
+        e.preventDefault();
+        const data = {
+            id: editId || Date.now(),
+            invoice: document.getElementById('invoice').value,
+            dept: selectedDepts.length > 0 ? [...selectedDepts] : ['MDA'],
+            notes: document.getElementById('notes').value,
+            qtyFix: parseInt(document.getElementById('qtyFix').value)||0,
+            qtyFlex: parseInt(document.getElementById('qtyFlex').value)||0,
+            qtyCal: parseInt(document.getElementById('qtyCal').value)||0,
+            date: document.getElementById('dateInput').value
+        };
+        if(editId) sales = sales.map(s => s.id === editId ? data : s);
+        else sales.push(data);
+        resetForm(); render();
     };
+
+    function resetForm() {
+        editId = null; 
+        const btn = document.getElementById('submitBtn');
+        btn.style.background = 'var(--btn-save)';
+        document.getElementById('btnIcon').innerText = 'save';
+        document.getElementById('btnText').innerText = 'SAVE';
+        document.getElementById('saleForm').reset();
+        selectedDepts = []; document.querySelectorAll('.dept-chip').forEach(c => c.classList.remove('active'));
+        document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+    }
 
     function startEdit(id) {
-        const s = sales.find(x => x.id === id); if(!s) return; editId = id; 
-        document.getElementById('invoice').value = s.invoice; document.getElementById('notes').value = s.notes || '';
-        document.getElementById('qtyFix').value = s.qtyFix; document.getElementById('qtyFlex').value = s.qtyFlex; document.getElementById('qtyCal').value = s.qtyCal;
-        document.getElementById('dateInput').value = s.isWait ? getLocalDate() : s.date; document.getElementById('dateUnknown').checked = s.isWait;
-        resetDepts(); s.dept.forEach(d => { let cls = d.toLowerCase(); if(cls === 'telco') cls = 'tel'; const chip = document.querySelector(`.dept-chip.${cls}`); if(chip) toggleDept(chip, d); });
-        toggleDate(document.getElementById('dateUnknown')); document.getElementById('btnText').innerText = 'UPDATE';
+        const s = sales.find(x => x.id === id);
+        editId = id; 
+        const btn = document.getElementById('submitBtn');
+        btn.style.background = 'var(--btn-update)';
+        document.getElementById('btnIcon').innerText = 'update';
+        document.getElementById('btnText').innerText = 'UPDATE';
+        document.getElementById('invoice').value = s.invoice;
+        document.getElementById('notes').value = s.notes || '';
+        document.getElementById('qtyFix').value = s.qtyFix; 
+        document.getElementById('qtyFlex').value = s.qtyFlex; 
+        document.getElementById('qtyCal').value = s.qtyCal;
+        document.getElementById('dateInput').value = s.date;
+        selectedDepts = [...s.dept];
+        document.querySelectorAll('.dept-chip').forEach(chip => {
+            chip.classList.toggle('active', s.dept.includes(chip.getAttribute('data-dept')));
+        });
+        window.scrollTo(0,0);
     }
-
-    function manualExport() {
-        const csv = sales.map(s => [s.id, s.date, s.invoice, `"${s.dept.join('|')}"`, s.qtyFix, s.qtyFlex, s.qtyCal, `"${s.notes}"`].join(","));
-        const blob = new Blob([csv.join("\n")], {type: 'text/csv'});
-        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'SS_Backup.csv'; a.click();
-    }
-
-    function manualImport(event) {
-        const file = event.target.files[0]; if (!file) return;
-        const reader = new FileReader(); reader.onload = function(e) {
-            const lines = e.target.result.split('\n');
-            sales = lines.map(line => {
-                const c = line.split(','); if(c.length < 7) return null;
-                return { id: parseInt(c[0]), date: c[1], invoice: c[2], dept: c[3].replace(/"/g,'').split('|'), qtyFix: parseInt(c[4]), qtyFlex: parseInt(c[5]), qtyCal: parseInt(c[6]), notes: c[7]?.replace(/"/g,'') || '' };
-            }).filter(x => x); render();
-        }; reader.readAsText(file);
-    }
-    function saveTargets() { localStorage.setItem('ss_t_v', document.getElementById('targetVerz').value); localStorage.setItem('ss_t_b_c', document.getElementById('targetVerzCalibration').value); render(); }
-    function confirmDelete(id) { if(confirm('DELETE?')) { sales = sales.filter(x => x.id !== id); render(); } }
-
-    window.onload = function() {
-        loadData(); const mS = document.getElementById('viewMonth'), yS = document.getElementById('viewYear'), n = new Date();
-        months.forEach((m, i) => mS.innerHTML += `<option value="${i}" ${i === n.getMonth() ? 'selected' : ''}>${m.toUpperCase()}</option>`);
-        [n.getFullYear(), n.getFullYear()-1].forEach(y => yS.innerHTML += `<option value="${y}">${y}</option>`);
-        document.getElementById('targetVerz').value = localStorage.getItem('ss_t_v') || 40; document.getElementById('targetVerzCalibration').value = localStorage.getItem('ss_t_b_c') || 10;
-        document.getElementById('dateInput').value = getLocalDate(); render();
-    };
 
     async function shareAsPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         const selM = parseInt(document.getElementById('viewMonth').value);
         const selY = parseInt(document.getElementById('viewYear').value);
-        const monthName = months[selM];
-        
-        const filtered = sales.filter(s => {
-            if (s.isWait || s.date === "2099-12-31") return false;
-            const d = new Date(s.date); return d.getMonth() === selM && d.getFullYear() === selY;
-        }).sort((a,b) => a.date.localeCompare(b.date));
-
-        doc.setFillColor(22, 22, 22); doc.rect(0, 0, 210, 297, 'F');
-        doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.setTextColor(255, 51, 51); doc.text("SALES REPORT", 15, 25);
-        doc.setFontSize(14); doc.setTextColor(255, 255, 255); doc.text(`${monthName.toUpperCase()} ${selY}`, 15, 35);
-        
-        let tFix = 0, tFlex = 0, tCal = 0;
-        const deptStats = {};
-
-        const rows = filtered.map(s => {
-            const f = parseInt(s.qtyFix) || 0, fl = parseInt(s.qtyFlex) || 0, c = parseInt(s.qtyCal) || 0;
-            tFix += f; tFlex += fl; tCal += c;
-            s.dept.forEach(d => {
-                if(!deptStats[d]) deptStats[d] = { fix: 0, flex: 0, cal: 0 };
-                deptStats[d].fix += f; deptStats[d].flex += fl; deptStats[d].cal += c;
-            });
-            return [s.date, s.invoice, s.dept.join(','), f, fl, c];
-        });
-
-        doc.autoTable({
-            startY: 45, head: [['DATE', 'INV', 'DEPT', 'FIX', 'FLX', 'CAL']], body: rows, theme: 'grid',
-            headStyles: { fillColor: [0, 0, 0], textColor: [255, 51, 51], fontStyle: 'bold', lineWidth: 0.1, lineColor: [44,44,44] },
-            bodyStyles: { fillColor: [30, 30, 30], textColor: [255, 255, 255], lineColor: [44,44,44] },
-            columnStyles: { 3: { textColor: [255, 51, 51] }, 4: { textColor: [255, 153, 0] }, 5: { textColor: [77, 184, 255] } },
-            alternateRowStyles: { fillColor: [25, 25, 25] }, margin: { left: 15, right: 15 }
-        });
-
-        let currentY = doc.lastAutoTable.finalY + 15;
-        if (currentY > 230) { doc.addPage(); currentY = 25; doc.setFillColor(22, 22, 22); doc.rect(0, 0, 210, 297, 'F'); }
-
-        const deptRows = Object.keys(deptStats).map(d => [d, deptStats[d].fix, deptStats[d].flex, deptStats[d].cal, (deptStats[d].fix + deptStats[d].flex + deptStats[d].cal)]);
-        doc.setFontSize(16); doc.setTextColor(255, 255, 255); doc.text("DEPARTMENT BREAKDOWN", 15, currentY);
-
-        doc.autoTable({
-            startY: currentY + 5, head: [['DEPARTMENT', 'FIX', 'FLX', 'CAL', 'TOTAL']], body: deptRows, theme: 'grid',
-            headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] },
-            bodyStyles: { fillColor: [30, 30, 30], textColor: [255, 255, 255] },
-            didParseCell: function(data) {
-                if (data.section === 'body' && data.column.index === 0) {
-                    const dName = data.cell.raw; if(DEPT_COLORS[dName]) data.cell.styles.textColor = DEPT_COLORS[dName];
-                }
-            }, margin: { left: 15, right: 15 }
-        });
-
-        let finalY = doc.lastAutoTable.finalY + 15;
-        if (finalY > 260) { doc.addPage(); finalY = 25; doc.setFillColor(22, 22, 22); doc.rect(0, 0, 210, 297, 'F'); }
-
-        doc.setFontSize(16); doc.setTextColor(255, 255, 255); doc.text("GRAND TOTALS", 15, finalY);
-        doc.setFontSize(12);
-        doc.setTextColor(255, 51, 51); doc.text(`FIX: ${tFix}`, 15, finalY + 10);
-        doc.setTextColor(255, 153, 0); doc.text(`FLX: ${tFlex}`, 45, finalY + 10);
-        doc.setTextColor(77, 184, 255); doc.text(`CAL: ${tCal}`, 75, finalY + 10);
-        doc.setTextColor(255, 255, 255); doc.setFontSize(14); doc.text(`TOTAL SERVICES: ${tFix + tFlex + tCal}`, 15, finalY + 20);
-
-        const pdfOutput = doc.output('blob');
-        const filename = `SS_Report_${monthName}_${selY}.pdf`;
-        const file = new File([pdfOutput], filename, { type: 'application/pdf' });
-
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try { await navigator.share({ files: [file], title: 'S&S Tracker Report', text: `Rapport ${monthName} ${selY}` }); } 
-            catch (err) { doc.save(filename); }
-        } else { doc.save(filename); }
+        const filtered = sales.filter(s => { const d = new Date(s.date); return d.getMonth() === selM && d.getFullYear() === selY; }).sort((a,b) => a.date.localeCompare(b.date));
+        doc.setFillColor(0, 0, 0); doc.rect(0, 0, 210, 297, 'F');
+        doc.setTextColor(255, 51, 51); doc.setFontSize(22); doc.text("S&S TRACKER", 15, 25);
+        const rows = filtered.map(s => [s.date, s.invoice, s.dept.join(', '), s.qtyFix, s.qtyFlex, s.qtyCal, s.notes || '']);
+        doc.autoTable({ startY: 40, head: [['DATUM', 'INV', 'DEPT', 'FIX', 'FLX', 'CAL', 'NOTES']], body: rows, theme: 'plain', styles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontSize: 8 } });
+        doc.save(`SS_Report_${months[selM]}.pdf`);
     }
+
+    function manualExport() {
+        const csv = sales.map(s => `${s.id},${s.date},"${s.invoice}",${s.qtyFix},${s.qtyFlex},${s.qtyCal},"${s.notes}","${s.dept.join('|')}"`).join("\n");
+        const blob = new Blob(["\ufeffid,date,invoice,qtyFix,qtyFlex,qtyCal,notes,dept\n"+csv], {type:'text/csv'});
+        const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='SS_Backup.csv'; a.click();
+    }
+
+    function manualImport(event) {
+        const file = event.target.files[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(f) {
+            const lines = f.target.result.split('\n');
+            const imported = [];
+            lines.forEach((line, i) => {
+                if(i===0 || !line.trim()) return;
+                const c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if(c.length >= 6) {
+                    imported.push({ id: parseInt(c[0]) || Date.now()+i, date: c[1].trim(), invoice: c[2].replace(/"/g,'').trim(), qtyFix: parseInt(c[3]) || 0, qtyFlex: parseInt(c[4]) || 0, qtyCal: parseInt(c[5]) || 0, notes: c[6] ? c[6].replace(/"/g,'').trim() : '', dept: (c[7]) ? c[7].replace(/"/g,'').split('|') : ['MDA'] });
+                }
+            });
+            sales = imported; render();
+        };
+        reader.readAsText(file);
+    }
+
+    function saveTargets() { localStorage.setItem('ss_t_v', document.getElementById('targetVerz').value); localStorage.setItem('ss_t_b_c', document.getElementById('targetCal').value); render(); }
+
+    window.onload = function() {
+        const mS = document.getElementById('viewMonth'), yS = document.getElementById('viewYear'), n = new Date();
+        months.forEach((m, i) => mS.innerHTML += `<option value="${i}" ${i === n.getMonth() ? 'selected' : ''}>${m}</option>`);
+        [n.getFullYear(), n.getFullYear()-1].forEach(y => yS.innerHTML += `<option value="${y}" ${y === n.getFullYear() ? 'selected' : ''}>${y}</option>`);
+        document.getElementById('targetVerz').value = localStorage.getItem('ss_t_v') || 40;
+        document.getElementById('targetCal').value = localStorage.getItem('ss_t_b_c') || 10;
+        document.getElementById('dateInput').value = n.toISOString().split('T')[0];
+        render();
+    };
 </script>
 </body>
 </html>
